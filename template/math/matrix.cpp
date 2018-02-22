@@ -21,8 +21,8 @@ struct Mat {
 		rep(j, 0, sz(a)) {
 		    vi r = a[j];
 		    rep(i, 0, sz(r))
-                printf("%d%c", r[i], " \n"[i == sz(r) - 1]);
-        }
+                	printf("%d%c", r[i], " \n"[i == sz(r) - 1]);
+        	}
 	}
 };
 
