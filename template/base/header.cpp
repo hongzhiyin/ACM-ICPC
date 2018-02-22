@@ -42,8 +42,11 @@ bool ls(const db &a, const db &b) { return a + eps < b; }
 bool le(const db &a, const db &b) { return eq(a, b) || ls(a, b); }
 
 //常用函数
-ll powmod(ll a,ll b) {ll res=1;a%=MOD; assert(b>=0); for(;b;b>>=1){if(b&1)res=res*a%MOD;a=a*a%MOD;}return res;}
+char read_char() {char c;for(;;){c=getchar();if(c>='A'&&c<='Z')return c;}}
+ll powmod(ll a,ll b) {ll res=1;a%=MOD;for(;b;b>>=1){if(b&1)res=res*a%MOD;a=a*a%MOD;}return res;}
 ll gcd(ll a,ll b) { return b?gcd(b,a%b):a;}
+int add(int a, int b) { if ((a += b) >= MOD) a -= MOD; return a; }
+int mul(int a, int b) { return 1ll * a * b % MOD; }
 
 //--------变量--------//
 
