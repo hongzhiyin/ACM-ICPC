@@ -12,5 +12,6 @@ ll phi(ll n)
 
 欧拉定理
 A ^ phi(C) ≡ 1 (mod C)
+
 欧拉降幂公式 ( B > phi(C) )
 A ^ B % C = A ^ (B % phi(C) + phi(C)) % C
