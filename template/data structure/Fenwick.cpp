@@ -9,7 +9,8 @@ struct Fenwick {    //注意下标从 1 开始，以及可能需要离散化操�
     }
 
     int Sum(int x) {
-        for (int ret = 0; x > 0; x -= Lowbit(x))
+        int ret = 0;
+        for (; x > 0; x -= Lowbit(x))
             ret += tree[x];
         return ret;
     }
