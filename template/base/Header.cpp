@@ -36,8 +36,8 @@ const int N = (int)-1;
 char read_char() {char c;for(;;){c=getchar();if(c>='A'&&c<='Z')return c;}}
 ll powmod(ll a,ll b) {ll res=1;a%=MOD;for(;b;b>>=1){if(b&1)res=res*a%MOD;a=a*a%MOD;}return res;}
 ll gcd(ll a,ll b) { return b?gcd(b,a%b):a;}
-int add(int a, int b) { if ((a += b) >= MOD) a -= MOD; return a; }
-int mul(int a, int b) { return 1ll * a * b % MOD; }
+ll add(ll a, ll b) { a = ((a + b) % MOD + MOD) % MOD; return a; }
+ll mul(ll a, ll b) { return a * b % MOD; }
 
 //--------变量--------//
 
