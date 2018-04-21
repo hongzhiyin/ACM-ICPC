@@ -1,4 +1,4 @@
-struct Dijkstra {   //注意：点的标号是从0开始 rep(i,0,n)
+struct Dijkstra {   //注意：点的标号是从 0 开始 rep(i,0,n)
     int n;
     ll dist[N];
     bool done[N];
