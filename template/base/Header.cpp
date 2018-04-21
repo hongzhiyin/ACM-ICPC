@@ -39,15 +39,15 @@ ll gcd(ll a,ll b) { return b?gcd(b,a%b):a;}
 ll add(ll a, ll b) { a = ((a + b) % MOD + MOD) % MOD; return a; }
 ll mul(ll a, ll b) { return a * b % MOD; }
 
-//--------变量--------//
+//-------- 变量 --------//
 
 
-//--------函数--------//
+//-------- 函数 --------//
 
 void Init() {}
 int Solve() {}
 
-//--------main--------//
+//-------- main --------//
 
 int main ()
 {
