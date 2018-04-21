@@ -1,8 +1,9 @@
 struct Tarjan {
     int dfn[N], low[N], scc[N], tot, cnt;
-    //dfn[] dfs序; low[] dfs序最小结点;
+    //dfn[] dfs 序;
+    //low[] dfs 序最小结点;
     //scc[] 所属强联通分量
-    //tot dfs序号
+    //tot dfs 序号
     //cnt 强联通分量数
     stack <int> S;
     
