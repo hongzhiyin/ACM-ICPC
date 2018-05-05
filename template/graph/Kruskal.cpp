@@ -6,10 +6,10 @@ struct Kruskal {
         bool operator < (const Edge &rhs) const { return dist < rhs.dist; }
     };
 
-    int n, fa[maxn];
+    int n, fa[N];
     vector<Edge> edge;
 
-    void Inti(int n) {
+    void Init(int n) {
         this -> n = n;
         rep(i, 0, n) fa[i] = i;
         edge.clear();
