@@ -10,6 +10,21 @@ ll phi(ll n)
     return ret;
 }
 
+int phi[N];
+void Euler()
+{
+    memset(phi, 0, sizeof(phi));
+    phi[1]=1;
+    rep(i, 2, N) {
+        if(!phi[i]) {
+            for(int j = i; j < N; j += i){
+                if(!phi[j]) phi[j]=j;
+                phi[j] = phi[j] / i * (i-1);
+            }
+        }
+    }
+}
+
 //欧拉定理
 //A ^ phi(C) ≡ 1 (mod C)
 
