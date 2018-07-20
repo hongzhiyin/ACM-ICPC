@@ -12,3 +12,15 @@ void GetPrime(int n)
         }
     }
 }
+
+// n <= 1e18
+// a ^ (n-1) = 1 (mod n)
+bool check(ll x) {
+    if (n == 2) return 1;
+    if (n < 2 || !(n & 1)) return 0;
+    rep(t, 0, 10) {
+        ll a = rand() % (n-1) + 1;
+        if (powmod(a, n-1) != 1) return 0;
+    }
+    return 1;
+}
