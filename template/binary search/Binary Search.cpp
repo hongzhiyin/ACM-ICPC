@@ -21,4 +21,8 @@ while (!eq(L, R)) {
     if (check(M)) L = M;
     else R = M;
 }
-printf("%.4f\n", L);
+printf("%.4f\n", L);    // L 不行就换 R 试试，精度问题，谁知道呢
+
+// 各种莫名其妙的精度问题：
+// 保留两位小数，其余位舍去：
+printf("%.2f\n", floor(x * 100)/100);
