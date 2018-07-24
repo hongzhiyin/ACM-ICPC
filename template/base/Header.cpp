@@ -36,7 +36,7 @@ const int N = (int)-1;
 char read_char() {char c;for(;;){c=getchar();if(c>='A'&&c<='Z')return c;}}
 ll powmod(ll a,ll b) {ll res=1;a%=MOD;for(;b;b>>=1){if(b&1)res=res*a%MOD;a=a*a%MOD;}return res;}
 ll gcd(ll a,ll b) { return b?gcd(b,a%b):a;}
-ll add(ll a, ll b) { a = ((a + b) % MOD + MOD) % MOD; return a; }
+ll add(ll a, ll b) { return ((a + b) % MOD + MOD) % MOD; }
 ll mul(ll a, ll b) { return a * b % MOD; }
 
 //-------- 变量 --------//
@@ -44,16 +44,29 @@ ll mul(ll a, ll b) { return a * b % MOD; }
 
 //-------- 函数 --------//
 
-void Init() {}
-int Solve() {}
+void Init() {
+    
+}
+
+int Solve() {
+
+}
 
 //-------- main --------//
 
 int main ()
 {
-    while (~scanf("")) {
+    //freopen("in.txt", "r", stdin);
+    //freopen("out.txt", "w", stdout);
+
+    //Pre();
+    //int t; scanf("%d", &t); while (t--) {
+    while (~scanf("", )) {
+        //printf("Case %d: ", ++kase);
+        //if (n == 0) break;
         Init();
         Solve();
+        //if (t) puts("");
     }
     return 0;
 }
