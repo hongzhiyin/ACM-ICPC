@@ -8,7 +8,6 @@ struct Node {
         son[0] = son[1] = 0;
     }
 };
-
 struct Treap {
     int root, cnt;
     Node T[N];
