@@ -1,4 +1,4 @@
-struct Node {
+struct Node {//
 	int key, pri, sz, son[2];
 	void setval(int x, int z = 1) {
 		static int seed = 3312;
