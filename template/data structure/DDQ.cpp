@@ -1,5 +1,26 @@
 struct DDQ {  //单调队列
     int id, l, r;
+    pii mx;
+    deque <pii> q;
+    DDQ () { id = 0; while (!q.empty()) q.pop_back(); }
+    void clear() { id = 0; while (!q.empty()) q.pop_back(); }
+    int front() { return q.front().fi; }
+    void push(int x) {
+        id++; r++;
+        while (!q.empty() && q.back().fi < x) q.pop_back();     // 单调递减，求最大值
+        // while (!q.empty() && q.back().fi > x) q.pop_back();     // 单调递增，求最小值
+        q.pb(mp(x, id));
+        maintain();
+    }
+    void maintain() {
+        while (q.back().se - q.front().se > len) q.pop_front();   // 窗口长度限制 len
+    }
+};
+
+
+// 窗口内 max - min <= k
+struct DDQ {  //单调队列
+    int id, l, r;
     pii mi, ma;
     deque <pii> maxq, minq;
     DDQ() { id = r = 0; l = 1; }
