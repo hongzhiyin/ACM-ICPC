@@ -20,7 +20,8 @@ struct Treap {
         T[x].sz = T[T[x].son[0]].sz + 1 + T[T[x].son[1]].sz;
         x = y;
     }
-    void ins(int &x, int val) {
+    // 执行插入和删除操作前要用 find(ans.root, x) 检验操作是否合法
+    void ins(int &x, int val) {     // 往集合中插入值 val，调用方法：ans.ins(ans.root, val)
         if (x == 0) {
             T[x = cnt++].setval(val);
         } else {
@@ -31,7 +32,7 @@ struct Treap {
                 rotate(x, !p);
         }
     }
-    void del(int &x, int val) {
+    void del(int &x, int val) {     // 从集合中删除值 val，调用方法：ans.del(ans.root, val)
         if (T[x].key == val) {
             if (T[x].son[0] && T[x].son[1]) {
                 --T[x].sz;
@@ -48,19 +49,19 @@ struct Treap {
             del(T[x].son[p], val);
         }
     }
-    int findKth(int &x, int k) {
+    int findKth(int &x, int k) {    // 查找集合中第 k 小的元素，返回值为对应元素的编号，若不存在，则返回 -1，调用方法：ans.findKth(ans.root, k)
         if (k <= 0 || x == 0 || k > T[x].sz) return -1;
         if (k == T[T[x].son[0]].sz + 1) return x;
         if (k > T[T[x].son[0]].sz + 1)
             return findKth(T[x].son[1], k - T[T[x].son[0]].sz - 1);
         return findKth(T[x].son[0], k);
     }
-    int find(int &x, int val) {
+    int find(int &x, int val) {     // 查找集合中值为 val 的元素，返回值为对应元素的编号，若不存在，则返回 -1，调用方法：ans.find(ans.root, x)
         if (x == 0) return -1;
         if (val == T[x].key) return x;
         return find(T[x].son[T[x].key < val], val);
     }
-    int Count(int &x, int val) {
+    int Count(int &x, int val) {    // 查找集合中小于值 val 的元素个数，返回值为元素个数，调用方法：ans.Count(ans.root, val)
         if (x == 0) return 0;
         if (val < T[x].key) return Count(T[x].son[0], val);
         if (val == T[x].key) return T[T[x].son[0]].sz;
