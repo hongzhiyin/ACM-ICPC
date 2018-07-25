@@ -1,10 +1,15 @@
+void Init() {
+    cnt = 1;
+    T[0].key = T[0].pri = T[0].sz = T[0].son[0] = T[0].son[1] = 0;
+}
+
 struct Node {
     int key, pri, sz, son[2];
-    void setval(int x, int z = 1) {
+    void setval(int x) {
         static int seed = 3312;
         key = x;
         pri = seed = (int)((ll)seed * 48271 % 2147483647);
-        sz = z;
+        sz = 1;
         son[0] = son[1] = 0;
     }
 };
