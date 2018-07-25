@@ -1,5 +1,5 @@
 void Init() {
-    cnt = 1;
+    treap_cnt = 1;
     T[0].key = T[0].pri = T[0].sz = T[0].son[0] = T[0].son[1] = 0;
 }
 
@@ -13,7 +13,7 @@ struct Node {
         son[0] = son[1] = 0;
     }
 };
-int cnt;    // 在 Init() 里初始化，通过一个 cnt 和 一个 T[N] 给多个 Treap 分配节点
+int treap_cnt;    // 在 Init() 里初始化，通过一个 cnt 和 一个 T[N] 给多个 Treap 分配节点
 Node T[N];
 struct Treap {
     int root;
@@ -29,7 +29,7 @@ struct Treap {
     // 执行插入和删除操作前要用 find(ans.root, x) 检验操作是否合法
     void ins(int &x, int val) {     // 往集合中插入值 val，调用方法：ans.ins(ans.root, val)
         if (x == 0) {
-            T[x = cnt++].setval(val);
+            T[x = treap_cnt++].setval(val);
         } else {
             ++T[x].sz;
             int p = val > T[x].key;
@@ -72,5 +72,10 @@ struct Treap {
         if (val < T[x].key) return Count(T[x].son[0], val);
         if (val == T[x].key) return T[T[x].son[0]].sz;
         return T[x].sz - T[T[x].son[1]].sz + Count(T[x].son[1], val);
+    }
+    void Merge(int &src) {          // 把根为 src 的 treap 合并到根为 root 的本 treap 中
+        if (T[src].son[0]) Merge(T[src].son[0]);
+        if (T[src].son[1]) Merge(T[src].son[1]);
+        ins(root, T[src].key);
     }
 };
