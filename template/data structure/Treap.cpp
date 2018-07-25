@@ -8,10 +8,11 @@ struct Node {
         son[0] = son[1] = 0;
     }
 };
+int cnt;
+Node T[N];
 struct Treap {
-    int root, cnt;
-    Node T[N];
-    void init() { root = 0; cnt = 1; }
+    int root;
+    void init() { root = 0; }
     void rotate(int &x, int p) {
         int y = T[x].son[!p];
         T[x].son[!p] = T[y].son[p];
@@ -68,4 +69,3 @@ struct Treap {
         return T[x].sz - T[T[x].son[1]].sz + Count(T[x].son[1], val);
     }
 };
-
