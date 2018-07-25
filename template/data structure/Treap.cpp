@@ -8,7 +8,7 @@ struct Node {
         son[0] = son[1] = 0;
     }
 };
-int cnt;
+int cnt;    // 在 Init() 里初始化，通过一个 cnt 和 一个 T[N] 给多个 Treap 分配节点
 Node T[N];
 struct Treap {
     int root;
