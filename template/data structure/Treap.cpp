@@ -1,3 +1,70 @@
+// 非旋转 Treap
+void Init() {
+    node_cnt = 0;
+    ans.init();
+}
+
+#define lson T[u].ch[0]
+#define rson T[u].ch[1]
+
+struct Node {
+    int key, rnd, sz, rev, ch[2];
+    void setval(int val) {
+        static int seed = 3312;
+        key = val;
+        rnd = seed = (int)((ll)seed * 48271 % 2147483647);
+        sz = 1; ch[0] = ch[1] = 0;
+    }
+};
+int node_cnt;
+Node T[N];
+struct Treap {
+    int root;
+    void init() { root = 0; }
+    int newnode(int val) {
+        T[++node_cnt].setval(val);
+        return node_cnt;
+    }
+    void update(int u) {
+        T[u].sz = T[lson].sz + T[rson].sz + 1;
+    }
+    void pushdown(int u) {
+        if (T[u].rev) {
+            T[u].rev ^= 1;
+            swap(lson, rson);
+            T[lson].rev ^= 1;
+            T[rson].rev ^= 1;
+        }
+    }
+    void split(int u, int k, int &x, int &y) {
+        pushdown(u);
+        if (!k) { x = 0; y = u; return; }
+        if (T[u].sz == k) { x = u; y = 0; return ; }
+        if (T[lson].sz >= k) split(lson, k, x, lson), y = u;
+        else split(rson, k - T[lson].sz - 1, rson, y), x = u;
+        update(u);
+    }
+    int merge(int x, int y) {
+        if (!x || !y) return x + y;
+        pushdown(x); pushdown(y);
+        if (T[x].rnd < T[y].rnd) {
+            T[x].ch[1] = merge(T[x].ch[1], y);
+            update(x); return x;
+        } else {
+            T[y].ch[0] = merge(x, T[y].ch[0]);
+            update(y); return y;
+        }
+    }
+    void out(int u) {
+        pushdown(u);
+        if (lson) out(lson);
+        printf("%d ", T[u].key);
+        if (rson) out(rson);
+    }
+};
+Treap ans;
+
+// 旋转 Treap
 void Init() {
     treap_cnt = 1;
     T[0].key = T[0].pri = T[0].sz = T[0].son[0] = T[0].son[1] = 0;
