@@ -2,7 +2,7 @@ struct Fenwick {    //注意下标从 1 开始，以及可能需要离散化操�
     int n; ll t[N];
     int Lowbit(int x) { return x & -x; }
     void Init(int n) {
-        memset(tree, 0, sizeof(tree));
+        memset(t, 0, sizeof(t));
         this->n = n;
     }
     ll Sum(int x) {
