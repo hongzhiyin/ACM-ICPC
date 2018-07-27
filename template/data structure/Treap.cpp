@@ -1,4 +1,11 @@
-// 非旋转 Treap
+// 非旋转可持久化 Treap （待填坑）
+
+// https://www.cnblogs.com/nbwzyzngyl/p/7977369.html
+
+// 非旋转 Treap （功能待完善）
+
+// https://www.cnblogs.com/DriverLao/p/8087423.html
+
 void Init() {
     node_cnt = 0;
     ans.init();
