@@ -134,10 +134,6 @@ struct Splay {
         for (r = rr; r; r = T[r].fa) pushdown(r), pushup(r);
         splay(rr, 0);
     }
-    void delnode(int x) {
-        T[x].fa = T[x].val = T[x].sz = T[x].mi = 0;
-        lson = rson = T[x].rev = T[x].lazy = 0;
-    }
     void del(int k) {   // 删除第 k 位置的数
         splay(kth(root, k-1), 0);
         splay(kth(root, k+1), root);
