@@ -1,3 +1,5 @@
+// https://blog.csdn.net/qq_34374664/article/details/77888508
+
 void Init() {
     node_cnt = 0;
     T[0].fa = T[0].sz = T[0].ch[0] = T[0].ch[1] = T[0].rev = T[0].lazy = 0;
