@@ -2,6 +2,10 @@
 #define rson m + 1, r, rt << 1 | 1
 struct SegTree {
     ll lazy[N << 2], t[N << 2];
+    void init() {
+        memset(t, 0, sizeof(t));
+        memset(lazy, 0, sizeof(lazy));
+    }
     void PushUp(int rt) {
         t[rt] = t[rt << 1] + t[rt << 1 | 1];        // 求和
         // t[rt] = min(t[rt << 1], t[rt << 1 | 1]);    // 最值
