@@ -1,22 +1,24 @@
 #define lson l, m, rt << 1
 #define rson m + 1, r, rt << 1 | 1
 struct SegTree {
-    ll lazy[N << 2], t[N << 2];
+    ll lazy[N << 2], t[N << 2], sz[N << 2];
     void PushUp(int rt) {
         t[rt] = t[rt << 1] + t[rt << 1 | 1];        // 求和
         // t[rt] = min(t[rt << 1], t[rt << 1 | 1]);    // 最值
     }
-    void PushDown(int rt, int m) {
+    void PushDown(int rt) {
         if (lazy[rt]) {
-            lazy[rt << 1] += lazy[rt];
-            lazy[rt << 1 | 1] += lazy[rt];
-            t[rt << 1] += lazy[rt] * (m - (m >> 1));
-            t[rt << 1 | 1] += lazy[rt] * (m >> 1);
+            Add(rt << 1, lazy[rt]);
+            Add(rt << 1 | 1, lazy[rt]);
             lazy[rt] = 0;
         }
     }
+    void Add(int rt, int val) {
+        lazy[rt] += val;
+        t[rt] += val * sz[rt];
+    }
     void build(int l, int r, int rt) {
-        lazy[rt] = 0; t[rt] = 0;
+        lazy[rt] = 0; t[rt] = 0; sz[rt] = r - l + 1;
         if (l == r) {
             scanf("%lld", &t[rt]);
             return;
@@ -26,23 +28,22 @@ struct SegTree {
         build(rson);
         PushUp(rt);
     }
-    void update(int L, int R, int c, int l, int r, int rt) {
+    void update(int L, int R, int val, int l, int r, int rt) {
         if (L <= l && r <= R) {
-            lazy[rt] += c;
-            t[rt] += (ll) c * (r - l + 1);
+            Add(rt, val);
             return;
         }
-        PushDown(rt, r - l + 1);
+        PushDown(rt);
         int m = (l + r) >> 1;
-        if (L <= m) update(L, R, c, lson);
-        if (m < R) update(L, R, c, rson);
+        if (L <= m) update(L, R, val, lson);
+        if (m < R) update(L, R, val, rson);
         PushUp(rt);
     }
     ll query(int L, int R, int l, int r, int rt) {
         if (L <= l && r <= R) {
             return t[rt];
         }
-        PushDown(rt, r - l + 1);
+        PushDown(rt);
         int m = (l + r) >> 1;
         // 求和
         ll ret = 0;
