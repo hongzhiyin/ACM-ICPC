@@ -3,7 +3,8 @@
 struct SegTree {
     ll lazy[N << 2], t[N << 2];
     void PushUp(int rt) {
-        t[rt] = t[rt << 1] + t[rt << 1 | 1];
+        t[rt] = t[rt << 1] + t[rt << 1 | 1];        // 求和
+        // t[rt] = min(t[rt << 1], t[rt << 1 | 1]);    // 最值
     }
     void PushDown(int rt, int m) {
         if (lazy[rt]) {
@@ -43,9 +44,15 @@ struct SegTree {
         }
         PushDown(rt, r - l + 1);
         int m = (l + r) >> 1;
+        // 求和
         ll ret = 0;
         if (L <= m) ret += query(L, R, lson);
         if (m < R) ret += query(L, R, rson);
+        /*  最值
+        ll ret = LINF;
+        if (L <= m) ret = min(ret, query(L, R, lson));
+        if (m < R) ret = min(ret, query(L, R, rson));
+        */
         return ret;
     }
 };
