@@ -147,3 +147,60 @@ struct SegTree {
         return ret;
     }
 };
+
+// 区间合并
+#define lson l, m, rt << 1
+#define rson m + 1, r, rt << 1 | 1
+struct SegTree {    // lsum 左端开始往右最长空区间，rsum 右端开始往左最长空区间，sum 区间内最大长度空区间
+    ll lazy[N << 2], lsum[N << 2], rsum[N << 2], sum[N << 2], sz[N << 2];
+    void PushUp(int rt) {
+        lsum[rt] = lsum[rt << 1];
+        rsum[rt] = rsum[rt << 1 | 1];
+        if (lsum[rt] == sz[rt] + 1 >> 1) lsum[rt] += lsum[rt << 1 | 1];
+        if (rsum[rt] == sz[rt] >> 1) rsum[rt] += rsum[rt << 1];
+        sum[rt] = max(rsum[rt << 1] + lsum[rt << 1 | 1], max(sum[rt << 1], sum[rt << 1 | 1]));
+    }
+    void PushDown(int rt) {
+        if (lazy[rt] != -1) {   // lazy ： -1 表示无操作，0 表示置空，1 表示置满
+            Set(rt << 1, lazy[rt]);
+            Set(rt << 1 | 1, lazy[rt]);
+            lazy[rt] = -1;
+        }
+    }
+    void Set(int rt, int val) {
+        lazy[rt] = val;
+        if (lazy[rt]) lsum[rt] = rsum[rt] = sum[rt] = 0;    // 置满，则剩余空区间为 0
+        else lsum[rt] = rsum[rt] = sum[rt] = sz[rt];        // 置空，则剩余空区间为区间长度
+    }
+    void build(int l, int r, int rt) {
+        sum[rt] = lsum[rt] = rsum[rt] = sz[rt] = r - l + 1;
+        lazy[rt] = -1;
+        if (l == r) return;
+        int m = (l + r) >> 1;
+        build(lson);
+        build(rson);
+    }
+    void update(int L, int R, int val, int l, int r, int rt) {  // 更新区间 [L, R]，val = 0 置空， val = 1 置满
+        if (L <= l && r <= R) {
+            Set(rt, val);
+            return;
+        }
+        PushDown(rt);
+        int m = (l + r) >> 1;
+        if (L <= m) update(L, R, val, lson);
+        if (m < R) update(L, R, val, rson);
+        PushUp(rt);
+    }
+    // 查询最左边能满足 val 长度的空区间的左端点，主函数中用 obj.sum[1] >= val 判断是否存在满足条件的区间
+    int query(int val, int l, int r, int rt) {
+        if (l == r) return l;
+        PushDown(rt);
+        int m = (l + r) >> 1;
+        if (sum[rt << 1] >= val)
+            return query(val, lson);
+        else if (rsum[rt << 1] + lsum[rt << 1 | 1] >= val)
+            return m - rsum[rt<<1] + 1;
+        else
+            return query(val, rson);
+    }
+};
