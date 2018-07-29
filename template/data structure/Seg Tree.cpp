@@ -1,3 +1,4 @@
+// 基本线段树
 #define lson l, m, rt << 1
 #define rson m + 1, r, rt << 1 | 1
 struct SegTree {
@@ -205,3 +206,92 @@ struct SegTree {    // lsum 左端开始往右最长空区间，rsum 右端开�
             return query(val, rson);
     }
 };
+
+// 矩形面积并 （至少被一个矩形覆盖）
+#define lson l, m, rt << 1
+#define rson m + 1, r, rt << 1 | 1
+struct SegTree {
+    ll cnt[N << 2];
+    db t[N << 2], sz[N << 2];
+    void PushUp(int l, int r, int rt) {
+        if (cnt[rt]) t[rt] = sz[rt];
+        else if (l == r) t[rt] = 0;
+        else t[rt] = t[rt << 1] + t[rt << 1 | 1];
+    }
+    void build(int l, int r, int rt) {
+        cnt[rt] = 0; t[rt] = 0; sz[rt] = dis[r+1] - dis[l];    // 左闭右开，求的长度
+        if (l == r) return;
+        int m = (l + r) >> 1;
+        build(lson);
+        build(rson);
+    }
+    void update(int L, int R, int val, int l, int r, int rt) {
+        if (L <= l && r <= R) {
+            cnt[rt] += val;
+            PushUp(l, r, rt);
+            return;
+        }
+        int m = (l + r) >> 1;
+        if (L <= m) update(L, R, val, lson);
+        if (m < R) update(L, R, val, rson);
+        PushUp(l, r, rt);
+    }
+};
+
+int n = sz(dis) - 2;
+obj.build(1, n, 1);
+db ans = 0;
+rep(i, 0, sz(a)-1) {
+    if (a[i].dl < a[i].dr) obj.update(a[i].dl, a[i].dr - 1, a[i].val, 1, n, 1);      // !!! 左闭右开 !!!
+    ans += obj.t[1] * (a[i+1].y - a[i].y);
+}
+
+// 矩形面积交 （至少被两个以上矩形覆盖）
+#define lson l, m, rt << 1
+#define rson m + 1, r, rt << 1 | 1
+struct SegTree {
+    ll cnt[N << 2];
+    db one[N << 2], two[N << 2], sz[N << 2];
+    void PushUp(int l, int r, int rt) {
+        if (cnt[rt] >= 2) two[rt] = one[rt] = sz[rt];
+        else if (cnt[rt] == 1) {
+            one[rt] = sz[rt];
+            if (l == r) two[rt] = 0;
+            else two[rt] = one[rt << 1] + one[rt << 1 | 1];
+            // 若干覆盖次数为 1 的区间，再在它们的父区间上再加一次覆盖，就变成覆盖次数为 2 的区间
+        } else {
+            if (l == r) one[rt] = two[rt] = 0;
+            else {
+                one[rt] = one[rt << 1] + one[rt << 1 | 1];
+                two[rt] = two[rt << 1] + two[rt << 1 | 1];
+            }
+        }
+    }
+    void build(int l, int r, int rt) {
+        cnt[rt] = 0; one[rt] = two[rt] = 0; sz[rt] = dis[r+1] - dis[l];    // 左闭右开，求的长度
+        if (l == r) return;
+        int m = (l + r) >> 1;
+        build(lson);
+        build(rson);
+    }
+    void update(int L, int R, int val, int l, int r, int rt) {
+        if (L <= l && r <= R) {
+            cnt[rt] += val;
+            PushUp(l, r, rt);
+            return;
+        }
+        int m = (l + r) >> 1;
+        if (L <= m) update(L, R, val, lson);
+        if (m < R) update(L, R, val, rson);
+        PushUp(l, r, rt);
+    }
+};
+
+int n = sz(dis) - 2;
+obj.build(1, n, 1);
+db ans = 0;
+rep(i, 0, sz(a)-1) {
+    if (a[i].dl < a[i].dr)
+        obj.update(a[i].dl, a[i].dr - 1, a[i].val, 1, n, 1);      // !!! 左闭右开 !!!
+    ans += obj.two[1] * (a[i+1].y - a[i].y);    // two[1]
+}
