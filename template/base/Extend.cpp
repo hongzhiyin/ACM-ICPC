@@ -7,7 +7,7 @@ bool eq(db a, db b) { return fabs(a - b) < eps; }
 bool ls(db a, db b) { return a + eps < b; }
 bool le(db a, db b) { return eq(a, b) || ls(a, b); }
 
-// 无视无关字符，读入数字
+// 忽略无关字符，读入数字
 inline void read(int &x) {
     int f = 1, res = 0; char c = getchar();
     while (!isdigit(c)) c == '-' && (f = -1), c = getchar();
