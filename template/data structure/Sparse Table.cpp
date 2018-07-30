@@ -5,8 +5,7 @@ struct ST {
         for (int j = 1; (1 << j) <= n; ++j)
             for (int i = 0; i + (1 << j) - 1 < n; ++i)
                 d[i][j] = min(d[i][j - 1], d[i + (1 << (j - 1))][j - 1]);
-        p[1] = 0;
-        rep(i, 2, n+1) p[i] = p[i >> 1] + 1;
+        p[1] = 0; rep(i, 2, n+1) p[i] = p[i >> 1] + 1;
     }
     int query(int L, int R) {       // 看情况 L 和 R 是否需要提前 -1
         int k = p[R - L + 1];
