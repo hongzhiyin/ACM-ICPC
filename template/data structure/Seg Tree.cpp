@@ -295,3 +295,81 @@ rep(i, 0, sz(a)-1) {
         obj.update(a[i].dl, a[i].dr - 1, a[i].val, 1, n, 1);      // !!! 左闭右开 !!!
     ans += obj.two[1] * (a[i+1].y - a[i].y);    // two[1]
 }
+
+// 立方体体积交（普通交只需要截面覆盖两次及以上即可，本题依具体题意要求覆盖三次及以上）
+// hdu 3642
+#define lson l, m, rt << 1
+#define rson m + 1, r, rt << 1 | 1
+struct SegTree {
+    ll cnt[N << 2];
+    ll one[N << 2], two[N << 2], thre[N << 2], sz[N << 2];
+    void PushUp(int l, int r, int rt) {
+        if (cnt[rt] >= 3) thre[rt] = two[rt] = one[rt] = sz[rt];
+        else if (cnt[rt] == 2) {
+            two[rt] = one[rt] = sz[rt];
+            if (l == r) thre[rt] = 0;
+            else thre[rt] = one[rt << 1] + one[rt << 1 | 1];    // 注意细节，当 cnt = (y)，则 (x)[rt] = (y-x)[rt<<1] + (y-x)[rt<<1|1]
+        } else if (cnt[rt] == 1) {
+            one[rt] = sz[rt];
+            if (l == r) thre[rt] = two[rt] = 0;
+            else {
+                thre[rt] = two[rt << 1] + two[rt << 1 | 1];
+                two[rt] = one[rt << 1] + one[rt << 1 | 1];
+            }
+        } else {
+            if (l == r) one[rt] = two[rt] = thre[rt] = 0;
+            else {
+                one[rt] = one[rt << 1] + one[rt << 1 | 1];
+                two[rt] = two[rt << 1] + two[rt << 1 | 1];
+                thre[rt] = thre[rt << 1] + thre[rt << 1 | 1];
+            }
+        }
+    }
+    void build(int l, int r, int rt) {
+        cnt[rt] = 0; one[rt] = two[rt] = thre[rt] = 0; sz[rt] = dis[r+1] - dis[l];    // 左闭右开，求的长度
+        if (l == r) return;
+        int m = (l + r) >> 1;
+        build(lson);
+        build(rson);
+    }
+    void update(int L, int R, int val, int l, int r, int rt) {
+        if (L <= l && r <= R) {
+            cnt[rt] += val;
+            PushUp(l, r, rt);
+            return;
+        }
+        int m = (l + r) >> 1;
+        if (L <= m) update(L, R, val, lson);
+        if (m < R) update(L, R, val, rson);
+        PushUp(l, r, rt);
+    }
+};
+// 枚举 z 轴（如果 z 值范围比较小）
+// 然后在每个截面上做矩形面积交，相交次数依具体题意而定
+ll ans = 0;
+rep(i, 0, sz(dz)-1) {
+    line.clear(); dis.clear(); dis.pb(-INF);
+    rep(j, 0, sz(c)) {
+        // 判断立方体在该 z 坐标下是否有截面，即下底面 <= z，上底面 > z
+        if (c[j].z1 <= dz[i] && c[j].z2 > dz[i]) {
+            line.pb(Line(c[j].x1, c[j].x2, c[j].y1, 1));
+            line.pb(Line(c[j].x1, c[j].x2, c[j].y2, -1));
+            dis.pb(c[j].x1); dis.pb(c[j].x2);
+        }
+    }
+    sort(all(line));
+    // 离散化 x 坐标
+    sort(all(dis)); dis.erase(unique(all(dis)), dis.end());
+    rep(j, 0, sz(line)) {
+        line[j].dl = lower_bound(all(dis), line[j].l) - dis.begin();
+        line[j].dr = lower_bound(all(dis), line[j].r) - dis.begin();
+    }
+    // 矩形面积交
+    int n = sz(dis) - 2;
+    obj.build(1, n, 1);
+    rep(j, 0, sz(line)-1) {
+        if (line[j].dl < line[j].dr)
+            obj.update(line[j].dl, line[j].dr-1, line[j].val, 1, n, 1);
+        ans += (ll)obj.thre[1] * (line[j+1].y - line[j].y) * (dz[i+1] - dz[i]);
+    }
+}
