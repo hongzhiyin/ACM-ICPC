@@ -1,3 +1,5 @@
+// 固定起点的区间的最值具有单调性，可依此进行二分
+
 struct ST {
     int d[N][30], p[N];
     void init(int *a, int n) {      // a[] 从 0 开始
