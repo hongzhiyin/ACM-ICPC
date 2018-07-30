@@ -22,7 +22,11 @@ struct DDQ {  //单调队列
     int id, l, r;
     pii mi, ma;
     deque <pii> maxq, minq;
-    void init() { id = r = 0; l = 1; }
+    void init() {
+        id = r = 0; l = 1;
+        while (!maxq.empty()) maxq.pop_back();
+        while (!minq.empty()) minq.pop_back();
+    }
     void push(int x) {
         id++; r++;
         while (!maxq.empty() && maxq.back().fi <= x) maxq.pop_back();   //单调递减，队首最大
