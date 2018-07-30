@@ -1,12 +1,13 @@
-//文件输入输出
+// 文件输入输出
 #define IO(x) freopen(x".in", "r", stdin); freopen(x".out", "w", stdout);
 
-//浮点型运算
+// 浮点型运算
 const db eps = 1e-6;
 bool eq(db a, db b) { return fabs(a - b) < eps; }
 bool ls(db a, db b) { return a + eps < b; }
 bool le(db a, db b) { return eq(a, b) || ls(a, b); }
 
+// 无视无关字符，读入数字
 inline void read(int &x) {
     int f = 1, res = 0; char c = getchar();
     while (!isdigit(c)) c == '-' && (f = -1), c = getchar();
