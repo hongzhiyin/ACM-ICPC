@@ -212,7 +212,7 @@ struct SegTree {    // lsum 左端开始往右最长空区间，rsum 右端开�
 #define rson m + 1, r, rt << 1 | 1
 struct SegTree {
     ll cnt[N << 2];
-    db t[N << 2], sz[N << 2];
+    db t[N << 2], sz[N << 2];       // 注意数据类型，数值范围
     void PushUp(int l, int r, int rt) {
         if (cnt[rt]) t[rt] = sz[rt];
         else if (l == r) t[rt] = 0;
@@ -251,7 +251,7 @@ rep(i, 0, sz(a)-1) {
 #define rson m + 1, r, rt << 1 | 1
 struct SegTree {
     ll cnt[N << 2];
-    db one[N << 2], two[N << 2], sz[N << 2];
+    db one[N << 2], two[N << 2], sz[N << 2];        // 注意数据类型，数值范围
     void PushUp(int l, int r, int rt) {
         if (cnt[rt] >= 2) two[rt] = one[rt] = sz[rt];
         else if (cnt[rt] == 1) {
@@ -302,7 +302,7 @@ rep(i, 0, sz(a)-1) {
 #define rson m + 1, r, rt << 1 | 1
 struct SegTree {
     ll cnt[N << 2];
-    ll one[N << 2], two[N << 2], thre[N << 2], sz[N << 2];
+    ll one[N << 2], two[N << 2], thre[N << 2], sz[N << 2];      // 注意数据类型，数值范围
     void PushUp(int l, int r, int rt) {
         if (cnt[rt] >= 3) thre[rt] = two[rt] = one[rt] = sz[rt];
         else if (cnt[rt] == 2) {
