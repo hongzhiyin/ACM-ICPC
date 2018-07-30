@@ -7,9 +7,9 @@ bool eq(db a, db b) { return fabs(a - b) < eps; }
 bool ls(db a, db b) { return a + eps < b; }
 bool le(db a, db b) { return eq(a, b) || ls(a, b); }
 
-inline int read() {
-    int k = 0, f = 1; char c = getchar();
-    while (c < '0' || c > '9') c == '-' && (f = -1), c = getchar();
-    while ('0' <= c && c <= '9') k = k * 10 + c - '0', c = getchar();
-    return k * f;
+inline void read(int &x) {
+    int f = 1, res = 0; char c = getchar();
+    while (!isdigit(c)) c == '-' && (f = -1), c = getchar();
+    while (isdigit(c)) res = res * 10 + c - '0', c = getchar();
+    x = res * f;
 }
