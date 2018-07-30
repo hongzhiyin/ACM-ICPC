@@ -59,6 +59,8 @@ struct SegTree {
     }
 };
 
+----------------------------------------------------------------------------------------
+
 // hdu 4578
 // 区间加，区间乘，区间赋值，查询区间和，区间平方和，区间立方和
 #define lson l, m, rt << 1
@@ -149,6 +151,8 @@ struct SegTree {
     }
 };
 
+----------------------------------------------------------------------------------------
+
 // POJ 3667
 // 区间合并
 #define lson l, m, rt << 1
@@ -207,7 +211,10 @@ struct SegTree {    // lsum 左端开始往右最长空区间，rsum 右端开�
     }
 };
 
+----------------------------------------------------------------------------------------
+
 // 矩形面积并 （至少被一个矩形覆盖）
+// HDU 1542 [POJ 1151]
 #define lson l, m, rt << 1
 #define rson m + 1, r, rt << 1 | 1
 struct SegTree {
@@ -237,7 +244,6 @@ struct SegTree {
         PushUp(l, r, rt);
     }
 };
-
 int n = sz(dis) - 2;
 obj.build(1, n, 1);
 db ans = 0;
@@ -246,7 +252,10 @@ rep(i, 0, sz(a)-1) {
     ans += obj.t[1] * (a[i+1].y - a[i].y);
 }
 
+----------------------------------------------------------------------------------------
+
 // 矩形面积交 （至少被两个以上矩形覆盖）
+// HDU 1255
 #define lson l, m, rt << 1
 #define rson m + 1, r, rt << 1 | 1
 struct SegTree {
@@ -286,7 +295,6 @@ struct SegTree {
         PushUp(l, r, rt);
     }
 };
-
 int n = sz(dis) - 2;
 obj.build(1, n, 1);
 db ans = 0;
@@ -295,6 +303,67 @@ rep(i, 0, sz(a)-1) {
         obj.update(a[i].dl, a[i].dr - 1, a[i].val, 1, n, 1);      // !!! 左闭右开 !!!
     ans += obj.two[1] * (a[i+1].y - a[i].y);    // two[1]
 }
+
+----------------------------------------------------------------------------------------
+
+// 矩形周长并
+// HDU 1828 [POJ 1177]
+#define lson l, m, rt << 1
+#define rson m + 1, r, rt << 1 | 1
+struct SegTree {
+    ll cnt[N << 2];
+    int t[N << 2], sz[N << 2];       // 注意数据类型，数值范围
+    void PushUp(int l, int r, int rt) {
+        if (cnt[rt]) t[rt] = sz[rt];
+        else if (l == r) t[rt] = 0;
+        else t[rt] = t[rt << 1] + t[rt << 1 | 1];
+    }
+    void build(int i, int l, int r, int rt) {
+        cnt[rt] = 0; t[rt] = 0; sz[rt] = dis[i][r+1] - dis[i][l];    // 左闭右开，求的长度
+        if (l == r) return;
+        int m = (l + r) >> 1;
+        build(i, lson);
+        build(i, rson);
+    }
+    void update(int L, int R, int val, int l, int r, int rt) {
+        if (L <= l && r <= R) {
+            cnt[rt] += val;
+            PushUp(l, r, rt);
+            return;
+        }
+        int m = (l + r) >> 1;
+        if (L <= m) update(L, R, val, lson);
+        if (m < R) update(L, R, val, rson);
+        PushUp(l, r, rt);
+    }
+};
+// 横竖两次扫描线
+// 注意边重合时，要先计算 +1 的边，再计算 -1 的边
+struct Line {
+    int l, r, h;
+    int val, dl, dr;
+    Line (int l, int r, int h, int val) : l(l), r(r), h(h), val(val) {}
+    bool operator < (const Line &rhs) const {
+        return h != rhs.h ? h < rhs.h : val > rhs.val;      // 特殊处理边重合的情况
+    }
+};
+int ans = 0;
+rep(i, 0, 2) {
+    rep(j, 0, sz(line[i])) {
+        line[i][j].dl = lower_bound(all(dis[i]), line[i][j].l) - dis[i].begin();
+        line[i][j].dr = lower_bound(all(dis[i]), line[i][j].r) - dis[i].begin();
+    }
+    int n = sz(dis[i]) - 2, pre = 0;
+    obj.build(i, 1, n, 1);
+    rep(j, 0, sz(line[i])) {
+        if (line[i][j].dl < line[i][j].dr)
+            obj.update(line[i][j].dl, line[i][j].dr-1, line[i][j].val, 1, n, 1);
+        ans += (int)fabs(obj.t[1] - pre);
+        pre = obj.t[1];
+    }
+}
+
+----------------------------------------------------------------------------------------
 
 // 立方体体积交（普通交只需要截面覆盖两次及以上即可，本题依具体题意要求覆盖三次及以上）
 // hdu 3642
