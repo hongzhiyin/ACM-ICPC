@@ -32,7 +32,7 @@ struct LCA {
     int find(int x) { return x == fa[x] ? x : fa[x] = find(fa[x]); }
     void dfs(int u) {
         fa[u] = u; vis[u] = 1;
-        rep(i, 0, sz(q[u])) {
+        rep(i, 0, sz(q[u])) {       // 这两个循环不能对调顺序，否则会造成重复更新答案
             int v = q[u][i].fi;
             if (vis[v]) lca[q[u][i].se] = find(v);
         }
