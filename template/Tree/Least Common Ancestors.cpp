@@ -43,4 +43,3 @@ struct LCA {
         }
     }
 };
-LCA obj;
