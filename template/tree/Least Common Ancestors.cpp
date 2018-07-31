@@ -31,15 +31,14 @@ struct LCA {
     void init() { memset(vis, 0, sizeof(vis)); };
     int find(int x) { return x == fa[x] ? x : fa[x] = find(fa[x]); }
     void dfs(int u) {
-        fa[u] = u;
-        vis[u] = 1;
-        rep(i, 0, sz(e[u])) {
-            int v = e[u][i];
-            if (!vis[v]) dfs(v), fa[v] = u;
-        }
+        fa[u] = u; vis[u] = 1;
         rep(i, 0, sz(q[u])) {
             int v = q[u][i].fi;
             if (vis[v]) lca[q[u][i].se] = find(v);
+        }
+        rep(i, 0, sz(e[u])) {
+            int v = e[u][i];
+            if (!vis[v]) dfs(v), fa[v] = u;
         }
     }
 };
