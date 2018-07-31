@@ -47,6 +47,7 @@ struct LCA {
 // 离线 tarjan 求 lca 的运用
 
 //-------- 变量 --------//
+
 // up[x] 表示从 x 走到 lca 的最优解
 // down[x] 表示从 lca 走到 x 的最优解
 // mx[x], mi[x] 分别表示 x 和 lca 之间的最大值和最小值
