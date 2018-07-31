@@ -9,13 +9,11 @@ struct Fenwick {    //注意下标从 1 开始，以及可能需要离散化操�
         ll ret = 0;
         for (; x > 0; x -= Lowbit(x))
             ret += t[x];
-            //ret = add(ret, t[x]);
         return ret;
     }
     void Add(int x, ll d) {
         for (; x <= n; x += Lowbit(x))
             t[x] += d;
-            //t[x] = add(t[x], d);
     }
     
     // 区间最值 （需要传入原数组 a[]）
@@ -50,16 +48,10 @@ struct Sec_Fenwick {
     void Update(ll l, ll r, ll x) {
         c1.Add(l, x); c1.Add(r+1, -x);
         c2.Add(l, (l-1) * x); c2.Add(r+1, r * -x);
-        //c2.Add(l, (l-1) * x % MOD); c2.Add(r+1, r * -x % MOD);
     }
     ll Query(ll l, ll r) {
         ll R = r * c1.Sum(r) - c2.Sum(r);
         ll L = (l-1) * c1.Sum(l-1) - c2.Sum(l-1);
         return R - L;
-        /*
-        ll R = add(r * c1.Sum(r) - c2.Sum(r), MOD) ;
-        ll L = add((l-1) * c1.Sum(l-1) - c2.Sum(l-1), MOD);
-        return add(R - L, MOD);
-        */
     }
 };
