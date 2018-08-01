@@ -1,3 +1,4 @@
+// tarjan
 // dfn[] dfs 序;
 // low[] dfs 序最小结点;
 // scc[] 所属强联通分量
@@ -5,7 +6,7 @@
 // cnt 强联通分量数
 int dfn[N], low[N], scc[N], tot, cnt;
 stack <int> S;
-struct Tarjan {
+struct SCC {
     void init() {
         tot = cnt = 0;
         memset(scc, 0, sizeof(scc));
