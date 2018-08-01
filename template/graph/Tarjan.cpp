@@ -1,18 +1,16 @@
+// dfn[] dfs 序;
+// low[] dfs 序最小结点;
+// scc[] 所属强联通分量
+// tot dfs 序号
+// cnt 强联通分量数
+int dfn[N], low[N], scc[N], tot, cnt;
+stack <int> S;
 struct Tarjan {
-    int dfn[N], low[N], scc[N], tot, cnt;
-    //dfn[] dfs 序;
-    //low[] dfs 序最小结点;
-    //scc[] 所属强联通分量
-    //tot dfs 序号
-    //cnt 强联通分量数
-    stack <int> S;
-    
-    void Init() {
+    void init() {
         tot = cnt = 0;
         memset(scc, 0, sizeof(scc));
         memset(dfn, 0, sizeof(dfn));
     }
-    
     void dfs(int u) {
         dfn[u] = low[u] = ++tot;
         S.push(u);
@@ -33,6 +31,5 @@ struct Tarjan {
             } while (x != u);
         }
     }
-    
     void run(int n) { rep(i, 0, n) if (!dfn[i]) dfs(i); }
 };
