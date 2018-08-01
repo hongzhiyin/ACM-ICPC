@@ -38,5 +38,5 @@ struct SCC {
             } while (x != u);
         }
     }
-    void run(int n) { rep(i, 0, n) if (!dfn[i]) dfs(i); }
+    void run(int n) { rep(i, 1, n+1) if (!dfn[i]) dfs(i); }
 };
