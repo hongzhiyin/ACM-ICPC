@@ -9,15 +9,15 @@
 
 vi e[N];
 int match[N];
-bool vis[N];
+bool vis[N];    // 注意 x 部的点标号和 y 部的点标号不能重合
 struct Hungary {
-    void init() { memset(match, 0, sizeof(match)); }
+    void init() { memset(match, -1, sizeof(match)); }
     bool dfs(int u) {
         rep(i, 0, sz(e[u])) {
             int v = e[u][i];
             if (!vis[v]) {
                 vis[v] = 1;
-                if (!match[v] || dfs(match[v])) {
+                if (match[v] == -1 || dfs(match[v])) {
                     match[v] = u;
                     return true;
                 }
@@ -27,7 +27,7 @@ struct Hungary {
     }
     int hungary() {   // 返回最大匹配数
         int res = 0;
-        rep(i, 1, n+1) {
+        rep(i, 0, n) {  // x 部的点标号的范围
             memset(vis, 0, sizeof(vis));
             res += dfs(i);
         }
