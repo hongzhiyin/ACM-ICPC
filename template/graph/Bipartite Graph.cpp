@@ -1,5 +1,7 @@
 // https://blog.csdn.net/ACMer_ZP/article/details/78570926
 // 网格图可转化为二分图，每个点对应一条边，点的坐标对应边的两个端点
+// 建图的时候，只需要连接 x 到 y 的边即可，不需要连接 y 到 x 的边，匈牙利算法遍历的时候也只是遍历 x 部的点
+// 除非题目给出的点无法确定属于 x 部还是 y 部，那就都存下来，做完最大匹配后，将最大匹配数除以 2 即可。
 
 // 【最大匹配】
 // 匹配：在图论中，一个「匹配」（matching）是一个边的集合，其中任意两条边都没有公共顶点。
@@ -9,7 +11,7 @@
 
 vi e[N];
 int match[N];
-bool vis[N];    // 注意 x 部的点标号和 y 部的点标号不能重合
+bool vis[N];    // 仅用来存 y 部点的标记情况，所以 x 部的点与 y 部的点标号重复也没有关系
 struct Hungary {
     void init() { memset(match, -1, sizeof(match)); }
     bool dfs(int u) {
