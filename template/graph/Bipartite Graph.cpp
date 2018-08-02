@@ -4,21 +4,20 @@
 // 匹配：在图论中，一个「匹配」（matching）是一个边的集合，其中任意两条边都没有公共顶点。
 // 最大匹配：一个图所有匹配中，所含匹配边数最多的匹配，称为这个图的最大匹配。
 // 算法： 匈牙利算法求二分图的最大匹配
-// 如果一个匹配中，图中的每个顶点都和图中某条边相关联，则称此匹配为完全匹配，也称作完备匹配。
 // https://blog.csdn.net/c20180630/article/details/70175814
 
 vi e[N];
-int link[N];
+int match[N];
 bool vis[N];
 struct Hungary {
-    void init() { memset(link, 0, sizeof(link)); }
+    void init() { memset(match, 0, sizeof(match)); }
     bool dfs(int u) {
         rep(i, 0, sz(e[u])) {
             int v = e[u][i];
             if (!vis[v]) {
                 vis[v] = 1;
-                if (!link[v] || dfs(link[v])) {
-                    link[v] = u;
+                if (!match[v] || dfs(match[v])) {
+                    match[v] = u;
                     return true;
                 }
             }
@@ -31,6 +30,67 @@ struct Hungary {
             memset(vis, 0, sizeof(vis));
             res += dfs(i);
         }
+        return res;
+    }
+};
+
+------------------------------------------------------------------------------------------------
+
+// 【最佳匹配】
+// 完备匹配：如果一个匹配中，图中的每个顶点都和图中某条边相关联，则称此匹配为完全匹配，也称作完备匹配。 
+// 最佳匹配：带权二分图的权值最大的完备匹配称为最佳匹配。
+// 注意：二分图的最佳匹配不一定是二分图的最大权匹配。 
+// 转化：可以添加一些权值为 0 的边，使得最佳匹配和最大权匹配统一起来。
+// https://blog.csdn.net/c20180630/article/details/71080521
+// https://blog.csdn.net/u014097230/article/details/51554905
+
+int n;
+int match[N], wx[N], wy[N], g[N][N], slack[N];
+bool visx[N], visy[N];
+struct KM {
+    void init() {
+        memset(match, -1, sizeof(match));
+        memset(wy, 0, sizeof(wy));
+        rep(i, 0, n) {
+            wx[i] = g[i][0];
+            rep(j, 1, n) wx[i] = max(wx[i], g[i][j]);
+        }
+    }
+    bool dfs(int x) {
+        visx[x] = 1;
+        rep(y, 0, n) {
+            if (visy[y]) continue;
+            int gap = wx[x] + wy[y] - g[x][y];
+            if (gap == 0) {
+                visy[y] = 1;
+                if (match[y] == -1 || dfs( match[y] )) {
+                    match[y] = x;
+                    return true;
+                }
+            } else {
+                slack[y] = min(slack[y], gap);
+            }
+        }
+        return false;
+    }
+    int km() {
+        rep(i, 0, n) {
+            memset(slack, 0x3f, sizeof(slack));
+            while (1) {
+                memset(visx, 0, sizeof(visx));
+                memset(visy, 0, sizeof(visy));
+                if (dfs(i)) break;
+                int d = INF;
+                rep(j, 0, n) if (!visy[j]) d = min(d, slack[j]);
+                rep(j, 0, n) {
+                    if (visx[j]) wx[j] -= d;
+                    if (visy[j]) wy[j] += d;
+                    else slack[j] -= d;
+                }
+            }
+        }
+        int res = 0;
+        rep(i, 0, n) res += g[match[i]][i];
         return res;
     }
 };
