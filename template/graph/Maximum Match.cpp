@@ -5,13 +5,13 @@
 
 vi e[N];
 int link[N];
-bool vis[N], g[N][N];
+bool vis[N];
 struct Hungary {
     void init() { memset(link, 0, sizeof(link)); }
     bool dfs(int u) {
         rep(i, 0, sz(e[u])) {
             int v = e[u][i];
-            if (g[u][v] && !vis[v]) {
+            if (!vis[v]) {
                 vis[v] = 1;
                 if (!link[v] || dfs(link[v])) {
                     link[v] = u;
