@@ -7,6 +7,10 @@ struct KMP {
             if (j == -1 || p[i] == p[j]) net[++i] = ++j;
             else j = net[j];
         }
+        // 最小循环节长度
+        // if (m % (m - net[m]) == 0) return n - net[n]; else return n;
+        // 最小循环节个数
+        // if (m % (m - net[m]) == 0) return m / (m - net[m]); else return 1;
     }
     int kmp(char *s, int n, char *p, int m) {
         Get(p, m);
