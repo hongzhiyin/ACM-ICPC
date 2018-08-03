@@ -14,6 +14,7 @@ struct KMP {
             if (j == -1 || s[i] == p[j]) ++i, ++j;
             else j = net[j];
             if (j == m) return i - j;   // 第一个匹配成功的 s 串下标
+            //if (j == m) cnt++, j = 0;     // 母串中可匹配的不相交模式串个数
         }
         return -1;
     }
