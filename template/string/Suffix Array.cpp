@@ -34,21 +34,14 @@ struct SuffixArray {
     }
     // 把 n 个字符串连接起来，中间插入未出现字符
     int connect(int *s, int n) {
-        int len = 0, d = 2 * n;
+        int len = 0, d = n;     // 注意偏移值 d 是否需要修改
         rep(i, 1, n+1) {
             int k = strlen(str[i]);
             rep(j, 0, k) {
                 s[j+len] = str[i][j] + d;
                 id[j+len] = i;
             }
-            s[len+k] = 2 * i - 1;
-            id[len+k] = 0;
-            len += k + 1;
-            rep(j, 0, k) {
-                s[j+len] = str[i][k-j-1] + d;
-                id[j+len] = i;
-            }
-            s[len+k] = 2 * i;
+            s[len+k] = i;       // 注意插入的字符选择
             id[len+k] = 0;
             len += k + 1;
         }
