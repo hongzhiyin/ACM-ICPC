@@ -32,7 +32,34 @@ struct SuffixArray {
             for(k ? k-- : 0, j = sa[rank[i]-1]; s[i+k] == s[j+k]; k++);
         return ;
     }
-    int lcp(int *s, int mid, int len) {   // mid 为前段字符串长度
+    // 把 n 个字符串连接起来，中间插入未出现字符
+    int connect(int *s, int n) {
+        int len = 0, d = 2 * n;
+        rep(i, 1, n+1) {
+            int k = strlen(str[i]);
+            rep(j, 0, k) {
+                s[j+len] = str[i][j] + d;
+                id[j+len] = i;
+            }
+            s[len+k] = 2 * i - 1;
+            id[len+k] = 0;
+            len += k + 1;
+            rep(j, 0, k) {
+                s[j+len] = str[i][k-j-1] + d;
+                id[j+len] = i;
+            }
+            s[len+k] = 2 * i;
+            id[len+k] = 0;
+            len += k + 1;
+        }
+        s[--len] = 0;
+        return len;
+    }
+    // 求两个字符串的最长公共子串
+    // 将两个字符串连接，中间插入未出现字符，尾部插入未出现的最小字符
+    // 然后求这个新字符串的后缀数组
+    // 按排名遍历相邻后缀，如果两个后缀分属两个字符串，则更新 lcs
+    int lcs(int *s, int mid, int len) {   // mid 为前段字符串长度
         int res = 0;
         rep(i, 2, len+1) if (sa[i] > mid && sa[i-1] < mid || sa[i] < mid && sa[i-1] > mid)
             res = max(res, height[i]);
