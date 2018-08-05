@@ -28,7 +28,7 @@ struct SuffixArray {
     void calheight(int *s, int n) {    // n = len
         int j, k = 0;
         rep(i, 1, n+1) rank[sa[i]] = i;
-        for(int i = 0; i < n; height[rank[i++]] = k)
+        for(int i = 0, j, k = 0; i < n; height[rank[i++]] = k)
             for(k ? k-- : 0, j = sa[rank[i]-1]; s[i+k] == s[j+k]; k++);
         return ;
     }
