@@ -51,6 +51,19 @@ struct SuffixArray {
 
 // -------------------------------------------------- 单个字符串问题 -------------------------------------------------- //
 
+// 【最长公共前缀】
+// 给定一个字符串，询问某两个字符串的最长公共前缀
+// 求两个后缀的最长公共前缀可以转化为求 height[] 某个区间上的最小值 (RMQ)
+ST rmq;     // a[] 从 1 开始
+void initrmq(int len) { rmq.init(height, len); }
+int lcp(int i, int j) {
+    int l = rk[i], r = rk[j];
+    if (l > r) swap(l, r);
+    return rmq.query(l+1, r);
+}
+
+// -------------------------------------------------- //
+
 // 重复子串：字符串 t 在字符串 s 中至少出现两次，则称 t 是 s 的 重复子串。
 
 // 【可重叠最长重复子串】
@@ -108,6 +121,48 @@ int lrs(int len, int k) {
 // 所以 suffix(sa[k]) 将贡献出 n-sa[k]-height[k] 个不同的子串。
 int cnt(int len) {
     int res = 0; rep(i, 1, len+1) res += n - sa[i] - height[i]; return res;
+}
+
+// -------------------------------------------------- //
+
+// 连续重复串：如果一个字符串 s 是由某个字符串 t 重复 R 次而得到的，则称 s 是一个连续重复串。 R 是这个字符串的重复次数。
+
+// 【重复次数最多的连续重复子串】
+
+// 给定一个字符串，求重复次数最多的连续重复子串。
+// https://www.cnblogs.com/staginner/archive/2012/02/06/2340521.html
+int crs(int len) {
+    int res = 1, j, k, dlen, tmp;
+    rep(i, 1, len+1) for (j = 0; j + i <= len; j += i) {
+        dlen = lcp(j, j + i);
+        k = j - (i - dlen % i);
+        tmp = dlen / i + 1;
+        if (k >= 0 && lcp(k, k + i) >= i) ++tmp;
+        res = max(res, tmp);
+    }
+    return res;     // 返回重复次数
+}
+
+// 找到字典序最小的重复次数最多的连续重复子串
+// int adr, alen, cnt;
+// obj.crs(len, adr, alen, cnt);
+// alen *= cnt;
+// rep(i, 0, alen) printf("%c", s[i+adr]);
+void crs(int len, int &adr, int &alen, int &cnt) {
+    int res = 0, j, k, dlen, tmp;
+    rep(i, 1, len+1) for (j = 0; j + i <= len; j += i) {
+        dlen = lcp(j, j + i);
+        tmp = dlen / i + 1;
+        if (tmp > res || tmp == res && rk[j] < rk[adr]) {
+            res = cnt = tmp; adr = j; alen = i;
+        }
+        for (k = j - (i - dlen % i); k >= 0 && j - k < i; --k) {
+            if (lcp(k, k + i) >= i)
+            if (tmp+1 > res || tmp+1 == res && rk[k] < rk[adr]) {
+                res = cnt = tmp+1; adr = k; alen = i;
+            }
+        }
+    }
 }
 
 // -------------------------------------------------- 两个字符串问题 -------------------------------------------------- //
