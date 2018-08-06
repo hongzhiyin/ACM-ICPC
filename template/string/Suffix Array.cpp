@@ -51,7 +51,7 @@ struct SuffixArray {
 
 // -------------------------------------------------- 单个字符串问题 -------------------------------------------------- //
 
-// 重复子串：字符串 t 在字符串 s 中至少出现两次，则称 R 是 L 的 重复子串。
+// 重复子串：字符串 t 在字符串 s 中至少出现两次，则称 t 是 s 的 重复子串。
 
 // 【可重叠最长重复子串】
 // 等价于求 height[] 最大值
@@ -77,6 +77,25 @@ int lrs(int len) {
     while (L < R) {
         int M = L + ((R - L + 1) >> 1);     //防止溢出，溢出可能造成TLE
         if (check(M, len)) L = M; else R = M - 1;
+    }
+    return L;
+}
+
+// 【可重叠的 k 次最长重复子串】
+// 给定一个字符串，求至少出现 k 次的最长重复子串，这 k 个子串可以重叠。
+// 二分长度，后缀分组，判断组内后缀个数是否不小于 k
+bool check(int m, int len, int k) {
+    int cnt = 1;
+    rep(i, 1, len+1) if (height[i] >= m) {
+        if (++cnt >= k) return true;
+    } else cnt = 1;
+    return false;
+}
+int lrs(int len, int k) {
+    int L = 0, R = len;
+    while (L < R) {
+        int M = L + ((R - L + 1) >> 1);     //防止溢出，溢出可能造成TLE
+        if (check(M, len, k)) L = M; else R = M - 1;
     }
     return L;
 }
