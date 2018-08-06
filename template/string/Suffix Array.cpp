@@ -59,7 +59,7 @@ struct SuffixArray {
     // connect -> calsa -> calheight -> lcs -> check
     // 和求两个字符串的时候一样，先把 n 个字符串连接起来
     // 调用的时候把 grup 移到外面，数组大小为单个字符串最大长度
-    int grup[107];
+    int grup[dlen];
     bool check(int m, int n) {     // 找到一段区间，使得区间内 height[] >= m 且后缀分属 n 个字符串
         memset(grup, 0, sizeof(grup)); height[len+1] = -1;  // 设 -1 是因为 j 会越界
         for (int i = 2, j, t, num; i <= len; i = j+1) { // 按排名枚举后缀
@@ -71,13 +71,12 @@ struct SuffixArray {
         }
         return false;
     }
-    int lcs(int n, int len) {   // n 个字符串, len : 单个字符串最大长度
-        int L = 0, R = len;
+    int lcs(int n, int dlen) {   // n 个字符串, len : 单个字符串最大长度
+        int L = 0, R = dlen;
         while (L < R) {
             int M = L + ((R - L + 1) >> 1);     //防止溢出，溢出可能造成TLE
             if (check(M, n)) L = M; else R = M - 1;
         }
-        if (n == 1) L = len / 2;
         return L;
     }
 };
