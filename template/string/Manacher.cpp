@@ -1,4 +1,5 @@
 // https://subetter.com/articles/2018/03/manacher-algorithm.html
+// 给定一个字符串，求出其最长回文子串
 
 int p[N];
 char str[N], s[N];
