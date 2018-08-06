@@ -4,8 +4,10 @@ struct ST {
     int d[N][30], lg[N];
     void init(int *a, int n) {      // a[] 从 0 开始
         rep(i, 0, n) d[i][0] = a[i];
+        // rep(i, 1, n+1) d[i][0] = a[i];  // a[] 从 1 开始
         for (int j = 1; j < 30; ++j)
             for (int i = 0; i + (1 << j) - 1 < n; ++i)
+            // for (int i = 1; i + (1 << j) - 1 <= n; ++i)  // a[] 从 1 开始
                 d[i][j] = min(d[i][j - 1], d[i + (1 << (j - 1))][j - 1]);
         lg[1] = 0; rep(i, 2, n+1) lg[i] = lg[i >> 1] + 1;
     }
