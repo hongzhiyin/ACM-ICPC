@@ -45,7 +45,7 @@ struct SuffixArray {
         s[--len] = 0;
         return len;
     }
-    // 求两个字符串的最长公共子串
+    // 求两个字符串的最长公共子串 connect -> calsa -> calheight -> lcs
     // 将两个字符串连接，中间插入未出现字符，尾部插入未出现的最小字符
     // 然后求这个新字符串的后缀数组
     // 按排名遍历相邻后缀，如果两个后缀分属两个字符串，则更新 lcs
@@ -54,5 +54,30 @@ struct SuffixArray {
         rep(i, 2, len+1) if (sa[i] > mid && sa[i-1] < mid || sa[i] < mid && sa[i-1] > mid)
             res = max(res, height[i]);
         return res;
+    }
+    // 求 n 个字符串的最长公共子串，复杂度 O(nLlogL) L: 单个字符串最大长度
+    // connect -> calsa -> calheight -> lcs -> check
+    // 和求两个字符串的时候一样，先把 n 个字符串连接起来
+    // 调用的时候把 grup 移到外面，数组大小为单个字符串最大长度
+    int grup[107];
+    bool check(int m, int n) {     // 找到一段区间，使得区间内 height[] >= m 且后缀分属 n 个字符串
+        memset(grup, 0, sizeof(grup)); height[len+1] = -1;  // 设 -1 是因为 j 会越界
+        for (int i = 2, j, t, num; i <= len; i = j+1) { // 按排名枚举后缀
+            for (; i <= len && height[i] < m; i++);     // 找到第一个大于等于 m 的 height[i]
+            for(j = i; height[j] >= m; j++);            // 找到最后一个大于等于 m 的 height[i], 此时 j 在下一位
+            if (j - i + 1 < n) continue;                // 如果区间长度不足 n
+            num = 0; rep(k, i-1, j) if ((t=id[sa[k]]) && grup[t] != j) grup[t] = j, ++num;
+            if (num >= n) return true;
+        }
+        return false;
+    }
+    int lcs(int n, int len) {   // n 个字符串, len : 单个字符串最大长度
+        int L = 0, R = len;
+        while (L < R) {
+            int M = L + ((R - L + 1) >> 1);     //防止溢出，溢出可能造成TLE
+            if (check(M, n)) L = M; else R = M - 1;
+        }
+        if (n == 1) L = len / 2;
+        return L;
     }
 };
