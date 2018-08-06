@@ -1,3 +1,5 @@
+// IOI 2009 国家集训队论文 罗穗骞《后缀数组——处理字符串的有力工具》
+
 // for -> rep 如果超时了试试换回来？
 // sa[i] 表示排在第 i 位的是后缀 sa[i], 注意：因为 s[len] = 0, 所以 sa[0] = len
 // rank[i] 表示后缀 i 排第 rank[i]
@@ -49,13 +51,46 @@ struct SuffixArray {
 
 // -------------------------------------------------- 单个字符串问题 -------------------------------------------------- //
 
+// 重复子串：字符串 t 在字符串 s 中至少出现两次，则称 R 是 L 的 重复子串。
+
+// 【可重叠最长重复子串】
+// 等价于求 height[] 最大值
+int lrs(int len) {
+    int res = 0; rep(i, 2, len+1) res = max(res, height[i]); return res;
+}
+
+// 【不可重叠最长重复子串】
+// 二分长度值，将后缀分组，组内 height[] 值不小于二分值，判断组内后缀的位置最大值和最小值的差值是否不小于二分值
+bool check(int m, int len) {
+    for (int i = 2, ma = sa[1], mi = sa[1]; i <= len; ++i) {
+        if (height[i] < m) ma = mi = sa[i];
+        else {
+            mi = min(mi, sa[i]);
+            ma = max(ma, sa[i]);
+            if (ma - mi >= m) return true;      // 如果使用的是差分数组，此处应改为 > m
+        }
+    }
+    return false;
+}
+int lrs(int len) {
+    int L = 0, R = len >> 1;
+    while (L < R) {
+        int M = L + ((R - L + 1) >> 1);     //防止溢出，溢出可能造成TLE
+        if (check(M, len)) L = M; else R = M - 1;
+    }
+    return L;
+}
+
+// -------------------------------------------------- //
+
 // -------------------------------------------------- 两个字符串问题 -------------------------------------------------- //
 
+// 【最长公共子串】
 // 求两个字符串的最长公共子串 connect -> calsa -> calheight -> lcs
 // 将两个字符串连接，中间插入未出现字符，尾部插入未出现的最小字符
 // 然后求这个新字符串的后缀数组
 // 按排名遍历相邻后缀，如果两个后缀分属两个字符串，则更新 lcs
-int lcs(int *s, int mid, int len) {   // mid 为前段字符串长度
+int lcs(int mid, int len) {   // mid 为前段字符串长度
     int res = 0;
     rep(i, 2, len+1) if (sa[i] > mid && sa[i-1] < mid || sa[i] < mid && sa[i-1] > mid)
         res = max(res, height[i]);
@@ -66,6 +101,7 @@ int lcs(int *s, int mid, int len) {   // mid 为前段字符串长度
 
 // -------------------------------------------------- 多个字符串问题 -------------------------------------------------- //
 
+// 【最长公共子串】
 // 求 n 个字符串的最长公共子串，复杂度 O(nLlogL) L: 单个字符串最大长度
 // connect -> calsa -> calheight -> lcs -> check
 // 和求两个字符串的时候一样，先把 n 个字符串连接起来
