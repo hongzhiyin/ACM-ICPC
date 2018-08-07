@@ -157,7 +157,7 @@ void crs(int len, int &adr, int &alen, int &cnt) {
             res = cnt = tmp; adr = j; alen = i;
         }
         for (k = j - (i - dlen % i); k >= 0 && j - k < i; --k) {
-            if (lcp(k, k + i) >= i)
+            if (lcp(k, k + i) < i) break;
             if (tmp+1 > res || tmp+1 == res && rk[k] < rk[adr]) {
                 res = cnt = tmp+1; adr = k; alen = i;
             }
