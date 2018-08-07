@@ -314,3 +314,35 @@ int Solve() {
 
 // -------------------------------------------------- //
 
+// 【每个字符串至少出现两次且不重叠的最长字串】
+
+// 与求最长公共子串方法基本类似，是否重叠则通过后缀出现位置的最值之差判断
+// 刚好由于有两个最值，所以顺便判断了出现次数
+
+int mi[ 字符串总数 ], ma[ 字符串总数 ];
+bool check(int m, int n, int len) {     // 找到一段区间，使得区间内 height[] >= m 且后缀分属 n 个字符串
+    height[len+1] = -1;  // 设 -1 是因为 j 会越界
+    for (int i = 2, j, k, t; i <= len; i = j+1) { // 按排名枚举后缀
+        for (; i <= len && height[i] < m; i++);     // 找到第一个大于等于 m 的 height[i]
+        for(j = i; height[j] >= m; j++);            // 找到最后一个大于等于 m 的 height[i], 此时 j 在下一位
+        if (j - i + 1 < n) continue;                // 如果区间长度不足 n
+        memset(mi, 0x3f, sizeof(mi));
+        memset(ma, 0xbf, sizeof(ma));   // 原因是这样 ma - mi 时不会下溢
+        for (k = i-1; k < j; ++k) {
+            t = id[sa[k]];
+            mi[t] = min(mi[t], sa[k]);
+            ma[t] = max(ma[t], sa[k]);
+        }
+        for (k = 1; k <= n; ++k) if (ma[k] - mi[k] < m) break;  // 如果不要求重叠，则不需要判断最值，用一个 cnt[] 记录出现次数，在这里判断即可
+        if (k > n) return true;
+    }
+    return false;
+}
+int lcs(int n, int dlen, int len) {   // n 个字符串, dlen : 单个字符串最大长度
+    int L = 0, R = dlen;
+    while (L < R) {
+        int M = L + ((R - L + 1) >> 1);     //防止溢出，溢出可能造成TLE
+        if (check(M, n, len)) L = M; else R = M - 1;
+    }
+    return L;   // 返回子串长度
+}
