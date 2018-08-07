@@ -2,9 +2,10 @@
 
 // for -> rep 如果超时了试试换回来？
 // sa[i] 表示排在第 i 位的是后缀 sa[i], 注意：因为 s[len] = 0, 所以 sa[0] = len
-// rank[i] 表示后缀 i 排第 rank[i]
+// rk[i] 表示后缀 i 排第 rk[i]
 // height[i] = LCP(sa[i], sa[i-1]), LCP: 最长公共前缀
-int sa[N], rank[N], height[N];
+int s[N], len, id[N];
+int sa[N], rk[N], height[N];
 int wa[N], wb[N], wc[N], wd[N];    // 不要问这些数组是什么意思，因为我也不知道，抄就对了
 struct SuffixArray {
     int cmp(int *s, int a, int b, int l) { return s[a] == s[b] && s[a+l] == s[b+l]; }
@@ -27,20 +28,20 @@ struct SuffixArray {
         }
     }
     void calheight(int *s, int n) {    // n = len
-        rep(i, 1, n+1) rank[sa[i]] = i;
-        for(int i = 0, j, k = 0; i < n; height[rank[i++]] = k)
-            for(k ? k-- : 0, j = sa[rank[i]-1]; s[i+k] == s[j+k]; k++);
+        rep(i, 1, n+1) rk[sa[i]] = i;
+        for(int i = 0, j, k = 0; i < n; height[rk[i++]] = k)
+            for(k ? k-- : 0, j = sa[rk[i]-1]; s[i+k] == s[j+k]; k++);
     }
     // 把 n 个字符串连接起来，中间插入未出现字符
-    int connect(int *s, int n) {
+    int connect(int *s, int n, char str[][N]) {    // 将 n 个字符串 str[i] （i 从 0 开始）连接成 s
         int len = 0, d = n;     // 注意偏移值 d 是否需要修改
-        rep(i, 1, n+1) {
+        rep(i, 0, n) {
             int k = strlen(str[i]);
             rep(j, 0, k) {
                 s[j+len] = str[i][j] + d;
-                id[j+len] = i;
+                id[j+len] = i + 1;
             }
-            s[len+k] = i;       // 注意插入的字符选择
+            s[len+k] = i + 1;       // 注意插入的字符选择
             id[len+k] = 0;
             len += k + 1;
         }
@@ -52,8 +53,10 @@ struct SuffixArray {
 // -------------------------------------------------- 单个字符串问题 -------------------------------------------------- //
 
 // 【最长公共前缀】
+
 // 给定一个字符串，询问某两个字符串的最长公共前缀
 // 求两个后缀的最长公共前缀可以转化为求 height[] 某个区间上的最小值 (RMQ)
+
 ST rmq;     // a[] 从 1 开始
 void initrmq(int len) { rmq.init(height, len); }
 int lcp(int i, int j) {
@@ -67,13 +70,17 @@ int lcp(int i, int j) {
 // 重复子串：字符串 t 在字符串 s 中至少出现两次，则称 t 是 s 的 重复子串。
 
 // 【可重叠最长重复子串】
+
 // 等价于求 height[] 最大值
+
 int lrs(int len) {
     int res = 0; rep(i, 2, len+1) res = max(res, height[i]); return res;
 }
 
 // 【不可重叠最长重复子串】
+
 // 二分长度值，将后缀分组，组内 height[] 值不小于二分值，判断组内后缀的位置最大值和最小值的差值是否不小于二分值
+
 bool check(int m, int len) {
     for (int i = 2, ma = sa[1], mi = sa[1]; i <= len; ++i) {
         if (height[i] < m) ma = mi = sa[i];
@@ -95,8 +102,10 @@ int lrs(int len) {
 }
 
 // 【可重叠的 k 次最长重复子串】
+
 // 给定一个字符串，求至少出现 k 次的最长重复子串，这 k 个子串可以重叠。
 // 二分长度，后缀分组，判断组内后缀个数是否不小于 k
+
 bool check(int m, int len, int k) {
     int cnt = 1;
     rep(i, 1, len+1) if (height[i] >= m) {
@@ -116,9 +125,11 @@ int lrs(int len, int k) {
 // -------------------------------------------------- //
 
 // 【不相同的子串的个数】
+
 // 按排名遍历，每一次新加进来的后缀 suffix(sa[k]), 它将产生 n-sa[k] 个新的前缀。
 // 但是其中有 height[k] 个是和前面的字符串的前缀是相同的。
 // 所以 suffix(sa[k]) 将贡献出 n-sa[k]-height[k] 个不同的子串。
+
 int cnt(int len) {
     int res = 0; rep(i, 1, len+1) res += n - sa[i] - height[i]; return res;
 }
@@ -131,6 +142,7 @@ int cnt(int len) {
 
 // 给定一个字符串，求重复次数最多的连续重复子串。
 // https://www.cnblogs.com/staginner/archive/2012/02/06/2340521.html
+
 int crs(int len) {
     int res = 1, j, k, dlen, tmp;
     rep(i, 1, len+1) for (j = 0; j + i <= len; j += i) {
@@ -148,6 +160,7 @@ int crs(int len) {
 // obj.crs(len, adr, alen, cnt);
 // alen *= cnt;
 // rep(i, 0, alen) printf("%c", s[i+adr]);
+
 void crs(int len, int &adr, int &alen, int &cnt) {
     int res = 0, j, k, dlen, tmp;
     rep(i, 1, len+1) for (j = 0; j + i <= len; j += i) {
@@ -168,10 +181,12 @@ void crs(int len, int &adr, int &alen, int &cnt) {
 // -------------------------------------------------- 两个字符串问题 -------------------------------------------------- //
 
 // 【最长公共子串】
+
 // 求两个字符串的最长公共子串 connect -> calsa -> calheight -> lcs
 // 将两个字符串连接，中间插入未出现字符，尾部插入未出现的最小字符
 // 然后求这个新字符串的后缀数组
 // 按排名遍历相邻后缀，如果两个后缀分属两个字符串，则更新 lcs
+
 int lcs(int mid, int len) {   // mid 为前段字符串长度
     int res = 0;
     rep(i, 2, len+1) if (sa[i] > mid && sa[i-1] < mid || sa[i] < mid && sa[i-1] > mid)
@@ -181,13 +196,61 @@ int lcs(int mid, int len) {   // mid 为前段字符串长度
 
 // -------------------------------------------------- //
 
+// 【长度不小于 k 的公共子串的个数】
+
+// 基本思路是计算 A 的所有后缀和 B 的所有后缀之间的最长公共前缀的长度，把最长公共前缀长度不小于 k 的部分全部加起来。
+// 先将两个字符串连起来，中间用一个没有出现过的字符隔开。
+// 按 height 值分组（组内 height[] >= k ）后，接下来的工作便是快速的统计每组中后缀之间的最长公共前缀之和。
+// 扫描一遍，每遇到一个 B 的后缀就统计与前面的 A 的后缀能产生多少个长度不小于 k 的公共子串，
+// 这里 A 的后缀需要用一个单调的栈来高效的维护。然后对 A 也这样做一次。
+// https://blog.csdn.net/acm_cxlove/article/details/7946967
+
+int Stack[N][2];
+bool cmp(int i, int mid, bool small) { return small ? sa[i] < mid : sa[i] > mid; }
+ll cnt(int len, int mid, int k) {
+    ll res = 0, tot, top;       // tot 当前总贡献， top 栈顶
+    rep(t, 0, 2) {  // 每次碰到 B 串后缀就统计与前面 A 串后缀产生的贡献，然后反过来再做一次
+        tot = top = 0;      // 从栈底到栈顶单调递增
+        rep(i, 2, len+1) {
+            if (height[i] < k) top = tot = 0;
+            else {
+                int num = 0;
+                // height[i] 表示 后缀 i 和后缀 i-1 的公共前缀，这里实际上是拿后缀 i-1 与栈顶比较
+                // 如果当前后缀 i-1 是用来产生贡献的串（如上述 A 串）
+                // 那么 num+1 用来表示自己参与了贡献 （如果 num = 0 ，就表示自己是如上述 B 串，不参与贡献）
+                // tot 加的就是当前后缀最多能够提供多少个公共前缀
+                if (cmp(i-1, mid, t)) num++, tot += height[i] - k + 1;
+                while (top > 0 && height[i] <= Stack[top-1][0]) {   // 如果当前后缀公共前缀比栈顶后缀短
+                    top--;      // 则栈顶需要出栈
+                    tot -= Stack[top][1] * (Stack[top][0] - height[i]);     // 之前它所提供的贡献也要相应减少
+                    num += Stack[top][1];
+                    // num 加的表示当前栈顶后缀把多少个公共后缀比它长的后缀踢出了栈，就要继承他们的贡献
+                }
+                Stack[top][0] = height[i]; Stack[top++][1] = num;
+                // 因为两个后缀的最长公共前缀取决于 height[] 区间最小值
+                // 所以较短的公共前缀只会对排在它前面的后缀在贡献时产生影响
+                // 不会对后面的后缀在贡献时产生影响
+                // 所以当前后缀处理完前面后缀的继承问题后，直接入栈
+                if (cmp(i, mid, !t)) res += tot;
+                // 在处理完后缀 i-1 的进栈后，如果 i 是属于上述 B 串
+                // 则实际上也等价处理了当前情况下后缀 i 对栈的影响
+                // （但下一次到后缀 i 和后缀 i+1 时， height[i+1] 就会不一样了）
+                // 那么直接将当前贡献加入 res ，就是属于 B 串的后缀 i 能够与前面的 A 串后缀产生的贡献
+            }
+        }
+    }
+    return res;
+}
+
 // -------------------------------------------------- 多个字符串问题 -------------------------------------------------- //
 
 // 【最长公共子串】
+
 // 求 n 个字符串的最长公共子串，复杂度 O(nLlogL) L: 单个字符串最大长度
 // connect -> calsa -> calheight -> lcs -> check
 // 和求两个字符串的时候一样，先把 n 个字符串连接起来
 // 调用的时候把 grup 移到外面，数组大小为单个字符串最大长度
+
 int grup[dlen];
 bool check(int m, int n, int len) {     // 找到一段区间，使得区间内 height[] >= m 且后缀分属 n 个字符串
     memset(grup, 0, sizeof(grup)); height[len+1] = -1;  // 设 -1 是因为 j 会越界
