@@ -333,7 +333,8 @@ bool check(int m, int n, int len) {     // 找到一段区间，使得区间内 
             mi[t] = min(mi[t], sa[k]);
             ma[t] = max(ma[t], sa[k]);
         }
-        for (k = 1; k <= n; ++k) if (ma[k] - mi[k] < m) break;  // 如果不要求重叠，则不需要判断最值，用一个 cnt[] 记录出现次数，在这里判断即可
+        // 如果不要求重叠，则下面不需要判断最值之差，用一个 cnt[] 记录出现次数，判断出现次数是否符合要求即可
+        for (k = 1; k <= n; ++k) if (ma[k] - mi[k] < m) break;
         if (k > n) return true;
     }
     return false;
