@@ -8,7 +8,7 @@ struct KMP {
             else j = net[j];
         }
         // 最小循环节长度
-        // if (m % (m - net[m]) == 0) return n - net[n]; else return n;
+        // if (m % (m - net[m]) == 0) return m - net[m]; else return m;
         // 最小循环节个数
         // if (m % (m - net[m]) == 0) return m / (m - net[m]); else return 1;
     }
