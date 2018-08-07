@@ -12,5 +12,5 @@ void Init() {
     sort(all(a)); sort(all(dis));
     dis.erase(unique(all(dis)), dis.end());
     rep(i, 0, sz(a))
-        a[i].dx = lower_bound(all(dis), a[i].l) - dis.begin();
+        a[i].dx = lower_bound(all(dis), a[i].x) - dis.begin();
 }
