@@ -19,4 +19,4 @@ while (M[key] != -1) {
     if (check()) { ...; break; }    // 实际映射对象相同
     else key++;                     // 发生碰撞
 }
-if (M[key] == -1) M[key] = i;       // 没有发生碰撞
+if (M[key] == -1) M[key] = val;       // 没有发生碰撞
