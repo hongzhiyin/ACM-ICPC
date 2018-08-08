@@ -11,3 +11,12 @@ struct Hash {
     }
     ull query(int l, int r) { return ha[r] - ha[l-1] * p[r-l+1]; }
 };
+
+// 闭散列碰撞检测，也可用 map 实现，但效率可能会低
+// poj 3274
+while (M[key] != -1) {
+    // 判断是发生碰撞还是实际映射对象相同
+    if (check()) { ...; break; }    // 实际映射对象相同
+    else key++;                     // 发生碰撞
+}
+if (M[key] == -1) M[key] = i;       // 没有发生碰撞
