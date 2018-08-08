@@ -33,12 +33,13 @@ struct SuffixArray {
             for(k ? k-- : 0, j = sa[rk[i]-1]; s[i+k] == s[j+k]; k++);
     }
     // 把 n 个字符串连接起来，中间插入未出现字符
-    int connect(int *s, int n, char str[][N]) {    // 将 n 个字符串 str[i] （i 从 0 开始）连接成 s
+    int connect(int *s, int n) {    // 将 n 个字符串连接成 s
         int len = 0, d = n;     // 注意偏移值 d 是否需要修改
         rep(i, 0, n) {
-            int k = strlen(str[i]);
+            scanf("%s", str);
+            int k = strlen(str);
             rep(j, 0, k) {
-                s[j+len] = str[i][j] + d;
+                s[j+len] = str[j] + d;
                 id[j+len] = i + 1;
             }
             s[len+k] = i + 1;       // 注意插入的字符选择
@@ -355,5 +356,35 @@ int lcs(int n, int dlen, int len) {   // n 个字符串, dlen : 单个字符串�
         int M = L + ((R - L + 1) >> 1);     //防止溢出，溢出可能造成TLE
         if (check(M, n, len)) L = M; else R = M - 1;
     }
+    return L;   // 返回子串长度
+}
+
+// -------------------------------------------------- //
+
+// 【出现在第一个字符串中且不出现在剩下的字符串中的最短子串】
+// UVALive 7902
+
+bool check(int m, int len1, int len) {
+    for (int i = 2, j, t, ok; i <= len; i = j+1) { // 按排名枚举后缀
+        for (; i <= len; ++i) {
+            if (id[sa[i]] == 1 && len1 - sa[i] >= m && height[i] < m) { ans = sa[i]; break; }
+            // 找到属于第一个字符串且长度大于等于 m 的后缀，且和前面不属于第一个字符串的后缀的公共前缀长度小于 m
+        }
+        if (i > len) return false;
+        for (ok = 1, j = i+1; j <= len; ++j) {
+            if (height[j] < m) return true;     // 两个后缀的最大公共前缀等于区间最小值
+            if (id[sa[j]] != 1) { ok = 0; break; }  // 如果不属于第一个字符串的后缀与前面的后缀的公共前缀长度大于等于 m
+        }
+        if (ok) return true;
+    }
+    return false;
+}
+int lcs(int n, int len1, int len) {   // n 个字符串
+    int L = 1, R = len1;    // 最大值为第一个字符串长度
+    while (L < R) {
+        int M = L + ((R - L) >> 1);     //防止溢出，溢出可能造成TLE
+        if (check(M, len1, len)) R = M; else L = M + 1;
+    }
+    if (!check(L, len1, len)) return -1;
     return L;   // 返回子串长度
 }
