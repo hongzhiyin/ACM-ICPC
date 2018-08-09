@@ -1,4 +1,5 @@
 // https://www.cnblogs.com/TheRoadToTheGold/p/6290732.html
+// 在单词表中查找单词或前缀
 
 int trie[N][26];
 void Init() {
@@ -13,9 +14,9 @@ struct Trie {
             int id = s[i] - 'a';
             if(!trie[rt][id]) trie[rt][id] = ++node_tot;  // 如果之前没有从 rt 到 id 的前缀，插入新节点
             rt = trie[rt][id];      // 顺着字典树往下走
-            // sum[rt]++;     // 保存前缀出现次数
+            // sum[rt]++;       // 保存前缀出现次数
         }
-        // isw[rt] = true; 标志该单词末位字母的尾结点，在查询整个单词时用到
+        // isw[rt] = true;      // 标志该单词末位字母的尾结点，在查询整个单词时用到
     }
     bool find(char *s) {
         int len = strlen(s), rt = 0;  // 从根结点开始找
