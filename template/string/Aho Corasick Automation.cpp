@@ -19,7 +19,7 @@ struct AhoCorasick {
             if(!trie[rt][id]) trie[rt][id] = newnode();
             rt = trie[rt][id];
         }
-        isw[rt] = id;
+        isw[rt] = id;       // 记录单词 id
     }
     void build() {  // 构建失配指针
         que[0] = 0;
@@ -48,7 +48,7 @@ struct AhoCorasick {
             if (!f) continue;
             int tmp = rt = trie[rt][id];
             while (tmp) {
-                if (isw[tmp]) cnt[isw[tmp]]++;
+                if (isw[tmp]) cnt[isw[tmp]]++;      // 统计单词出现次数
                 tmp = fail[tmp];
             }
         }
