@@ -4,6 +4,8 @@
 int trie[N][26];
 void Init() {
     memset(trie, 0, sizeof(trie));
+    // memset(sum, 0, sizeof(sum));
+    // memset(isw, 0, sizeof(isw));
     int node_tot = 0;
 }
 
