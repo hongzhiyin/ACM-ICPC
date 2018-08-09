@@ -3,7 +3,8 @@ void Init() {
 }
 
 int node_tot;
-int trie[N][128], fail[N], isw[N], last[N], que[N];    // N = 单词个数 * 单词长度，第二维视情况而定  last[] 表示上一个是单词结尾的失配位置
+int trie[N][128], fail[N], isw[N], last[N], que[N];
+// N = 单词个数 * 单词长度，第二维视情况而定  last[] 表示上一个是单词结尾的失配位置
 struct AhoCorasick {
     int newnode() {
         ++node_tot;
