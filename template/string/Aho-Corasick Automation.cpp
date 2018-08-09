@@ -1,6 +1,5 @@
 void Init() {
-    memset(trie, 0, sizeof(trie));
-    node_tot = 0;
+    node_tot = -1; obj.newnode();
 }
 
 int node_tot;
@@ -8,6 +7,7 @@ int trie[N][128], fail[N], isw[N], que[N];    // N = 单词个数 * 单词长度
 struct AhoCorasick {
     int newnode() {
         ++node_tot;
+        memset(trie[node_tot], 0, sizeof(trie[node_tot]));
         fail[node_tot] = 0;
         isw[node_tot] = 0;
         return node_tot;
@@ -40,12 +40,8 @@ struct AhoCorasick {
     void run(char *s) {
         int len = strlen(s), rt = 0;
         rep(i, 0, len) {
-            int id = s[i], f = 1;
-            while (!trie[rt][id]) {
-                if (rt == 0) { f = 0; break; }
-                rt = fail[rt];
-            }
-            if (!f) continue;
+            int id = s[i];
+            while (rt && !trie[rt][id]) rt = fail[rt];
             int tmp = rt = trie[rt][id];
             while (tmp) {
                 if (isw[tmp]) cnt[isw[tmp]]++;      // 统计单词出现次数
