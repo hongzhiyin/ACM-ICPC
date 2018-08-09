@@ -1,32 +1,31 @@
-void Init()
-{
+// https://www.cnblogs.com/TheRoadToTheGold/p/6290732.html
+
+int trie[N][26];
+void Init() {
     memset(trie, 0, sizeof(trie));
-    int tot = 0;
+    int node_tot = 0;
 }
 
-void insert()//插入单词 s
-{
-    int len = strlen(s);//单词 s 的长度
-    int root = 0;//根节点编号为 0
-    rep(i, 0, len) {
-        int id = s[i]-'a';//第二种编号
-        if(!trie[root][id])//如果之前没有从 root 到 id 的前缀 
-            trie[root][id] = ++tot;//插入， tot 即为第一种编号
-        root = trie[root][id];//顺着字典树往下走
-        //sum[root]++;//前缀后移一个位置保存
+struct Trie {
+    void insert(char *s) {     // 插入单词 s
+        int len = strlen(s), rt = 0;   // 根节点编号为 0
+        rep(i, 0, len) {
+            int id = s[i] - 'a';
+            if(!trie[rt][id]) trie[rt][id] = ++node_tot;  // 如果之前没有从 rt 到 id 的前缀，插入新节点
+            rt = trie[rt][id];      // 顺着字典树往下走
+            // sum[rt]++;     // 保存前缀出现次数
+        }
+        // isw[rt] = true; 标志该单词末位字母的尾结点，在查询整个单词时用到
     }
-    /*isw[rt]=true; 标志该单词末位字母的尾结点，在查询整个单词时用到*/
-}
-
-bool find()
-{
-    int len=strlen(s), root = 0;//从根结点开始找
-    rep(i, 0, len) {
-        int x = s[i] - 'a';
-        if( !trie[root][x]) return false; 
-        root = trie[root][x];//为查询下个字母做准备，往下走 
+    bool find(char *s) {
+        int len = strlen(s), rt = 0;  // 从根结点开始找
+        rep(i, 0, len) {
+            int id = s[i] - 'a';
+            if(!trie[rt][id]) return false; 
+            rt = trie[rt][id];      // 为查询下个字母做准备，往下走 
+        }
+        return true;            // 作为前缀出现
+        // return isw[rt];      // 是否作为完整的单词出现过
+        // return sum[rt];      // 前缀出现的次数 
     }
-    return true;//找到了
-    //查询整个单词时，应该 return isw[rt] 
-    //return sum[root] ; 因为前缀后移了一个保存，所以此时的 sum[root] 就是要求的前缀出现的次数 
-}
+};
