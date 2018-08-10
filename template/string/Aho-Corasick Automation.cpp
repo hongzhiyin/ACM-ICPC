@@ -107,28 +107,28 @@ struct AhoCorasick {
 };
 AhoCorasick obj;
 struct Mat {
-	vector< vector <ll> > a;
-	Mat() {}
-	Mat(int n, int m) { a.resize(n, vector<ll>(m)); }
-	Mat operator *(const Mat &b) const {
-		int n = sz(a), m = sz(b.a[0]), nm = sz(b.a); Mat r(n, m);
-		rep(i, 0, n) rep(j, 0, m) {
-		    rep(k, 0, nm) r.a[i][j] += a[i][k] * b.a[k][j];     // 取模运算非常耗时，尽量最后再做取模运算
-            r.a[i][j] %= MOD;
+    vector< vector<ll> > a;
+    Mat() {}
+    Mat(int n, int m) { a.resize(n, vector<ll>(m)); }
+    Mat operator *(const Mat &b) const {
+        int n = sz(a), m = sz(b.a[0]), nm = sz(b.a); Mat r(n, m);
+        rep(i, 0, n) rep(j, 0, m) {
+	    rep(k, 0, nm)
+        	r.a[i][j] = a[i][k] * b.a[k][j];    // 取模运算十分耗时，尽可能最后再取模
+        	r.a[i][j] %= MOD;
 		}
 		return r;
-	}
-	Mat operator ^(ll b) {
-		int n = sz(a); Mat r(n, n), t = *this;
-		rep(i, 0, sz(r.a)) r.a[i][i] = 1;
-		for (; b; b >>= 1) {
-			if (b & 1) r = r * t;
-			t = t * t;
-		}
-		return r;
-	}
+    }
+    Mat operator ^(ll b) {
+        int n = sz(a); Mat r(n, n), t = *this;
+        rep(i, 0, sz(r.a)) r.a[i][i] = 1;
+        for (; b; b >>= 1) {
+            if (b & 1) r = r * t;
+            t = t * t;
+        }
+        return r;
+    }
 };
-
 void Init() {
     f['A'] = 0, f['T'] = 1, f['C'] = 2, f['G'] = 3;
     memset(mat, 0, sizeof(mat));
