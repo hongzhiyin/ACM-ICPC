@@ -183,82 +183,11 @@ int Solve() {
 
 // 最终答案两者相减即可
 
-int node;
-int trie[N][26], fail[N], isw[N], que[N];
-struct AhoCorasick {
-    int newnode() {
-        ++node;
-        memset(trie[node], 0, sizeof(trie[node]));
-        fail[node] = 0;
-        isw[node] = 0;
-        return node;
-    }
-    void insert(char *s) {
-        int len = strlen(s), rt = 0;
-        rep(i, 0, len) {
-            int id = s[i] - 'a';
-            if(!trie[rt][id]) trie[rt][id] = newnode();
-            rt = trie[rt][id];
-        }
-        isw[rt] = 1;       // 标记单词结尾，表明不可转移到此状态
-    }
-    void build() {  // 构建失配指针
-        que[0] = 0;
-        for (int head = 0, tail = 1; head < tail; ++head) {
-            int cur = que[head];
-            isw[cur] |= isw[fail[cur]];
-            // 失配指针如果被标记，说明从根节点到当前节点形成的字符串包含了一个不可出现的字符串作为后缀，因此也不可转移到此状态
-            rep(i, 0, 26) {     // 注意遍历范围
-                int u = trie[cur][i];
-                if (u) {
-                    int p = fail[cur];
-                    while (p && !trie[p][i]) p = fail[p];
-                    fail[u] = !cur ? 0 : trie[p][i];
-                    que[tail++] = u;
-                } else {
-                    trie[cur][i] = trie[fail[cur]][i];
-                }
-            }
-        }
-    }
-    void run() {
-        rep(i, 0, node+1) rep(j, 0, 26)      // 遍历节点编号，即遍历所有状态
-            if (!isw[i] && !isw[trie[i][j]])    // 如果状态转移的两端都合法，则表明两状态之间有一条长度为 1 的有向边
-                mat[i][trie[i][j]]++;           // 注意，这里并不需要子节点一定存在，对于不存在的节点，都返回根节点状态
-    }
-};
-AhoCorasick obj;
-
-struct Mat {
-    vector< vector<ull> > a;
-    Mat() {}
-    Mat(int n, int m) { a.resize(n, vector<ull>(m)); }
-    Mat operator *(const Mat &b) const {
-        int n = sz(a), m = sz(b.a[0]), nm = sz(b.a); Mat r(n, m);
-        rep(i, 0, n) rep(j, 0, m) rep(k, 0, nm) r.a[i][j] += a[i][k] * b.a[k][j];    // 取模运算十分耗时，尽可能最后再取模
-        // 对 2^64 取模即为 unsigned long long 自然溢出
-        return r;
-    }
-    Mat operator ^(ll b) {
-        int n = sz(a); Mat r(n, n), t = *this;
-        rep(i, 0, sz(r.a)) r.a[i][i] = 1;
-        for (; b; b >>= 1) {
-            if (b & 1) r = r * t;
-            t = t * t;
-        }
-        return r;
-    }
-};
-Mat a, b;
+AhoCorasick obj;    // 结构基本同上，注意字符编号和遍历范围
+Mat a, b;       // 对 2^64 取模即为 unsigned long long 自然溢出
 
 void Init() {
-    node = -1; obj.newnode();
-    memset(mat, 0, sizeof(mat));
-
-    while (n--) {
-        scanf("%s", str);
-        obj.insert(str);
-    }
+    while (n--) obj.insert(str);
     obj.build();
     obj.run();
 }
@@ -276,4 +205,36 @@ int Solve() {
     return !printf("%llu\n", tmp - ans);    // unsigned long long 要用 %llu 输出，如果用 %lld 会 WA ，同理也有 %I64u
 }
 
+// ------------------------------------------------------------------------------- //
 
+// hdu 4511
+// https://www.cnblogs.com/kuangbin/p/3577678.html
+// 给定若干路径不允许出现，问从 1 到 n 的最短路
+// 通过 AC 自动机得到状态转移。
+// 之后 dp[i][j] 表示走到 i 点，状态在 j 的距离。
+
+void run(int n) {
+    dp[1][trie[0][1]] = 0;          // 从 1 号节点出发
+    int state = node + 1;
+    rep(i, 1, n+1) rep(j, 0, state) if (dp[i][j] < LINF) {     // 如果可以走到 i 号节点，且这个时候属于状态 j
+        rep(k, i+1, n+1) {    // 遍历当前节点可以走到的下一个节点，且节点编号大于 i
+            if (isw[trie[j][k]]) continue;      // 非法状态
+            int s = trie[j][k];     // 下一个合法状态编号
+            dp[k][s] = min(dp[k][s], dp[i][j] + dist(i, k));
+        }
+    }
+}
+
+void Init() {
+    rep(i, 0, 57) rep(j, 0, N) dp[i][j] = LINF;
+    
+    while (m--) obj.insert(str, k);
+    obj.build(n);
+    obj.run(n);
+}
+int Solve() {
+    db ans = LINF;
+    rep(i, 0, node+1) ans = min(ans, dp[n][i]);     // 遍历处在第 n 个点的所有状态
+    if (ans == LINF) return !puts("Can not be reached!");
+    return !printf("%.2f\n", ans);
+}
