@@ -1,11 +1,9 @@
-void Init() {
-    node_tot = -1; obj.newnode();
-}
-
 int node_tot;
 int trie[N][128], fail[N], isw[N], last[N], que[N];
 // N = 单词个数 * 单词长度，第二维视情况而定  last[] 表示上一个是单词结尾的失配位置
 struct AhoCorasick {
+    static node_tot;
+    void init() { node_tot = -1; newnode(); }
     int newnode() {
         ++node_tot;
         memset(trie[node_tot], 0, sizeof(trie[node_tot]));
