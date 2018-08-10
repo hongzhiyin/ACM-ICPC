@@ -9,7 +9,7 @@ int sa[N], rk[N], height[N];
 int wa[N], wb[N], wc[N], wd[N];    // 不要问这些数组是什么意思，因为我也不知道，抄就对了
 struct SuffixArray {
     int cmp(int *s, int a, int b, int l) { return s[a] == s[b] && s[a+l] == s[b+l]; }
-    void calsa(int *s, int n, int m) {     // s[len] = 0, n = len + 1, m 为字符种类
+    void calsa(int *s, int n, int m) {     // s[len] = 0, n = len + 1, m 为字符种类 ( m = 128 + d )
         int *x = wa, *y = wb, *t;
         rep(i, 0, m) wc[i] = 0;
         rep(i, 0, n) wc[x[i]=s[i]]++;
