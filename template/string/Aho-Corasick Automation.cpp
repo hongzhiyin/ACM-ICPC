@@ -85,7 +85,7 @@ struct AhoCorasick {
         que[0] = 0;
         for (int head = 0, tail = 1; head < tail; ++head) {
             int cur = que[head];
-            if (isw[fail[cur]]) isw[cur] = 1;
+            isw[cur] |= isw[fail[cur]];
             // 失配指针如果被标记，说明从根节点到当前节点形成的字符串包含了一个不可出现的字符串作为后缀，因此也不可转移到此状态
             rep(i, 0, 4) {
                 int u = trie[cur][i];
@@ -206,7 +206,7 @@ struct AhoCorasick {
         que[0] = 0;
         for (int head = 0, tail = 1; head < tail; ++head) {
             int cur = que[head];
-            if (isw[fail[cur]]) isw[cur] = 1;
+            isw[cur] |= isw[fail[cur]];
             // 失配指针如果被标记，说明从根节点到当前节点形成的字符串包含了一个不可出现的字符串作为后缀，因此也不可转移到此状态
             rep(i, 0, 26) {     // 注意遍历范围
                 int u = trie[cur][i];
