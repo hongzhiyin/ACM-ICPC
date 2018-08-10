@@ -118,6 +118,7 @@ struct Mat {
         	r.a[i][j] %= MOD;
 	    }
 	    return r;
+        }
     }
     Mat operator ^(ll b) {
         int n = sz(a); Mat r(n, n), t = *this;
