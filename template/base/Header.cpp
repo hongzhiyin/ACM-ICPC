@@ -37,7 +37,7 @@ char read_char() {char c;for(;;){c=getchar();if(c>='A'&&c<='Z')return c;}}
 ll powmod(ll a,ll b) {ll res=1;a%=MOD;for(;b;b>>=1){if(b&1)res=res*a%MOD;a=a*a%MOD;}return res;}
 ll gcd(ll a,ll b) { return b?gcd(b,a%b):a;}
 ll add(ll a, ll b) { return ((a + b) % MOD + MOD) % MOD; }
-ll mul(ll a, ll b) { return a * b % MOD; }
+ll mul(ll a, ll b) { return (a * b % MOD + MOD) % MOD; }
 
 //-------- 变量 --------//
 
