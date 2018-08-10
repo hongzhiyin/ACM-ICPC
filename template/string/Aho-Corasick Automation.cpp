@@ -116,8 +116,8 @@ struct Mat {
 	    rep(k, 0, nm)
         	r.a[i][j] = a[i][k] * b.a[k][j];    // 取模运算十分耗时，尽可能最后再取模
         	r.a[i][j] %= MOD;
-		}
-		return r;
+	    }
+	    return r;
     }
     Mat operator ^(ll b) {
         int n = sz(a); Mat r(n, n), t = *this;
