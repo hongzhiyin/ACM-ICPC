@@ -113,12 +113,10 @@ struct Mat {
     Mat operator *(const Mat &b) const {
         int n = sz(a), m = sz(b.a[0]), nm = sz(b.a); Mat r(n, m);
         rep(i, 0, n) rep(j, 0, m) {
-	    rep(k, 0, nm)
-        	r.a[i][j] = a[i][k] * b.a[k][j];    // 取模运算十分耗时，尽可能最后再取模
-        	r.a[i][j] %= MOD;
-	    }
-	    return r;
+            rep(k, 0, nm) r.a[i][j] = a[i][k] * b.a[k][j];    // 取模运算十分耗时，尽可能最后再取模
+            r.a[i][j] %= MOD;
         }
+        return r;
     }
     Mat operator ^(ll b) {
         int n = sz(a); Mat r(n, n), t = *this;
