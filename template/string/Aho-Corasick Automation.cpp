@@ -1,9 +1,7 @@
-int node_tot;
+int node_tot = -1;
 int trie[N][128], fail[N], isw[N], last[N], que[N];
 // N = 单词个数 * 单词长度，第二维视情况而定  last[] 表示上一个是单词结尾的失配位置
 struct AhoCorasick {
-    static node_tot;
-    void init() { node_tot = -1; newnode(); }
     int newnode() {
         ++node_tot;
         memset(trie[node_tot], 0, sizeof(trie[node_tot]));
@@ -60,7 +58,7 @@ struct AhoCorasick {
 // AC 自动机 + 矩阵快速幂
 // AC 自动机构建状态转移图，通过状态转移构建有向图的邻接矩阵，通过矩阵快速幂计算两点之间长度为 n 的路径数目
 
-int node_tot;
+int node_tot = -1;
 int trie[N][4], fail[N], isw[N], que[N];
 struct AhoCorasick {
     int newnode() {
@@ -181,7 +179,7 @@ int Solve() {
 
 // 最终答案两者相减即可
 
-int node_tot;
+int node_tot = -1;
 int trie[N][26], fail[N], isw[N], que[N];
 struct AhoCorasick {
     int newnode() {
