@@ -1,19 +1,19 @@
 T node[N];
-int node_cnt, net[N];
+int node, net[N];
 struct Vector {
     int head;
     Vector() { head = 0; }
     void clear() { head = 0; }
     void push_back(T x) {
-        node_cnt++;
-        node[node_cnt] = x;
-        net[node_cnt] = head;
-        head = node_cnt;
+        node++;
+        node[node] = x;
+        net[node] = head;
+        head = node;
     }
 };
 Vector e[N];
 void Init() {
-    node_cnt = 0;
+    node = 0;
     rep(i, 0, n) e[i].clear();
 }
 // 遍历
