@@ -11,10 +11,10 @@
 #include <set>
 #include <map>
 using namespace std;
-typedef long long ll;
 typedef double db;
-typedef pair<int,int> pii;
+typedef long long ll;
 typedef vector<int> vi;
+typedef pair<int,int> pii;
 #define dd(x) cout << #x << " = " << x << ", "
 #define de(x) cout << #x << " = " << x << endl
 #define rep(i,a,b) for(int i=(a);i<(b);++i)
@@ -31,13 +31,6 @@ const int INF = 0x3f3f3f3f;
 const ll LINF = 0x3f3f3f3f3f3f3f3f;
 const int MOD = (int)1e9+7;
 const int N = (int)-1;
-
-//常用函数
-char read_char() {char c;for(;;){c=getchar();if(c>='A'&&c<='Z')return c;}}
-ll powmod(ll a,ll b) {ll res=1;a%=MOD;for(;b;b>>=1){if(b&1)res=res*a%MOD;a=a*a%MOD;}return res;}
-ll gcd(ll a,ll b) { return b?gcd(b,a%b):a;}
-ll add(ll a, ll b) { return ((a + b) % MOD + MOD) % MOD; }
-ll mul(ll a, ll b) { return (a * b % MOD + MOD) % MOD; }
 
 //-------- 变量 --------//
 
