@@ -16,3 +16,12 @@ int Solve() {
     }
     printf("%d\n", dp[0][len-1]);
 }
+
+// hdu 4293
+// 每个区间有一个权值，求区间互不相交和包含的最大权值
+
+int Solve() {
+    rep(i, 1, n+1) rep(j, 0, i)
+        dp[i] = max(dp[i], dp[j] + grp[j+1][i]);
+    return !printf("%d\n", dp[n]);
+}
