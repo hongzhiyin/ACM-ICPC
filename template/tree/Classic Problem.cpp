@@ -5,6 +5,7 @@
 // 即去掉一条边形成一个游离的链，所有游离的链需要增加一条边连接在根节点所在的链上
 // 然后再用一条边将这条长链首位相连
 
+// dfs 返回值表示是否与父节点连接
 int dfs(int u, int f) {
     int sum = 0;
     for (int i = e[u].head; i; i = net[i]) {
@@ -21,6 +22,6 @@ int dfs(int u, int f) {
 }
 
 int Solve() {
-    dfs(1, false);
+    dfs(1, 0);
     return !printf("%d\n", ans+1);
 }
