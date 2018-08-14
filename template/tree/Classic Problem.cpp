@@ -20,7 +20,6 @@ int dfs(int u, int f) {
     }
     return 1;
 }
-
 int Solve() {
     dfs(1, 0);
     return !printf("%d\n", ans+1);
