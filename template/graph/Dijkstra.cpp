@@ -3,10 +3,11 @@ bool done[N];
 vector <pii> e[N];
 priority_queue <pii> Q;
 struct Dijkstra {
-    void init() {
+    void init(int n) {
         while (!Q.empty()) Q.pop();
         memset(dist, 0x3f, sizeof(dist));
         memset(done, 0, sizeof(done));
+        rep(i, 0, n+1) e[i].clear();
     }
     void dijkstra(int s) {
         Q.push(mp(dist[s] = 0, s));
