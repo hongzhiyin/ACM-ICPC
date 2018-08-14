@@ -24,3 +24,21 @@ int Solve() {
     dfs(1, 0);
     return !printf("%d\n", ans+1);
 }
+
+// -------------------------------------------------------------------------- //
+
+// poj 2255
+// 已知先序遍历，中序遍历，求后序遍历
+
+void build(int len, char *DLR, char *LDR) {     // DLR: 先序遍历 LDR: 中序遍历
+    if (len == 0) return;
+    int pos = strchr(LDR, DLR[0]) - LDR;
+    build(pos, DLR + 1, LDR);
+    build(len - pos - 1, DLR + pos + 1, LDR + pos + 1);
+    putchar(DLR[0]);
+}
+int Solve() {
+    int len = strlen(DLR);
+    build(len, DLR, LDR);
+    puts("");
+}
