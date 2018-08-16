@@ -27,7 +27,7 @@ typedef pair<int,int> pii;
 #define se second
 //INF = 1 061 109 567 ; INF + INF = 2 122 219 134 ;
 //LINF = 4 557 430 888 798 830 399 ; LINF + LINF = 9 114 861 777 597 660 798 ;
-const int INF = 0x3f3f3f3f;
+const int INF = 0x3f3f3f3f;     // -INF: 0xc0   abs(-INF) = INF + 1
 const ll LINF = 0x3f3f3f3f3f3f3f3f;
 const int MOD = (int)1e9+7;
 const int N = (int)-1;
