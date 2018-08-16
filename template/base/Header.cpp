@@ -55,8 +55,8 @@ int main ()
     //Pre();
     //int t; scanf("%d", &t); while (t--) {
     while (~scanf("", )) {
-        //printf("Case %d: ", ++kase);
         //if (n == 0) break;
+        //static int kase = 0; printf("Case %d: ", ++kase);
         Init();
         Solve();
         //if (t) puts("");
