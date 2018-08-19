@@ -24,7 +24,7 @@ ll gcd(ll a, ll b) { return b ? gcd(b, a % b) : a; }
 #define IO(x) freopen(x".in", "r", stdin); freopen(x".out", "w", stdout);
 
 // 浮点型运算
-const db eps = 1e-6;
+const db eps = 1e-7;
 bool eq(db a, db b) { return fabs(a - b) < eps; }
 bool ls(db a, db b) { return a + eps < b; }
 bool le(db a, db b) { return eq(a, b) || ls(a, b); }
