@@ -1,4 +1,4 @@
-struct Fenwick {    //注意下标从 1 开始，以及可能需要离散化操作
+struct Fenwick {    // 注意下标从 1 开始，以及可能需要离散化操作
     int n; ll t[N];
     int Lowbit(int x) { return x & -x; }
     void Init(int n) {
@@ -35,10 +35,10 @@ struct Fenwick {    //注意下标从 1 开始，以及可能需要离散化操�
     }
 };
 
-//区间修改，区间查询
+// 区间修改，区间查询
 struct Sec_Fenwick {
     Fenwick c1, c2;
-    void Init(ll *a, int n) {    //a[] 下标从 1 开始， a[0] = 0
+    void Init(ll *a, int n) {    // a[] 下标从 1 开始， a[0] = 0
         c1.Init(n); c2.Init(n);
         rep(i, 1, n+1) {
             c1.Add(i, a[i] - a[i-1]);
