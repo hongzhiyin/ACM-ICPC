@@ -1,4 +1,4 @@
-struct DDQ {  //单调队列
+struct MQ {  // 单调队列
     int id, l, r;
     pii mx;
     deque <pii> q;
@@ -18,7 +18,7 @@ struct DDQ {  //单调队列
 
 
 // 窗口内 max - min <= k
-struct DDQ {  //单调队列
+struct MQ {  // 单调队列
     int id, l, r;
     pii mi, ma;
     deque <pii> maxq, minq;
@@ -47,4 +47,4 @@ struct DDQ {  //单调队列
         }
     }
     int size() { return r - l + 1; }
-} Q;
+};
