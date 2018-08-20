@@ -43,10 +43,10 @@ struct LCA {
     }
 };
 
+================================================== Problem Set ==================================================
+
 // poj 3728
 // 离线 tarjan 求 lca 的运用
-
-//-------- 变量 --------//
 
 // up[x] 表示从 x 走到 lca 的最优解
 // down[x] 表示从 lca 走到 x 的最优解
@@ -103,8 +103,6 @@ struct LCA {
 };
 LCA obj;
 
-//-------- 函数 --------//
-
 void Init() {
     memset(up, 0, sizeof(up));
     memset(down, 0, sizeof(down));
@@ -133,16 +131,5 @@ void Init() {
 int Solve() {
     obj.dfs(1);
     rep(i, 1, Q+1) printf("%d\n", ans[i]);
-    return 0;
-}
-
-//-------- main --------//
-
-int main ()
-{
-    while (~scanf("%d", &n)) {
-        Init();
-        Solve();
-    }
     return 0;
 }
