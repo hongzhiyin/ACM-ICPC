@@ -25,8 +25,8 @@ ll gcd(ll a, ll b) { return b ? gcd(b, a % b) : a; }
 
 // 浮点型运算
 const db eps = 1e-7;
-bool eq(db a, db b) { return fabs(a - b) < eps; }
-bool ls(db a, db b) { return a + eps < b; }
-bool le(db a, db b) { return eq(a, b) || ls(a, b); }
+inline bool eq(db a, db b) { return fabs(a - b) < eps; }
+inline bool ls(db a, db b) { return a + eps < b; }
+inline bool le(db a, db b) { return eq(a, b) || ls(a, b); }
 
 
