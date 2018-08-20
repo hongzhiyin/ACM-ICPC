@@ -155,4 +155,3 @@ struct Splay {
         if (rson) out(rson);
     }
 };
-Splay ans;
