@@ -25,9 +25,11 @@ bool check(ll x) {      // 判断 x 是否是质数
     return 1;
 }
 
+// Decompose Prime Factor 分解质因数
+// 预处理 [2, sqrt(x)] 的质数
 set <int> S;
-void DPF(int x) {       // Decompose Prime Factor 分解质因数
-    rep(i, 0, sz(prim)) {   // 预处理 [2, sqrt(x)] 的质数
+void DPF(int x) {
+    rep(i, 0, sz(prim)) {
         int p = prim[i];
         if (p > x) break;
         if (x % p == 0) {
