@@ -9,7 +9,7 @@ inline void readint(int &x) {
     x = res * f;
 }
 
-// 取模加，取模乘
+// 取模加，取模乘      // 如果保证不会出现负数的情况，就可以省去两次 MOD 操作
 inline ll add(ll a, ll b) { return ((a + b) % MOD + MOD) % MOD; }
 inline ll mul(ll a, ll b) { return (a * b % MOD + MOD) % MOD; }
 
