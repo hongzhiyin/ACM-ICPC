@@ -245,12 +245,14 @@ struct SegTree {
         PushUp(l, r, rt);
     }
 };
-int n = sz(dis) - 2;
-obj.build(1, n, 1);
-db ans = 0;
-rep(i, 0, sz(a)-1) {
-    if (a[i].dl < a[i].dr) obj.update(a[i].dl, a[i].dr - 1, a[i].val, 1, n, 1);      // !!! 左闭右开 !!!
-    ans += obj.t[1] * (a[i+1].y - a[i].y);
+int Solve() {
+    int n = sz(dis) - 2;
+    obj.build(1, n, 1);
+    db ans = 0;
+    rep(i, 0, sz(a)-1) {
+        if (a[i].dl < a[i].dr) obj.update(a[i].dl, a[i].dr - 1, a[i].val, 1, n, 1);      // !!! 左闭右开 !!!
+        ans += obj.t[1] * (a[i+1].y - a[i].y);
+    }
 }
 
 ----------------------------------------------------------------------------------------------------
@@ -296,13 +298,15 @@ struct SegTree {
         PushUp(l, r, rt);
     }
 };
-int n = sz(dis) - 2;
-obj.build(1, n, 1);
-db ans = 0;
-rep(i, 0, sz(a)-1) {
-    if (a[i].dl < a[i].dr)
-        obj.update(a[i].dl, a[i].dr - 1, a[i].val, 1, n, 1);      // !!! 左闭右开 !!!
-    ans += obj.two[1] * (a[i+1].y - a[i].y);    // two[1]
+int Solve() {
+    int n = sz(dis) - 2;
+    obj.build(1, n, 1);
+    db ans = 0;
+    rep(i, 0, sz(a)-1) {
+        if (a[i].dl < a[i].dr)
+            obj.update(a[i].dl, a[i].dr - 1, a[i].val, 1, n, 1);      // !!! 左闭右开 !!!
+        ans += obj.two[1] * (a[i+1].y - a[i].y);    // two[1]
+    }
 }
 
 ----------------------------------------------------------------------------------------------------
@@ -348,19 +352,21 @@ struct Line {
         return h != rhs.h ? h < rhs.h : val > rhs.val;      // 特殊处理边重合的情况
     }
 };
-int ans = 0;
-rep(i, 0, 2) {
-    rep(j, 0, sz(line[i])) {
-        line[i][j].dl = lower_bound(all(dis[i]), line[i][j].l) - dis[i].begin();
-        line[i][j].dr = lower_bound(all(dis[i]), line[i][j].r) - dis[i].begin();
-    }
-    int n = sz(dis[i]) - 2, pre = 0;
-    obj.build(i, 1, n, 1);
-    rep(j, 0, sz(line[i])) {
-        if (line[i][j].dl < line[i][j].dr)
-            obj.update(line[i][j].dl, line[i][j].dr-1, line[i][j].val, 1, n, 1);
-        ans += (int)fabs(obj.t[1] - pre);
-        pre = obj.t[1];
+int Solve() {
+    int ans = 0;
+    rep(i, 0, 2) {
+        rep(j, 0, sz(line[i])) {
+            line[i][j].dl = lower_bound(all(dis[i]), line[i][j].l) - dis[i].begin();
+            line[i][j].dr = lower_bound(all(dis[i]), line[i][j].r) - dis[i].begin();
+        }
+        int n = sz(dis[i]) - 2, pre = 0;
+        obj.build(i, 1, n, 1);
+        rep(j, 0, sz(line[i])) {
+            if (line[i][j].dl < line[i][j].dr)
+                obj.update(line[i][j].dl, line[i][j].dr-1, line[i][j].val, 1, n, 1);
+            ans += (int)fabs(obj.t[1] - pre);
+            pre = obj.t[1];
+        }
     }
 }
 
@@ -417,30 +423,32 @@ struct SegTree {
 };
 // 枚举 z 轴（如果 z 值范围比较小）
 // 然后在每个截面上做矩形面积交，相交次数依具体题意而定
-ll ans = 0;
-rep(i, 0, sz(dz)-1) {
-    line.clear(); dis.clear(); dis.pb(-INF);
-    rep(j, 0, sz(c)) {
-        // 判断立方体在该 z 坐标下是否有截面，即下底面 <= z，上底面 > z
-        if (c[j].z1 <= dz[i] && c[j].z2 > dz[i]) {
-            line.pb(Line(c[j].x1, c[j].x2, c[j].y1, 1));
-            line.pb(Line(c[j].x1, c[j].x2, c[j].y2, -1));
-            dis.pb(c[j].x1); dis.pb(c[j].x2);
+int Solve() {
+    ll ans = 0;
+    rep(i, 0, sz(dz)-1) {
+        line.clear(); dis.clear(); dis.pb(-INF);
+        rep(j, 0, sz(c)) {
+            // 判断立方体在该 z 坐标下是否有截面，即下底面 <= z ，上底面 > z
+            if (c[j].z1 <= dz[i] && c[j].z2 > dz[i]) {
+                line.pb(Line(c[j].x1, c[j].x2, c[j].y1, 1));
+                line.pb(Line(c[j].x1, c[j].x2, c[j].y2, -1));
+                dis.pb(c[j].x1); dis.pb(c[j].x2);
+            }
         }
-    }
-    sort(all(line));
-    // 离散化 x 坐标
-    sort(all(dis)); dis.erase(unique(all(dis)), dis.end());
-    rep(j, 0, sz(line)) {
-        line[j].dl = lower_bound(all(dis), line[j].l) - dis.begin();
-        line[j].dr = lower_bound(all(dis), line[j].r) - dis.begin();
-    }
-    // 矩形面积交
-    int n = sz(dis) - 2;
-    obj.build(1, n, 1);
-    rep(j, 0, sz(line)-1) {
-        if (line[j].dl < line[j].dr)
-            obj.update(line[j].dl, line[j].dr-1, line[j].val, 1, n, 1);
-        ans += (ll)obj.thre[1] * (line[j+1].y - line[j].y) * (dz[i+1] - dz[i]);
+        sort(all(line));
+        // 离散化 x 坐标
+        sort(all(dis)); dis.erase(unique(all(dis)), dis.end());
+        rep(j, 0, sz(line)) {
+            line[j].dl = lower_bound(all(dis), line[j].l) - dis.begin();
+            line[j].dr = lower_bound(all(dis), line[j].r) - dis.begin();
+        }
+        // 矩形面积交
+        int n = sz(dis) - 2;
+        obj.build(1, n, 1);
+        rep(j, 0, sz(line)-1) {
+            if (line[j].dl < line[j].dr)
+                obj.update(line[j].dl, line[j].dr-1, line[j].val, 1, n, 1);
+            ans += (ll)obj.thre[1] * (line[j+1].y - line[j].y) * (dz[i+1] - dz[i]);
+        }
     }
 }
