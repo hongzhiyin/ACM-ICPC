@@ -13,7 +13,6 @@ vi e[N];
 int match[N];
 bool vis[N];    // 仅用来存 y 部点的标记情况，所以 x 部的点与 y 部的点标号重复也没有关系
 struct Hungary {
-    void init() { memset(match, -1, sizeof(match)); }
     bool dfs(int u) {
         rep(i, 0, sz(e[u])) {
             int v = e[u][i];
@@ -28,6 +27,7 @@ struct Hungary {
         return false;
     }
     int hungary() {   // 返回最大匹配数
+        memset(match, -1, sizeof(match));
         int res = 0;
         rep(i, 0, n) {  // x 部的点标号的范围
             memset(vis, 0, sizeof(vis));
