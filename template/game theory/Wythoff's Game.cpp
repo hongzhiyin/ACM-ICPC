@@ -16,7 +16,7 @@ else puts("WIN");
 // 非必败态转化为必败态：
 
 // 必败态预处理，loss[i] 表示第 i 个必败态
-// posa[i] 表示必败态 (x, y) 中，当 x == i 时，该必败态在 loss[] 中的位置，不存在则为 -1，posb[] 同理
+// posa[i] 表示必败态 (x, y) 中，当 x == i 时，该必败态在 loss[] 中的位置，不存在则为 -1 ，posb[] 同理
 memset(posa, -1, sizeof(posa));
 memset(posb, -1, sizeof(posb));
 rep(k, 0, N) {
