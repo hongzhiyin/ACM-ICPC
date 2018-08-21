@@ -1,4 +1,4 @@
-int net[N];
+int net[N];     // net[i] 表示 p[0] 到 p[i-1] 的最长公共前后缀长度
 char s[N], p[N];
 struct KMP {
     void Get(char *p, int m) {
@@ -79,4 +79,33 @@ int Solve() {
         }
         printf("%d\n", ans);
     }
+}
+
+----------------------------------------------------------------------------------------------------
+
+// 查找字符串中所有循环子串的个数
+// 循环字符串即可以分成若干个相同的子串，如 abcabc 可以分成两个 abc
+
+struct KMP {
+    int Get(char *p, int m) {
+        net[0] = -1;
+        for (int i = 0, j = -1; i < m;) {
+            if (j == -1 || p[i] == p[j]) {
+                net[++i] = ++j;
+                // 注意这部分代码必须放在当前 if 内，否则放在外面会因为 j 的跳转造成重复计算
+                // 也可以在主程序中调用完 Get() 后，再去寻找循环串
+                if (i % (i - net[i]) == 0 && i / (i - net[i]) != 1) {   // i - net[i] 为最小循环节长度
+                    cnt++;      // 对于每一个子串右端点，判断是否为循环串
+                }
+            }
+            else j = net[j];
+        }
+    }
+};
+
+int Solve() {
+    int len = strlen(str);
+    cnt = 0;
+    rep(i, 0, len) obj.Get(str+i, len - i);  // 枚举子串起点
+    return !printf("%d\n", cnt);
 }
