@@ -2,10 +2,7 @@ void Init(int n) { rep(i, 0, n) fa[i] = i; }
 
 int find(int x) { return fa[x] == x ? x : fa[x] = find(fa[x]); }
 
-void Union(int x, int y) {
-    int u = find(x), v = find(y);
-    if (u != v) fa[u] = v;
-}
+void Union(int x, int y) { fa[find(x)] = find(y); }
 
 void Split(int a, int b)
 {
