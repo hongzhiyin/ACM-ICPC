@@ -1,12 +1,11 @@
-// N - 点数, M - 边数
-struct Edge {
-    int s, t, v, net;
-    Edge() {}
-    Edge(int s, int t, int v, int net) : s(s), t(t), v(v), net(net) {}
-} e[M<<1];
-
+// N : 点数 , M : 边数
 struct MaxFlow {
     int n, no, dis[N], Q[N], cur[N], head[N];
+    struct Edge {
+        int s, t, v, net;
+        Edge() {}
+        Edge(int s, int t, int v, int net) : s(s), t(t), v(v), net(net) {}
+    } e[M<<1];
     void init(int _n) {     // _n 为最大点编号 + 1
         n = _n, no = 0;
         memset(head, -1, sizeof(head[0]) * n);
@@ -54,4 +53,4 @@ struct MaxFlow {
         }
         return maxflow;
     }
-} obj;
+};
