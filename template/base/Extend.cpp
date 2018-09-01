@@ -29,4 +29,10 @@ inline bool eq(db a, db b) { return fabs(a - b) < eps; }
 inline bool ls(db a, db b) { return a + eps < b; }
 inline bool le(db a, db b) { return eq(a, b) || ls(a, b); }
 
-
+// GCC 内建函数
+int __builtin_ffs (unsigned int x)      // 返回右起第一个 1 的位置，从 1 开始，如果 x = 0 ，返回 0 。
+int __builtin_clz (unsigned int x)      // 返回前导 0 的个数，如果 x = 0 ，结果未定义。
+int __builtin_ctz (unsigned int x)      // 返回末尾 0 的个数，如果 x = 0 ，结果未定义。
+int __builtin_popcount (unsigned int x) // 返回 1 的个数。
+int __builtin_parity (unsigned int x)   // 返回 1 的个数的奇偶性，奇为 1 ，偶为 0 。
+// x 若为 unsigned long long 类型，只需要在函数名后加 ll 即可，如 int __builtin_ffsll (unsigned long long x)
