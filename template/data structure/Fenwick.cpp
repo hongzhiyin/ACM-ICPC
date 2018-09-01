@@ -1,37 +1,17 @@
 struct Fenwick {    // 注意下标从 1 开始，以及可能需要离散化操作
     int n; ll t[N];
-    int Lowbit(int x) { return x & -x; }
+    int lowbit(int x) { return x & -x; }
     void Init(int n) {
         memset(t, 0, sizeof(t));
         this->n = n;
     }
     ll Sum(int x) {
         ll ret = 0;
-        for (; x > 0; x -= Lowbit(x))
-            ret += t[x];
+        for (; x > 0; x -= lowbit(x)) ret += t[x];
         return ret;
     }
     void Add(int x, ll d) {
-        for (; x <= n; x += Lowbit(x))
-            t[x] += d;
-    }
-    
-    // 区间最值 （需要传入原数组 a[]）
-    void update(int x, int d, int *a) {     // 将 a[x] 更新为 d
-        for (a[x] = d; x <= n; x += Lowbit(x)) {
-            t[x] = a[x];
-            for(int i = 1; i < Lowbit(x); i <<= 1)
-                t[x] = max(t[x], t[x-i]);
-        }
-    }
-    int query(int l, int r, int *a) {       // 求 [l, r] 的最值
-        int ans = 0;
-        while (r >= l) {
-            ans = max(a[r], ans);
-            for (--r; r-Lowbit(r) >= l; r -= Lowbit(r))
-                ans = max(t[r], ans);
-        }
-        return ans;
+        for (; x <= n; x += lowbit(x)) t[x] += d;
     }
 };
 
