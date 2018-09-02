@@ -82,6 +82,31 @@ struct SegTree {
 
 ================================================== Problem Set ==================================================
 
+// hdu 6447
+// 二维坐标，严格上升，总权值最大
+int Solve() {
+    memset(t, 0, sizeof(t)); tmp.clear();
+    sort(all(v));
+    int cur = -1; ll pre = 0;
+    len = -1; rep(i, 0, sz(v)) len = max(len, v[i].dy);
+    rep(i, 0, sz(v)) {
+        if (v[i].x != cur) {
+            cur = v[i].x;
+            pre = 0;
+            rep(j, 0, sz(tmp)) update(tmp[j].se, tmp[j].fi);
+            tmp.clear();
+        }
+        int r = v[i].dy;
+        ll val = max(max(zuo, query(r, r)), query(1, r-1) + v[i].w);
+        tmp.pb(mp(val, r));
+        pre = max(pre, val);
+    }
+    rep(j, 0, sz(tmp)) update(tmp[j].se, tmp[j].fi);
+    return !printf("%lld\n", query(1, len));
+}
+
+----------------------------------------------------------------------------------------------------
+
 // hdu 4578
 // 区间加，区间乘，区间赋值，查询区间和，区间平方和，区间立方和
 #define lson l, m, rt << 1
