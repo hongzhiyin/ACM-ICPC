@@ -2,21 +2,21 @@
 // 《统计的力量》 —— 清华大学 张昆玮
 inline int op(int a, int b) { return min(a, b); }
 void build() {  // 下标从 1 开始
-    memset(tree, 0, sizeof(tree));
-    rep(i, 0, n) tree[i+n] = a[i+1];
-    per(i, 1, n) tree[i] = op(tree[i<<1], tree[i<<1|1]);
+    memset(t, 0, sizeof(t));
+    rep(i, 0, n) t[i+n] = a[i+1];
+    per(i, 1, n) t[i] = op(t[i<<1], t[i<<1|1]);
 }
 int query(int l, int r) {
     int res = INF;
     for (l += n-1, r += n-1; l <= r; l >>= 1, r >>= 1) {
-        if (l & 1) res = op(res, tree[l++]);
-        if (~r & 1) res = op(res, tree[r--]);
+        if (l & 1) res = op(res, t[l++]);
+        if (~r & 1) res = op(res, t[r--]);
     }
     return res;
 }
 void update(int p, int c) {
-    for (tree[p+=n-1] = c, p >>= 1; p; p >>= 1)
-        tree[p] = op(tree[p<<1], tree[p<<1|1]);
+    for (t[p+=n-1] = c, p >>= 1; p; p >>= 1)
+        t[p] = op(t[p<<1], t[p<<1|1]);
 }
 
 // 基本线段树
