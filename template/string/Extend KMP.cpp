@@ -37,4 +37,21 @@ struct ExKMP {  // 求 T 与 S 的每一个后缀的最长公共前缀
 ================================================== Problem Set ==================================================
 
 // cf 535D
-// 
+// 题意：有一个长度为 n 的字符串，已知一个子串以及这个子串出现的若干个位置（可能不是全部）。问这种长度为 n 的字符串有多少种可能性
+// 题解：从左到右依次把若干个子串填入原串，用一个指针表示前一个填入的子串的末尾，保证不重复填子串，最后用扩展 KMP 检验原串
+int Solve() {
+	int pos = -1;
+	rep(i, 0, m) if (a[i] + len - 1 > pos) {
+		for (int j = len-1; ~j && str[a[i]+j] == '?'; --j) str[a[i]+j] = s[j];
+		pos = a[i] + len - 1;
+	}
+	obj.exkmp(str, n, s, len);
+	bool ok = 1;
+	rep(i, 0, m) if (ex[a[i]] != len) {
+		ok = 0; break;
+	}
+	if (!ok) return !puts("0");
+	ll ans = 1;
+	rep(i, 0, n) if (str[i] == '?') ans = (ans * 26) % MOD;
+	return !printf("%lld\n", ans);
+}
