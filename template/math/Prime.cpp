@@ -1,7 +1,6 @@
-int notPrim[N];
 vi prim;
-void GetPrime(int n)    // 预处理 [2, n] 的质数
-{
+bool notPrim[N];
+void GetPrime(int n) {   // 预处理 [2, n] 的质数
     memset(notPrim, 0, sizeof(notPrim)); prim.clear();
     notPrim[0] = notPrim[1] = 1;
     rep(i, 2, n+1) {
