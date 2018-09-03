@@ -1,4 +1,4 @@
-T eno[N];      // 树： N = 点数 * 2
+T eno[N];      // 无向边 : N << 1
 int no, net[N];
 struct Vector {
     int head;
