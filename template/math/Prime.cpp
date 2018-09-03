@@ -1,11 +1,11 @@
 vi prim;
 bool notPrim[N];
-void GetPrime(int n) {   // 预处理 [2, n] 的质数
+void GetPrime(int n) {   // 预处理 [2, n) 的质数
     memset(notPrim, 0, sizeof(notPrim)); prim.clear();
     notPrim[0] = notPrim[1] = 1;
     rep(i, 2, n+1) {
         if (!notPrim[i]) prim.pb(i);
-        for (int j = 0; j < sz(prim) && (ll)i * prim[j] <= n; ++j) {
+        for (int j = 0; j < sz(prim) && (ll)i * prim[j] < n; ++j) {
             notPrim[i*prim[j]] = 1;
             if (i % prim[j] == 0) break;
         }
