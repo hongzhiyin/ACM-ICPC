@@ -18,7 +18,7 @@ struct Node {
 };
 int no;
 Node T[N];
-struct Treap {
+struct Treap {		// 适合序列查找第 k 个元素
     int root;
     void init() { root = 0; }
     int newnode(int val) { T[++no].setval(val); return no; }
@@ -51,7 +51,7 @@ struct Treap {
         }
     }
     void ins(int x) { root = merge(root, newnode(x)); }
-    int del(int k) {
+    int del(int k) {	// 删除第 k 个位置的元素，返回被删除元素的值
 		int x, y, z;
 		split(root, k-1, x, y); split(y, 1, y, z);
 		root = merge(x, z);
@@ -77,7 +77,7 @@ struct Node {
 };
 int treap_cnt;    // 在 Init() 里初始化，通过一个 cnt 和 一个 T[N] 给多个 Treap 分配节点
 Node T[N];
-struct Treap {
+struct Treap {		// 适合集合查找第 k 大元素
     int root;
     void init() { root = 0; }
     void rotate(int &x, int p) {
@@ -145,7 +145,8 @@ struct Treap {
 ================================================== Problem Set ==================================================
 
 // cf 159C
-// 
+// 题意：给一个由子串 t 重复 k 次组成的字符串 s ，每次删去第 p 次出现的字母 ch ，求最终字符串
+// 题解：建 26 个字母的 treap ，按顺序插入字母位置，进行删除操作即可。
 int Solve() {
     int l = strlen(t), len = 0;
     rep(i, 0, k) rep(j, 0, l) s[len++] = t[j];
