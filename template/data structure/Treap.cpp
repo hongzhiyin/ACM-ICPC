@@ -3,38 +3,26 @@
 // https://www.cnblogs.com/nbwzyzngyl/p/7977369.html
 
 // 非旋转 Treap （功能待完善）
-
 // https://www.cnblogs.com/DriverLao/p/8087423.html
-
-void Init() {
-    node_cnt = 0;
-    ans.init();
-}
-
+void Init() { no = 0; obj.init(); }
 #define lson T[u].ch[0]
 #define rson T[u].ch[1]
-
 struct Node {
     int key, rnd, sz, rev, ch[2];
     void setval(int val) {
         static int seed = 3312;
         key = val;
         rnd = seed = (int)((ll)seed * 48271 % 2147483647);
-        sz = 1; ch[0] = ch[1] = 0;
+        sz = 1; ch[0] = ch[1] = rev = 0;
     }
 };
-int node_cnt;
+int no;
 Node T[N];
 struct Treap {
     int root;
     void init() { root = 0; }
-    int newnode(int val) {
-        T[++node_cnt].setval(val);
-        return node_cnt;
-    }
-    void update(int u) {
-        T[u].sz = T[lson].sz + T[rson].sz + 1;
-    }
+    int newnode(int val) { T[++no].setval(val); return no; }
+    void pushup(int u) { T[u].sz = T[lson].sz + T[rson].sz + 1; }
     void pushdown(int u) {
         if (T[u].rev) {
             T[u].rev ^= 1;
@@ -49,27 +37,27 @@ struct Treap {
         if (T[u].sz == k) { x = u; y = 0; return ; }
         if (T[lson].sz >= k) split(lson, k, x, lson), y = u;
         else split(rson, k - T[lson].sz - 1, rson, y), x = u;
-        update(u);
+        pushup(u);
     }
     int merge(int x, int y) {
         if (!x || !y) return x + y;
         pushdown(x); pushdown(y);
         if (T[x].rnd < T[y].rnd) {
             T[x].ch[1] = merge(T[x].ch[1], y);
-            update(x); return x;
+            pushup(x); return x;
         } else {
             T[y].ch[0] = merge(x, T[y].ch[0]);
-            update(y); return y;
+            pushup(y); return y;
         }
     }
-    void out(int u) {
-        pushdown(u);
-        if (lson) out(lson);
-        printf("%d ", T[u].key);
-        if (rson) out(rson);
+    void ins(int x) { root = merge(root, newnode(x)); }
+    int del(int k) {
+		int x, y, z;
+		split(root, k-1, x, y); split(y, 1, y, z);
+		root = merge(x, z);
+		return T[y].key;
     }
 };
-Treap ans;
 
 // 旋转 Treap
 void Init() {
@@ -153,3 +141,21 @@ struct Treap {
         ins(root, T[src].key);
     }
 };
+
+================================================== Problem Set ==================================================
+
+// cf 159C
+// 
+int Solve() {
+    int l = strlen(t), len = 0;
+    rep(i, 0, k) rep(j, 0, l) s[len++] = t[j];
+    s[len] = '\0';
+    rep(i, 0, len) Q[s[i]-'a'].ins(i);
+    rep(i, 0, n) {
+        int p; char ch[5];
+        scanf("%d%s", &p, ch);
+        vis[Q[ch[0]-'a'].del(p)] = 1;
+    }
+    rep(i, 0, len) if (!vis[i]) putchar(s[i]);
+    return !puts("");
+}
