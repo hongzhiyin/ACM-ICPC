@@ -1,18 +1,18 @@
 // https://www.cnblogs.com/TheRoadToTheGold/p/6290732.html
 // 在单词表中查找单词或前缀
 
-int trie[N][26];
+int trie[N][k];    // 字母种类 : k ，单词长度 len ，则 N = (k ^ len) - 1 ， N 多开一些
 void Init() {
-    node_tot = -1; obj.newnode();
+    no = -1; obj.newnode();
 }
 
 struct Trie {
     int newnode() {
-        ++node_tot;
-        memset(trie[node_tot], 0, sizeof(trie[node_tot]));
-        // isw[node_tot] = 0;
-        // sum[node_tot] = 0;
-        return node_tot;
+        ++no;
+        memset(trie[no], 0, sizeof(trie[no]));
+        // isw[no] = 0;
+        // sum[no] = 0;
+        return no;
     }
     void insert(char *s) {     // 插入单词 s
         int len = strlen(s), rt = 0;   // 根节点编号为 0
