@@ -4,7 +4,7 @@
 int dist[N];
 bool inq[N];
 Vector e[N], re[N];
-priority_queue <pii> Q;
+queue <pii> Q;  // 有时可换 priority_queue 试试
 void spfa(int s) {
     memset(dist, 0x3f, sizeof(dist));
     memset(inq, 0, sizeof(inq));
