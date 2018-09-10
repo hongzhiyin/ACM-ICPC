@@ -1,9 +1,6 @@
 struct Kruskal {
     int Find(int x) { return fa[x] == x ? x : fa[x] = Find(fa[x]); }
-    void Union(int x, int y) {
-        int u = find(x), v = find(y);
-        if (u != v) fa[u] = v;
-    }
+    void Union(int x, int y) { fa[find(x)] = find(y); }
     ll kruskal() {
         ll sum = 0;
         sort(all(e));
