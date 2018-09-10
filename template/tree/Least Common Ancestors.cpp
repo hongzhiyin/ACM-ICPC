@@ -3,12 +3,12 @@ vi e[N];
 int f[N][30], dep[N];
 struct LCA {
     void init() { memset(f, 0, sizeof(f)); memset(dep, 0, sizeof(dep)); }   // 如果不用 init() 可能可以省空间
-    void dfs(int u, int p, int d) {
-        f[u][0] = p; dep[u] = d;
-        rep(j, 1, 30) f[u][j] = f[f[u][j-1]][j-1];
+    void dfs(int u, int p, int d) {     // void dfs(int u, int p, int d, int w) {
+        f[u][0] = p; dep[u] = d;        // sum[u][0] = w; 最值同理
+        rep(j, 1, 30) f[u][j] = f[f[u][j-1]][j-1];  // sum[u][j] = sum[f[u][j-1]][j-1] + sum[u][j-1];
         rep(i, 0, sz(e[u])) {
             int v = e[u][i];
-            if (v != p) dfs(v, u, d+1);
+            if (v != p) dfs(v, u, d+1); // dfs(v, u, d + 1, e[u][i].se);
         }
     }
     int lca(int u, int v) {
@@ -19,6 +19,15 @@ struct LCA {
         per(i, 0, 30) if (f[u][i] != f[v][i])
             u = f[u][i], v = f[v][i];
         return f[u][0];
+    }
+    ll dist(int u, int v) {     // 求最值之类的看着改
+        int p = lca(u, v);
+        ll d1 = 0, d2 = 0;
+        for (int i = 29, d = dep[u] - dep[p]; i >= 0; --i)
+            if (d >> i & 1) d1 += sum[u][i], u = f[u][i];
+        for (int i = 29, d = dep[v] - dep[p]; i >= 0; --i)
+            if (d >> i & 1) d2 += sum[v][i], v = f[v][i];
+        return d1 + d2;
     }
 };
 
@@ -44,6 +53,31 @@ struct LCA {
 };
 
 ================================================== Problem Set ==================================================
+
+// https://nanti.jisuanke.com/t/31462
+// 题意：最少的花费删除图中某些边，使得询问的点对存在唯一最短路，输出最短路长度
+// 题解：求最大生成树， LCA 求树上两点距离
+int Solve() {
+    rep(i, 1, n+1) rep(j, 1, m+1) {
+        char ch[5]; int c1, c2;
+        scanf("%s%d%s%d", ch, &c1, ch, &c2);
+        int id1 = m * (i - 1) + j, id2 = m * i + j, id3 = m * (i - 1) + j + 1;
+        if (i < n) edge.pb(mp(-c1, mp(id1, id2)));
+        if (j < m) edge.pb(mp(-c2, mp(id1, id3)));
+    }
+    kruskal();
+	dfs(1, 0, 0, 0);
+    int q; scanf("%d", &q);
+    while (q--) {
+        int x1, y1, x2, y2;
+        scanf("%d%d%d%d", &x1, &y1, &x2, &y2);
+        int u = m * (x1 - 1) + y1;
+        int v = m * (x2 - 1) + y2;
+        printf("%lld\n", dist(u, v));
+    }
+}
+
+----------------------------------------------------------------------------------------------------
 
 // poj 3728
 // 离线 tarjan 求 lca 的运用
