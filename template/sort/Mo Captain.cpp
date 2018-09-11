@@ -8,6 +8,13 @@ void mo() {
         for (; r > qry[i].r; --r) sub(r);
         for (; l < qry[i].l; ++l) sub(l);
         for (; l > qry[i].l; --l) add(l - 1);
+        tmp..
+    }
+}
+int Solve() {
+    int block = sqrt(n);
+    rep(i, 1, n+1) {
+        pos[i] = (i - 1) / block + 1;
         ...
     }
 }
