@@ -4,10 +4,10 @@ void sub(int p) { tmp.. }
 void mo() {
     int l = 1, r = 0;
     rep(i, 0, q) {
-        for (; r < qry[i].r; ++r) add(r + 1);
-        for (; r > qry[i].r; --r) sub(r);
-        for (; l < qry[i].l; ++l) sub(l);
-        for (; l > qry[i].l; --l) add(l - 1);
+        while (r < qry[i].r) add(++r);
+        while (r > qry[i].r) sub(r--);
+        while (l < qry[i].l) sub(l++);
+        while (l > qry[i].l) add(--l);
         tmp..
     }
 }
@@ -41,10 +41,10 @@ void sub(int p) { // x^2 - 2*x + 1 == (x-1)^2
 void mo() {
     int l = 1, r = 0;
     rep(i, 0, q) {
-        for (; r < qry[i].r; ++r) add(r + 1);
-        for (; r > qry[i].r; --r) sub(r);
-        for (; l < qry[i].l; ++l) sub(l);
-        for (; l > qry[i].l; --l) add(l - 1);
+        while (r < qry[i].r) add(++r);
+        while (r > qry[i].r) sub(r--);
+        while (l < qry[i].l) sub(l++);
+        while (l > qry[i].l) add(--l);
         if (qry[i].l == qry[i].r) {
             qry[i].zi = 0;
             qry[i].mu = 1;
