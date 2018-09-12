@@ -1,3 +1,4 @@
+// 莫队  O(n^(3/2))
 ll tmp;
 void add(int p) { tmp.. }
 void sub(int p) { tmp.. }
@@ -8,7 +9,8 @@ void mo() {
         while (r > qry[i].r) sub(r--);
         while (l < qry[i].l) sub(l++);
         while (l > qry[i].l) add(--l);
-        tmp..
+        ...
+        qry[i].ans = tmp;
     }
 }
 int Solve() {
@@ -17,6 +19,62 @@ int Solve() {
         pos[i] = (i - 1) / block + 1;
         ...
     }
+    rep(i, 0, q) { ... }
+    sort(qry, qry + q, [&](Node a, Node b){ return pos[a.l] != pos[b.l] ? a.l < b.l : a.r < b.r; });
+    mo();
+    sort(qry, qry + q, [&](Node a, Node b){ return a.id < b.id; });
+    rep(i, 0, q) printf("%lld\n", qry[i].ans);
+}
+
+// 带修改莫队  O(n^(5/3))
+bool cmp(Node a, Node b) {
+    return pos[a.l] != pos[b.l] ? pos[a.l] < pos[b.l] :
+           pos[a.r] != pos[b.r] ? pos[a.r] < pos[b.r] : a.pre < b.pre;
+}
+int tmp, l, r, cur;
+void add(int p) { tmp.. }
+void sub(int p) { tmp.. }
+void upd(int cur) {
+    if (chg[cur].pos >= l && chg[cur].pos <= r) { tmp.. }
+    swap(chg[cur].val, c[ chg[cur].pos ]);
+}
+void mo() {
+    rep(i, 1, qno+1) {
+        while (r < qry[i].r) add(++r);
+        while (r > qry[i].r) sub(r--);
+        while (l < qry[i].l) sub(l++);
+        while (l > qry[i].l) add(--l);
+        while (cur < qry[i].pre) upd(++cur);
+        while (cur > qry[i].pre) upd(cur--);
+        qry[i].ans = tmp;
+    }
+}
+int Solve() {
+    qno = cno = 0;
+    tmp = 0; l = 1; r = 0; cur = 0;
+
+    int block = pow(n, 2.0 / 3);    // 注意分块大小
+    rep(i, 1, n+1) {
+        pos[i] = (i - 1) / block + 1;
+        ...
+    }
+    while (q--) {
+        char op[5]; scanf("%s", op);
+        if (op[0] == 'Q') {     // 读询问
+            ++qno;
+            scanf("%d%d", &qry[qno].l, &qry[qno].r);
+            qry[qno].pre = cno; // 最近一次修改
+            qry[qno].id = qno;
+        } else {                // 读修改
+            ++cno;
+            scanf("%d%d", &chg[cno].pos, &chg[cno].val);
+        }
+    }
+    sort(qry + 1, qry + qno + 1, cmp);
+    mo();
+    sort(qry + 1, qry + qno + 1, [&](Node a, Node b){ return a.id < b.id; });
+    rep(i, 1, qno+1) printf("%lld\n", qry[i].ans);
+    return 0;
 }
 
 ================================================== Problem Set ==================================================
@@ -72,5 +130,65 @@ int Solve() {
     mo();
     sort(qry, qry + q, [&](Node a, Node b){ return a.id < b.id; });
     rep(i, 0, q) printf("%lld/%lld\n", qry[i].zi, qry[i].mu);
+    return 0;
+}
+
+// luogu P1903
+// 题意：询问 [l, r] 的颜色种数，修改 pos 位置的颜色
+// 题解：带修改莫队
+int tmp, l, r, cur;
+void add(int p) {
+    cnt[c[p]]++;
+    if (cnt[c[p]] == 1) tmp++;
+}
+void sub(int p) {
+    cnt[c[p]]--;
+    if (cnt[c[p]] == 0) tmp--;
+}
+void upd(int cur) {
+    if (chg[cur].pos >= l && chg[cur].pos <= r) {
+        if (--cnt[ c[ chg[cur].pos ] ] == 0) tmp--;
+        if (++cnt[ chg[cur].val ] == 1) tmp++;
+    }
+    swap(chg[cur].val, c[ chg[cur].pos ]);
+}
+void mo() {
+    rep(i, 1, qno+1) {
+        while (r < qry[i].r) add(++r);
+        while (r > qry[i].r) sub(r--);
+        while (l < qry[i].l) sub(l++);
+        while (l > qry[i].l) add(--l);
+        while (cur < qry[i].pre) upd(++cur);
+        while (cur > qry[i].pre) upd(cur--);
+        qry[i].ans = tmp;
+    }
+}
+int Solve() {
+    qno = cno = 0;
+    tmp = 0; l = 1; r = 0; cur = 0;
+    memset(cnt, 0, sizeof(cnt));
+
+    int block = pow(n, 2.0 / 3);    // 注意分块大小
+    rep(i, 1, n+1) {
+        pos[i] = (i - 1) / block + 1;
+        scanf("%d", c+i);
+    }
+    while (q--) {
+        char op[5];
+        scanf("%s", op);
+        if (op[0] == 'Q') {
+            ++qno;
+            scanf("%d%d", &qry[qno].l, &qry[qno].r);
+            qry[qno].pre = cno;
+            qry[qno].id = qno;
+        } else {
+            ++cno;
+            scanf("%d%d", &chg[cno].pos, &chg[cno].val);
+        }
+    }
+    sort(qry + 1, qry + qno + 1, cmp);
+    mo();
+    sort(qry + 1, qry + qno + 1, [&](Node a, Node b){ return a.id < b.id; });
+    rep(i, 1, qno+1) printf("%d\n", qry[i].ans);
     return 0;
 }
