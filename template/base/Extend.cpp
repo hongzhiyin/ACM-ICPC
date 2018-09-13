@@ -17,6 +17,11 @@ inline ll mul(ll a, ll b) { return (a * b % MOD + MOD) % MOD; }
 ll mulmod(ll a, ll b) { ll res = 0; for(a %= MOD; b; b >>= 1) { if (b & 1) res = add(res, a); a = add(a, a); } return res; }
 ll powmod(ll a, ll b) { ll res = 1; for(a %= MOD; b; b >>= 1) { if (b & 1) res = mul(res, a); a = mul(a, a); } return res; }
 
+// 字符串映射
+int cnt = 0;
+map <string, int> id;
+int ID(string s) { return id.count(s) ? id[s] : id[s] = cnt++; }
+
 // gcd
 ll gcd(ll a, ll b) { return b ? gcd(b, a % b) : a; }
 
