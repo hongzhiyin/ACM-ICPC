@@ -6,7 +6,7 @@
 // t[i][c]: 每个节点 i 表示一个回文串， t[i][c] 表示在回文串 i 两边加上字符 c 形成的新的回文串
 // fail[i]: 指向节点 i 的最长真后缀回文串
 // cnt[i]:  节点 i 表示的本质不同的回文串的个数（建树时求出的不是完全的，最后跑一遍 count() 后才是正确的）
-// flen[i]: 节点 i 的 fail 链的长度
+// flen[i]: 节点 i 的 fail 链的长度，即以节点 i 的最后一个字符为结尾的回文串个数
 // len[i]:  节点 i 表示的回文串的长度
 // s[i]:    第 i 次加入的字符， s[0] = -1
 // last:    指向新添加一个字符后所形成的最长回文串表示的节点
@@ -163,5 +163,65 @@ int Solve() {       // 注意子串个数是否需要用 long long
             break;
         }
     }
+    return printf("%lld\n", ans);
+}
+
+----------------------------------------------------------------------------------------------------
+
+// cf 17E
+// 题意：求 s 中选两个有公共部分的回文子串的方案数
+// 题解：枚举 i ，计算以 s[i] 为开头的回文子串和 s[0..i-1] 内所有回文子串的组合方案数，最后用总方案数减去该方案数
+struct Palindromic_Tree {   // 用邻接表防止 MLE
+    vector <pii> t[N]; ...
+    ...
+    void add(int c) {
+        c -= 'a';
+        s[++sno] = c;
+        int cur = get_fail(last);
+        /*
+        if (!t[cur][c]) {
+            int now = newnode(len[cur] + 2);
+            fail[now] = t[get_fail(fail[cur])][c];
+            t[cur][c] = now;
+            flen[now] = flen[fail[now]] + 1;
+        }
+        last = t[cur][c];
+        cnt[last]++;
+        */
+        rep(i, 0, sz(t[cur])) if (t[cur][i].fi == c) {
+            last = t[cur][i].se;
+            cnt[last]++;
+            return;
+        }
+        int now = newnode(len[cur] + 2);
+        int u = get_fail(fail[cur]), v = 0;
+        rep(i, 0, sz(t[u])) if (t[u][i].fi == c) { v = t[u][i].se; break; }
+        t[cur].pb(mp(c, now));
+        flen[now] = flen[fail[now]=v] + 1;
+        last = now;
+        cnt[last=now]++;
+        return;
+    }
+    ...
+} obj;
+int inv(int a) {    // 因为 MOD 不是质数，所以用扩展欧几里得求逆元
+    ll g, x, y;
+    exgcd(a, MOD, g, x, y);
+    return (x + MOD) % MOD;
+}
+int Solve() {
+    obj.init();
+    rep(i, 0, n) {
+        obj.add(s[i]);
+        if (i) pre[i] = add(pre[i-1], obj.flen[obj.last]);     // flen[last] 表示以 s[i] 为结尾的回文串个数
+        else pre[i] = obj.flen[obj.last];
+    }
+    ll sum = pre[n-1], ans = 0;
+    obj.init();
+    per(i, 1, n) {      // 计算以 s[i] 开头的回文子串与 s[0..i-1] 内的回文子串的组合方案数
+        obj.add(s[i]);
+        ans = add(ans, mul(obj.flen[obj.last], pre[i-1]));
+    }
+    ans = sub(mul(mul(sum, sum - 1), inv(2)), ans);
     return printf("%lld\n", ans);
 }
