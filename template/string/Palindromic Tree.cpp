@@ -119,7 +119,7 @@ int Solve() {
 
 ----------------------------------------------------------------------------------------------------
 
-
+// http://www.tsinsen.com/A1280
 // 题意：找到最长的串 XY ， X 为长度非 0 的回文串， Y 为长度非 0 的回文串
 // 题解：枚举以 i 为结尾的最长回文长度和以 i 为开头的最长回文长度
 int Solve() {
@@ -137,4 +137,31 @@ int Solve() {
         ans = max(ans, pre[i-1] + suf[i]);
     }
     return printf("%d\n", ans);
+}
+
+----------------------------------------------------------------------------------------------------
+
+// http://www.tsinsen.com/A1255
+// 题意：找出字符串中长度为奇数的回文子串，按长度降序排序，求前 k 个回文子串的长度的乘积
+// 题解：统计奇数长度的回文子串总个数，分别存在下标表示长度的数组中，从大到小遍历长度，用快速幂计算 len 的 cnt 次方
+int Solve() {       // 注意子串个数是否需要用 long long
+    obj.init();
+    rep(i, 0, n) obj.add(s[i]);
+    obj.count();
+    rep(i, 2, obj.no) if (obj.len[i] & 1) {
+        lcnt[obj.len[i]] += obj.cnt[i];
+        sum += obj.cnt[i];
+    }
+    if (sum < k) return puts("-1");
+    ll ans = 1;
+    for (int i = n & 1 ? n : n-1; i >= 1; i -= 2) {
+        if (lcnt[i] < k) {
+            ans = mul(ans, powmod(i, lcnt[i]));
+            k -= lcnt[i];
+        } else {
+            ans = mul(ans, powmod(i, k));
+            break;
+        }
+    }
+    return printf("%lld\n", ans);
 }
