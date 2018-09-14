@@ -44,7 +44,7 @@ struct Palindromic_Tree {
         cnt[last]++;
     }
     void count() { per(i, 0, no) cnt[fail[i]] += cnt[i]; }
-} obj;
+};
 
 ================================================== Problem Set ==================================================
 
