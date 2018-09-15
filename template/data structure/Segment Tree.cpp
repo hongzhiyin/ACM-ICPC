@@ -1,5 +1,6 @@
 // zkw 线段树
 // 《统计的力量》 —— 清华大学 张昆玮
+int t[N<<1];
 inline int op(int a, int b) { return min(a, b); }
 void build() {  // 下标从 1 开始
     memset(t, 0, sizeof(t));
