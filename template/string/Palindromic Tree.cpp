@@ -225,3 +225,38 @@ int Solve() {
     ans = sub(mul(mul(sum, sum - 1), inv(2)), ans);
     return printf("%lld\n", ans);
 }
+
+----------------------------------------------------------------------------------------------------
+
+// https://nanti.jisuanke.com/t/30998
+// 题意：一个由 1 ~ 9 组成的字符串，求字符串中所有本质不同的回文数之和
+// 题解：在回文树上 dfs ，累加答案
+int dfs(int x) {
+    if (x == 1) {
+        rep(i, 1, 10) {
+            int v = obj.t[x][i];
+            if (v == 0) continue;
+            num[v] = i;
+            ans = add(ans, num[v]);
+            dfs(v);
+        }
+    } else {
+        rep(i, 1, 10) {
+            int v = obj.t[x][i];
+            if (v == 0) continue;
+            num[v] = add(add(mul(num[x], 10), i), mul(i, powmod(10, obj.len[x] + 1)));
+            ans = add(ans, num[v]);
+            dfs(v);
+        }
+    }
+}
+int Solve() {
+    obj.init();
+    int len = strlen(s);
+    rep(i, 0, len) obj.add(s[i]);
+    obj.count();
+    ans = 0;
+    num[0] = num[1] = 0;
+    dfs(0); dfs(1);
+    return printf("%d\n", ans);
+}
