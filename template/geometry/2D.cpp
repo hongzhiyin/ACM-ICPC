@@ -1,5 +1,5 @@
 typedef ll T;
-const db eps = 1e-9, pi = acosl(-1.);
+const db eps = 1e-7, pi = acosl(-1.);
 int sgn(T x) { return (x > eps) - (x < -eps); }
 struct P {
     T x, y; P () {} P (T x, T y) : x(x), y(y) {}
