@@ -14,6 +14,7 @@ public class Main {
 	
 	public static void main(String[] args) {
 		Pre();
+		//int t; t = in.nextInt(); while (t-- >= 1) {
 		while (in.hasNext()) {
 			Init();
 			Solve();
