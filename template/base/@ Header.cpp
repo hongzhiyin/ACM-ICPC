@@ -56,6 +56,7 @@ int main ()
     //Pre();
     //int t; scanf("%d", &t); while (t--) {
     while (~scanf("", )) {
+    //while(fgets(s, N, stdin)) {   // 注意 fgets 会读入换行符
         //if (n == 0) break;
         //static int kase = 0; printf("Case %d: ", ++kase);
         Init();
