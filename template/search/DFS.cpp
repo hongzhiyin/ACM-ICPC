@@ -35,19 +35,19 @@ int Solve() {
 // 题意：如果 A > B 并且 B > C , 那么有 A > C , 现在 A > B 的条件是， A 的两个元素中的至少一个大于 B 。问一个人可以打败多少人
 // 题解：按每一分量排序，相邻连边，最后从小到大（随便某一分量） dfs 每一个点，小的点能到达的点，大的点也一定能到达，所以叠加 cnt
 void dfs(int u) {
-	++cnt;
-	vis[u] = 1;
-	for (auto v : e[u]) if (!vis[v]) dfs(v);
+    ++cnt;
+    vis[u] = 1;
+    for (auto v : e[u]) if (!vis[v]) dfs(v);
 }
 int Solve() {
-	sort(a, a + n, [&](Node a, Node b){ return a.x < b.x; });
-	rep(i, 1, n) e[a[i].id].pb(a[i-1].id);
-	sort(a, a + n, [&](Node a, Node b){ return a.y < b.y; });
-	rep(i, 1, n) e[a[i].id].pb(a[i-1].id);
-	cnt = 0;
+    sort(a, a + n, [&](Node a, Node b){ return a.x < b.x; });
+    rep(i, 1, n) e[a[i].id].pb(a[i-1].id);
+    sort(a, a + n, [&](Node a, Node b){ return a.y < b.y; });
+    rep(i, 1, n) e[a[i].id].pb(a[i-1].id);
+    cnt = 0;
     rep(i, 0, n) {
-		if (!vis[a[i].id]) dfs(a[i].id);
-		ans[a[i].id] = cnt - 1;
-	}
-	rep(i, 0, n) printf("%d\n", ans[i]);
+        if (!vis[a[i].id]) dfs(a[i].id);
+        ans[a[i].id] = cnt - 1;
+    }
+    rep(i, 0, n) printf("%d\n", ans[i]);
 }
