@@ -3,3 +3,7 @@
 // 复杂度：随机迭代器 O(logN) ，非随机迭代器 O(N)
 auto it = equal_range(all(v), x);
 cnt = it.se - it.fi
+
+// 消除字符串 s 首尾空格
+s.erase(0, s.find_first_not_of(" "));
+s.erase(s.find_last_not_of(" ") + 1);
