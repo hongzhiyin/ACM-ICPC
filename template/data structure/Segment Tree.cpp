@@ -1,24 +1,27 @@
 // zkw 线段树
 // 《统计的力量》 —— 清华大学 张昆玮
-int t[N<<1];
-inline int op(int a, int b) { return min(a, b); }
-void build() {  // 下标从 1 开始
-    memset(t, 0, sizeof(t));
-    rep(i, 0, n) t[i+n] = a[i+1];
-    per(i, 1, n) t[i] = op(t[i<<1], t[i<<1|1]);
-}
-int query(int l, int r) {
-    int res = INF;
-    for (l += n-1, r += n-1; l <= r; l >>= 1, r >>= 1) {
-        if (l & 1) res = op(res, t[l++]);
-        if (~r & 1) res = op(res, t[r--]);
+struct SegTree {
+    int n, t[N<<1];
+    inline int op(int a, int b) { return min(a, b); }
+    void build(int n) {  // 下标从 1 开始
+        this->n = n;
+        memset(t, 0, sizeof(t));
+        rep(i, 0, n) t[i+n] = a[i+1];
+        per(i, 1, n) t[i] = op(t[i<<1], t[i<<1|1]);
     }
-    return res;
-}
-void update(int p, int c) {
-    for (t[p+=n-1] = c, p >>= 1; p; p >>= 1)
-        t[p] = op(t[p<<1], t[p<<1|1]);
-}
+    int query(int l, int r) {
+        int res = INF;
+        for (l += n-1, r += n-1; l <= r; l >>= 1, r >>= 1) {
+            if (l & 1) res = op(res, t[l++]);
+            if (~r & 1) res = op(res, t[r--]);
+        }
+        return res;
+    }
+    void update(int p, int c) {
+        for (t[p+=n-1] = c, p >>= 1; p; p >>= 1)
+            t[p] = op(t[p<<1], t[p<<1|1]);
+    }
+};
 
 // 基本线段树
 #define lson l, m, rt << 1
