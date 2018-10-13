@@ -1,5 +1,5 @@
 struct Fenwick {    // 注意下标从 1 开始，以及可能需要离散化操作
-    int n; ll t[N];
+    int n; ll t[N]; // map <int, int> t;
     void Init(int n) {
         memset(t, 0, sizeof(t));
         this->n = n;
