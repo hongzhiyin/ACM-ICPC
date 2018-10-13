@@ -1,17 +1,16 @@
 struct Fenwick {    // 注意下标从 1 开始，以及可能需要离散化操作
     int n; ll t[N];
-    int lowbit(int x) { return x & -x; }
     void Init(int n) {
         memset(t, 0, sizeof(t));
         this->n = n;
     }
     ll Sum(int x) {
         ll ret = 0;
-        for (; x > 0; x -= lowbit(x)) ret += t[x];
+        for (; x > 0; x -= x&-x) ret += t[x];
         return ret;
     }
     void Add(int x, ll d) {
-        for (; x <= n; x += lowbit(x)) t[x] += d;
+        for (; x <= n; x += x&-x) t[x] += d;
     }
 };
 
