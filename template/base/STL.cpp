@@ -11,4 +11,4 @@ s.erase(s.find_last_not_of(" ") + 1);
 // 分割字符串 s
 int pos = s.find("  ");
 s1 = s.substr(0, pos);
-s2 = s.substr(pos, sz(str)-pos);
+s2 = s.substr(pos, sz(s)-pos);
