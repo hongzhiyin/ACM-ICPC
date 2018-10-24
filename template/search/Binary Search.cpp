@@ -18,7 +18,7 @@ printf("%d\n", L);
 
 // 浮点数
 db L = 0, R = max;
-while (!eq(L, R)) {
+while (!eq(L, R)) {     // 精度太小可能 TLE ，可以用固定次数的循环
     db M = (L + R) / 2;
     if (check(M)) L = M; else R = M;
 }
