@@ -9,7 +9,7 @@ struct SegTree {
         rep(i, 0, n) t[i+n] = a[i+1];
         per(i, 1, n) t[i] = op(t[i<<1], t[i<<1|1]);
     }
-    int query(int l, int r) {
+    int query(int l, int r) {       // 根据情况调整 res 初值
         int res = INF;
         for (l += n-1, r += n-1; l <= r; l >>= 1, r >>= 1) {
             if (l & 1) res = op(res, t[l++]);
@@ -17,7 +17,7 @@ struct SegTree {
         }
         return res;
     }
-    void update(int p, int c) {
+    void update(int p, int c) {     // 注意是 = c 还是 += c
         for (t[p+=n-1] = c, p >>= 1; p; p >>= 1)
             t[p] = op(t[p<<1], t[p<<1|1]);
     }
