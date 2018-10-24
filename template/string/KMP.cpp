@@ -45,7 +45,7 @@ struct KMP {
             if (j == -1 || s[i] == p[j]) ++i, ++j;
             else j = net[j];
             if (i == n) {
-                S.insert(j-1);      // 当匹配成功时，记录下最长能匹配到的前缀下标
+                v.pb(j-1);          // 当匹配成功时，记录下最长能匹配到的前缀下标
                 --i;
                 j = net[j-1];       // 当作失配，重新匹配
             }
@@ -66,16 +66,16 @@ KMP obj;
 
 int Solve() {
     while (n--) {
-        S.clear();
+        v.clear();
         scanf("%s", s);
         int len = strlen(s);
         if (len < 3) { puts("0"); continue; }
         obj.Get(s, len);
-        obj.kmp1(s+len-len/3, len/3, s, len);   // 寻找各个相同前后缀的位置
+        obj.kmp1(s+len-len/3, len/3, s, len);   // 寻找各个相同前后缀的位置，若可以相交，则 kmp1(s+1, len-1, s, len)
         int ans = 0;
-        for (auto i : S) {
-            bool ok = obj.kmp(s+i+1, len-2*i-2, s, i+1);    // 匹配中间字符串
-            if (ok) ans = i + 1;    // 记录最大长度
+        for (auto i : v) {      // v 中元素是从大到小的顺序
+            bool ok = obj.kmp(s+i+1, len-2*i-2, s, i+1);    // 匹配中间字符串，若可以相交，则 kmp(s+1, len-2, s, i+1)
+            if (ok) { ans = i + 1; break; }   // 记录最大长度
         }
         printf("%d\n", ans);
     }
