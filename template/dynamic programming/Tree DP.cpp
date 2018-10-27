@@ -33,6 +33,7 @@ int Solve() {
             ans[j] = add(ans[j], mul(sum[i], up[i][j]));
         }
     }
+    // 同一条路径被算了两次，所以要乘以 2 的逆元
     rep(i, 1, 2*(n-1)+1) printf("%d%c", mul(ans[i], 500000004), " \n"[i==2*(n-1)]);
     return 0;
 }
