@@ -1,4 +1,4 @@
-set nu ai ci si mouse=a ts=4 sts=4 sw=4
+set nu ai ci si mouse=a ts=4 sts=4 sw=4 fdm=marker
 nmap<F2> : vs %<.in <CR>                                          // 新建输入文件
 nmap<F3> : !gedit % <CR>                                          // 用 gedit 打开
 nmap<F5> : !./%< <CR>                                             // 在命令行中运行
