@@ -10,6 +10,7 @@
 
 */
 
+// int pre[N];  // PrintRoad
 T dist[N];
 bool done[N];
 vector < pair<int, T> > e[N];
@@ -25,12 +26,25 @@ void dijkstra(int s) {
             int v = e[u][i].fi; T w = e[u][i].se;
             if (dist[v] > dist[u] + w) {
                 dist[v] = dist[u] + w;
+                // pre[v] = u;  // PrintRoad
                 Q.push(mp(-dist[v], v));
             }
         }
     }
 }
 
+vi road;
+void PrintRoad(int S, int T) {
+    road.clear(); road.pb(T);
+    int v = T;
+    while (v != S) {
+        v = pre[v];
+        road.pb(v);
+    }
+    per(i, 0, sz(road))
+        printf("%d%c", road[i], " \n"[i==0]);
+}
+    
 ================================================== Problem Set ==================================================
 
 // cf 229B
