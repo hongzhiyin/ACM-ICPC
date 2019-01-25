@@ -1,7 +1,19 @@
-int dist[N];
+/*
+【时间复杂度】
+    O( (V+E)logV )
+【准备工作】
+    e[] : 边集
+【输入】
+    s : 起点
+【输出】
+    dist[i] : 从起点 s 到点 i 的最短距离
+【注意事项】
+*/
+
+T dist[N];
 bool done[N];
-vector <pii> e[N];
-priority_queue <pii> Q;
+vector < pair<int, T> > e[N];
+priority_queue < pair<T, int> > Q;
 void dijkstra(int s) {
     memset(dist, 0x3f, sizeof(dist));
     memset(done, 0, sizeof(done));
@@ -10,7 +22,7 @@ void dijkstra(int s) {
         int u = Q.top().se; Q.pop();
         if (done[u]) continue; done[u] = true;
         rep(i, 0, sz(e[u])) {
-            int v = e[u][i].fi, w = e[u][i].se;
+            int v = e[u][i].fi; T w = e[u][i].se;
             if (dist[v] > dist[u] + w) {
                 dist[v] = dist[u] + w;
                 Q.push(mp(-dist[v], v));
