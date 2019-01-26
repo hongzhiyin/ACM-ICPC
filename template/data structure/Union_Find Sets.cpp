@@ -1,8 +1,8 @@
 void Init(int n) { rep(i, 0, n) fa[i] = i; }
 
-int find(int x) { return fa[x] == x ? x : fa[x] = find(fa[x]); }
+int Find(int x) { return fa[x] == x ? x : fa[x] = Find(fa[x]); }
 
-void Union(int x, int y) { fa[find(x)] = find(y); }
+void Union(int x, int y) { fa[Find(x)] = Find(y); }
 
 void Split(int a, int b)
 {
