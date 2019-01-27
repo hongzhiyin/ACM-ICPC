@@ -1,3 +1,23 @@
+/*
+时间复杂度 : O(n)
+准备 :
+    base : 基数 ; mod : 模数
+输入 :
+    s : 待求哈希值的字符串
+输出 :
+    pair<ull, ull> : 双哈希值
+注意 :
+*/
+typedef unsigned long long ull;
+ull ha[2], base[] = {123, 131}, mod = 19260817;
+pair<ull, ull> Hash(char *s) {
+    int len = strlen(s);
+    ha[0] = ha[1] = 0;
+    rep(i, 1, len+1) ha[0] = ha[0] * base[0] + s[i];
+    rep(i, 1, len+1) ha[1] = (ha[1] * base[1] + s[i]) % mod;
+    return mp(ha[0], ha[1]);
+}
+
 typedef unsigned long long ull;
 char s[N];
 ull ha[N], p[N];      // ha[i] 表示从 1 到 i 位的字符串映射为数字， p[i] 表示 base 的 i 次方
