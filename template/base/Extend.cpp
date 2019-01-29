@@ -9,9 +9,9 @@ inline void readint(int &x) {
     x = res * f;
 }
 
-// 取模加，取模乘      // 如果保证不会出现负数的情况，就可以省去两次 MOD 操作
-inline ll add(ll a, ll b) { return ((a + b) % MOD + MOD) % MOD; }
-inline ll mul(ll a, ll b) { return (a * b % MOD + MOD) % MOD; }
+// 取模加，取模乘
+inline int add(ll a, int b) { if ((a += b) >= MOD) a -= MOD; return a; }
+inline int mul(ll a, int b) { if ((a *= b) >= MOD) a %= MOD; return a; }
 
 // 快速乘，快速幂
 ll mulmod(ll a, ll b) { ll res = 0; for(a %= MOD; b; b >>= 1) { if (b & 1) res = add(res, a); a = add(a, a); } return res; }
