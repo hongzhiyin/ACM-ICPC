@@ -1,6 +1,5 @@
-int net[N];     // net[i] 表示 p[0] 到 p[i-1] 的最长公共前后缀长度
-char s[N], p[N];
 struct KMP {
+    int net[N];     // net[i] 表示 p[0] 到 p[i-1] 的最长公共前后缀长度
     void Get(char *p, int m) {
         net[0] = -1;
         for (int i = 0, j = -1; i < m;) {
@@ -17,8 +16,9 @@ struct KMP {
         for (int i = 0, j = 0; i < n;) {
             if (j == -1 || s[i] == p[j]) ++i, ++j;
             else j = net[j];
-            if (j == m) return i - j;   // 第一个匹配成功的 s 串下标
-            //if (j == m) cnt++, j = 0;     // 母串中可匹配的不相交模式串个数
+            if (j == m) return i - j;   // 第一个匹配成功的 s 串下标，从 0 开始
+            // if (j == m) { ans.pb(i-j); j = net[j]; } // 记录所有可匹配的位置
+            // if (j == m) cnt++, j = 0;     // 母串中可匹配的不相交模式串个数
         }
         return -1;
     }
