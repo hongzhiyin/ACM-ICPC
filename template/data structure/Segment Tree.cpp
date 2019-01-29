@@ -40,6 +40,7 @@ void Build(T a[], int l, int r, int rt)             : 以 a[] 建树
 void Upd(int L, int R, T val, int l, int r, int rt) : 区间 [L, R] 都加上 val
 T Qry(int L, int R, int l, int r, int rt)           : 查询区间 [L, R]
 */
+
 #define lson l, m, rt << 1
 #define rson m + 1, r, rt << 1 | 1
 template <class T>
