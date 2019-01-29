@@ -15,10 +15,9 @@ ll inverse(ll a, ll MOD) {
 // 当 k = 1 时，a 的乘法逆元为 a^(MOD-2)
 
 // 递推公式
-// 模数 MOD 为奇质数
+// 模数 p 质数
 inv[1] = 1;
-rep(i, 2, MOD)
-    inv[i] = (MOD - MOD / i) * inv[MOD % i] % MOD;
+rep(i, 2, n+1) inv[i] = (ll)(p - p / i) * inv[p % i] % p;
 
 // 另，有结论：1 到 p-1 模 p 的所有逆元值对应 1 到 p 中所有的数。
 // 例如， p = 7 ，那么 1 到 6 对应的逆元是 1 4 5 2 3 6 。
