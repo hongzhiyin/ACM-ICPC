@@ -1,37 +1,52 @@
+/*
 // zkw 线段树
 // 《统计的力量》 —— 清华大学 张昆玮
+
+【函数功能】
+void Init(T a[], int n) : 用长度为 n 的数组 a[] 初始化线段树
+T Qry(int l, int r)     : 查询区间 [l, r] 内元素 之和 或 最值
+void Upd(int p, int c)  : 单点更新 a[p] 赋值为 c 或 累加上 c
+*/
+
+template <class T>
 struct SegTree {
-    int n, t[N<<1];
-    inline int op(int a, int b) { return min(a, b); }
-    void build(int n) {  // 下标从 1 开始
+    int n; T t[N<<1];
+    inline T op(T a, T b) { return ? ; }
+    void Init(T a[], int n) {   // 下标从 1 开始
         this->n = n;
-        memset(t, 0, sizeof(t));
         rep(i, 0, n) t[i+n] = a[i+1];
         per(i, 1, n) t[i] = op(t[i<<1], t[i<<1|1]);
     }
-    int query(int l, int r) {       // 根据情况调整 res 初值
-        int res = INF;
+    T Qry(int l, int r) {       // 最值 : -INF/INF ; 求和 : 0
+        T res = ? ;
         for (l += n-1, r += n-1; l <= r; l >>= 1, r >>= 1) {
             if (l & 1) res = op(res, t[l++]);
             if (~r & 1) res = op(res, t[r--]);
         }
         return res;
     }
-    void update(int p, int c) {     // 注意是 = c 还是 += c
-        for (t[p+=n-1] = c, p >>= 1; p; p >>= 1)
+    void Upd(int p, int c) {    // 最值 (= c) ; 求和 (+= c)
+        for (t[p+=n-1] ? c, p >>= 1; p; p >>= 1)
             t[p] = op(t[p<<1], t[p<<1|1]);
     }
 };
 
-// 基本线段树
+/* 基本线段树
+【函数功能】
+void PushUp(int rt)                                 : 向上更新结点
+void PushDown(int rt)                               : 下传标记
+void Add(int rt, T val)                             : 将标记作用于当前结点
+void Build(T a[], int l, int r, int rt)             : 以 a[] 建树
+void Upd(int L, int R, T val, int l, int r, int rt) : 区间 [L, R] 都加上 val
+T Qry(int L, int R, int l, int r, int rt)           : 查询区间 [L, R]
+*/
 #define lson l, m, rt << 1
 #define rson m + 1, r, rt << 1 | 1
+template <class T>
 struct SegTree {
-    ll lazy[N << 2], t[N << 2], sz[N << 2];
-    void PushUp(int rt) {
-        t[rt] = t[rt << 1] + t[rt << 1 | 1];        // 求和
-        // t[rt] = min(t[rt << 1], t[rt << 1 | 1]);    // 最值
-    }
+    int sz[N<<2]; T lazy[N<<2], t[N<<2];
+    inline T op(T a, T b) { return ? ; }
+    void PushUp(int rt) { t[rt] = op(t[rt<<1], t[rt<<1|1]); }
     void PushDown(int rt) {
         if (lazy[rt]) {
             Add(rt << 1, lazy[rt]);
@@ -39,48 +54,33 @@ struct SegTree {
             lazy[rt] = 0;
         }
     }
-    void Add(int rt, int val) {
+    void Add(int rt, T val) {
         lazy[rt] += val;
-        t[rt] += val * sz[rt];
+        t[rt] += ? ;     // 最值 (val) ;  求和 (val*sz[rt])
     }
-    void build(int l, int r, int rt) {
-        lazy[rt] = 0; t[rt] = 0; sz[rt] = r - l + 1;
-        if (l == r) {
-            scanf("%lld", &t[rt]);
-            return;
-        }
+    void Build(T a[], int l, int r, int rt) {
+        lazy[rt] = 0; sz[rt] = r - l + 1;
+        if (l == r) { t[rt] = a[r]; return; }
         int m = (l + r) >> 1;
-        build(lson);
-        build(rson);
+        Build(a, lson); Build(a, rson);
         PushUp(rt);
     }
-    void update(int L, int R, int val, int l, int r, int rt) {
-        if (L <= l && r <= R) {
-            Add(rt, val);
-            return;
-        }
+    void Upd(int L, int R, T val, int l, int r, int rt) {
+        if (L <= l && r <= R) { Add(rt, val); return ; }
         PushDown(rt);
         int m = (l + r) >> 1;
-        if (L <= m) update(L, R, val, lson);
-        if (m < R) update(L, R, val, rson);
+        if (L <= m) Upd(L, R, val, lson);
+        if (m < R) Upd(L, R, val, rson);
         PushUp(rt);
     }
-    ll query(int L, int R, int l, int r, int rt) {
-        if (L <= l && r <= R) {
-            return t[rt];
-        }
+    T Qry(int L, int R, int l, int r, int rt) {
+        if (L <= l && r <= R) return t[rt];
         PushDown(rt);
         int m = (l + r) >> 1;
-        // 求和
-        ll ret = 0;
-        if (L <= m) ret += query(L, R, lson);
-        if (m < R) ret += query(L, R, rson);
-        /*  最值
-        ll ret = LINF;
-        if (L <= m) ret = min(ret, query(L, R, lson));
-        if (m < R) ret = min(ret, query(L, R, rson));
-        */
-        return ret;
+        T res = ? ;     // 最值 : -INF/INF ; 求和 : 0
+        if (L <= m) res = op(res, Qry(L, R, lson));
+        if (m < R) res = op(res, Qry(L, R, rson));
+        return res;
     }
 };
 
