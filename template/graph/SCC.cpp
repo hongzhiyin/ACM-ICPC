@@ -1,23 +1,36 @@
-// dfn[] dfs 序;
-// low[] dfs 序最小结点;
-// scc[] 所属强联通分量，从 1 开始
-// tot dfs 序号
-// cnt 强联通分量数
-int dfn[N], low[N], scc[N], tot, cnt;
-stack <int> S;
-struct SCC {
+/*
+【变量定义】
+dfn[i] : 点 i 的 dfs 序
+low[i] : 点 i 能到达的 dfs 序最小的结点
+scc[i] : 点 i 所属的强联通分量标号，从 1 开始
+cut[i] : 点 i 是否为割点
+tot    : dfs 序号
+cnt    : 强联通分量个数
+
+【函数功能】
+void init()                  : 初始化
+void run(int n)              : 调用所需函数
+void SCC(int u)              : 求强联通分量
+void CutPoint(int u, int fa) : 求割点
+*/
+
+vi e[N];
+struct Tarjan {
+    int dfn[N], low[N], tot;
     void init() {
-        tot = cnt = 0;
-        memset(scc, 0, sizeof(scc));
+        tot = 0; cnt = 0;
         memset(dfn, 0, sizeof(dfn));
+        memset(scc, 0, sizeof(scc));
+        memset(cut, 0, sizeof(cut));
     }
-    void dfs(int u) {
+    void run(int n) { rep(i, 1, n+1) if (!dfn[i]) function(i); }
+    int scc[N], cnt; stack <int> S;
+    void SCC(int u) {   // 求强联通分量
         dfn[u] = low[u] = ++tot;
         S.push(u);
-        rep(i, 0, sz(e[u])) {
-            int v = e[u][i];
+        for(auto v : e[u]) {
             if (!dfn[v]) {
-                dfs(v);
+                SCC(v);
                 low[u] = min(low[u], low[v]);
             } else if (!scc[v]) {
                 low[u] = min(low[u], dfn[v]);
@@ -31,7 +44,21 @@ struct SCC {
             } while (x != u);
         }
     }
-    void run(int n) { rep(i, 1, n+1) if (!dfn[i]) dfs(i); }
+    bool cut[N];
+    void CutPoint(int u, int fa) { // 求割点
+        dfn[u] = low[u] = ++tot;
+        int son = 0;
+        for (auto v : e[u]) {
+            if (!dfn[v]) {
+                CutPoint(v, fa);
+                low[u] = min(low[u], low[v]);
+                if (low[v] >= dfn[u] && u != fa) cut[u]=1;
+                if (u == fa) son++;
+            }
+            low[u] = min(low[u], dfn[v]);
+        }
+        if (son >= 2 && u == fa) cut[u] = 1;
+    }
 };
 
 ================================================== Problem Set ==================================================
