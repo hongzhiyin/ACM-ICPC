@@ -1,15 +1,17 @@
-// 倍增
-vi e[N];
-int f[N][30], dep[N];
+/* 倍增
+【函数功能】
+void dfs(int u, int p, int d) : 根结点 u ; 父节点 p ; 深度 d
+int lca(int u, int v)	      : 返回 u 和 v 的最近公共祖先
+【注意事项】
+1. 如果超时，改用邻接表
+*/
+
 struct LCA {
-    void init() { memset(f, 0, sizeof(f)); memset(dep, 0, sizeof(dep)); }   // 如果不用 init() 可能可以省空间
-    void dfs(int u, int p, int d) {     // void dfs(int u, int p, int d, int w) {
-        f[u][0] = p; dep[u] = d;        // sum[u][0] = w; 最值同理
-        rep(j, 1, 30) f[u][j] = f[f[u][j-1]][j-1];  // sum[u][j] = sum[f[u][j-1]][j-1] + sum[u][j-1];
-        rep(i, 0, sz(e[u])) {
-            int v = e[u][i];
-            if (v != p) dfs(v, u, d+1); // dfs(v, u, d + 1, e[u][i].se);
-        }
+    int f[N][30], dep[N];
+    void dfs(int u, int p, int d) {	// dfs(rt, rt, 0)
+        f[u][0] = p; dep[u] = d;
+        rep(j, 1, 30) f[u][j] = f[f[u][j-1]][j-1];
+        for (auto v : e[u]) if (v != p) dfs(v, u, d+1);
     }
     int lca(int u, int v) {
         if (dep[u] < dep[v]) swap(u, v);
@@ -20,16 +22,28 @@ struct LCA {
             u = f[u][i], v = f[v][i];
         return f[u][0];
     }
-    ll dist(int u, int v) {     // 求最值之类的看着改
+};
+
+// 求路径长度、最值
+    ll sum[N][30];
+    ll op(ll a, ll b) { return ? ; }
+    void dfs(int u, int p, int d, ll w) {
+        f[u][0] = p; dep[u] = d; sum[u][0] = w;
+        rep(j, 1, 30) {
+            f[u][j] = f[f[u][j-1]][j-1];
+            sum[u][j] = op(sum[f[u][j-1]][j-1], sum[u][j-1]);
+        }
+        for (auto v : e[u]) if (v.fi != p) dfs(v.fi, u, d+1, v.se);
+    }
+    ll dist(int u, int v) {
         int p = lca(u, v);
         ll d1 = 0, d2 = 0;
         for (int i = 29, d = dep[u] - dep[p]; i >= 0; --i)
-            if (d >> i & 1) d1 += sum[u][i], u = f[u][i];
+            if (d >> i & 1) d1 = op(d1, sum[u][i]), u = f[u][i];
         for (int i = 29, d = dep[v] - dep[p]; i >= 0; --i)
-            if (d >> i & 1) d2 += sum[v][i], v = f[v][i];
-        return d1 + d2;
+            if (d >> i & 1) d2 = op(d2, sum[v][i]), v = f[v][i];
+        return op(d1, d2);
     }
-};
 
 // 离线 tarjan
 vi e[N];
