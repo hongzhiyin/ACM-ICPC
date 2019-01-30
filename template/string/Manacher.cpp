@@ -1,9 +1,8 @@
 // https://subetter.com/articles/2018/03/manacher-algorithm.html
 // 给定一个字符串，求出其最长回文子串
 
-int p[N];
-char str[N], s[N];
 struct Manacher {
+    int p[N<<1]; char s[N<<1];
     int init(char *str, int m) {
         s[0] = '$'; s[1] = '#';
         int j = 2;
