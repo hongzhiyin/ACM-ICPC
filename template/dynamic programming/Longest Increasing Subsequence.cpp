@@ -1,6 +1,7 @@
 /*
 【注意事项】
 1. lower_bound : 严格上升 ; upper_bound : 非严格上升
+2. a[] 从 0 开始
 */
 
 int g[N];
