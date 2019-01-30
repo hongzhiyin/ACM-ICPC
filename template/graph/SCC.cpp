@@ -17,6 +17,8 @@ void CutPoint(int u, int fa) : 求割点
 vi e[N];
 struct Tarjan {
     int dfn[N], low[N], tot;
+    int scc[N], cnt; stack <int> S;
+    bool cut[N];
     void init() {
         tot = 0; cnt = 0;
         memset(dfn, 0, sizeof(dfn));
@@ -24,7 +26,6 @@ struct Tarjan {
         memset(cut, 0, sizeof(cut));
     }
     void run(int n) { rep(i, 1, n+1) if (!dfn[i]) function(i); }
-    int scc[N], cnt; stack <int> S;
     void SCC(int u) {   // 求强联通分量
         dfn[u] = low[u] = ++tot;
         S.push(u);
@@ -44,7 +45,6 @@ struct Tarjan {
             } while (x != u);
         }
     }
-    bool cut[N];
     void CutPoint(int u, int fa) { // 求割点
         dfn[u] = low[u] = ++tot;
         int son = 0;
