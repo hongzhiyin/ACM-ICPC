@@ -2,6 +2,7 @@
 【函数功能】
 void dfs(int u, int p, int d) : 根结点 u ; 父节点 p ; 深度 d
 int lca(int u, int v)	      : 返回 u 和 v 的最近公共祖先
+
 【注意事项】
 1. 如果超时，改用邻接表
 */
