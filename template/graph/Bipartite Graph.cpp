@@ -9,33 +9,28 @@
 // 算法： 匈牙利算法求二分图的最大匹配
 // https://blog.csdn.net/c20180630/article/details/70175814
 
-vi e[N];
+vi e[N];    // e[x].pb(y)
 int match[N];
 bool vis[N];    // 仅用来存 y 部点的标记情况，所以 x 部的点与 y 部的点标号重复也没有关系
-struct Hungary {
-    bool dfs(int u) {
-        rep(i, 0, sz(e[u])) {
-            int v = e[u][i];
-            if (!vis[v]) {
-                vis[v] = 1;
-                if (match[v] == -1 || dfs(match[v])) {
-                    match[v] = u;
-                    return true;
-                }
-            }
+bool dfs(int u) {
+    for (auto v : e[u]) if (!vis[v]) {
+        vis[v] = 1;
+        if (match[v] == -1 || dfs(match[v])) {
+            match[v] = u;
+            return 1;
         }
-        return false;
     }
-    int hungary() {   // 返回最大匹配数
-        memset(match, -1, sizeof(match));
-        int res = 0;
-        rep(i, 0, n) {  // x 部的点标号的范围
-            memset(vis, 0, sizeof(vis));
-            res += dfs(i);
-        }
-        return res;
+    return 0;
+}
+int hungary() {   // 返回最大匹配数
+    memset(match, -1, sizeof(match));
+    int res = 0;
+    rep(i, 0, n) {  // x 部的点标号的范围
+        memset(vis, 0, sizeof(vis));
+        res += dfs(i);
     }
-};
+    return res;
+}
 
 ------------------------------------------------------------------------------------------------
 
