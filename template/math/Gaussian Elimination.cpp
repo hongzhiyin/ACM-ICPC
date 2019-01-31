@@ -11,7 +11,7 @@ a[][]   : 増广矩阵
 const db eps = 1e-7;
 bool used[N];
 double x[N], a[N][N];
-int gauss(int n, int m) {
+int gauss(int n, int m) { // 1 : 唯一解 ; 0 : 非唯一解 ; -1 : 无解
     int row, col;
     for (row = col = 0; row < n && col < m; ++row, ++col) {
         int mxr = row;
