@@ -1,7 +1,8 @@
 // 莫队  O(n^(3/2))
+
 ll tmp;
-void add(int p) { tmp.. }
-void sub(int p) { tmp.. }
+void add(int p) { tmp.. } // 计算将位置 p 纳入区间带来的影响
+void sub(int p) { tmp.. } // 计算将位置 p 移出区间带来的影响
 void mo() {
     int l = 1, r = 0;
     rep(i, 0, q) {
@@ -9,24 +10,24 @@ void mo() {
         while (r > qry[i].r) sub(r--);
         while (l < qry[i].l) sub(l++);
         while (l > qry[i].l) add(--l);
-        ...
         qry[i].ans = tmp;
     }
 }
 int Solve() {
-    int block = sqrt(n);
-    rep(i, 1, n+1) {
-        pos[i] = (i - 1) / block + 1;
-        ...
+    int block = sqrt(n);    // 1. 设置块大小
+    rep(i, 0, q) {          // 2. 设置询问区间、序号、块号
+        scanf("%d%d", &qry[i].l, &qry[i].r);
+        qry[i].id = i;
+        qry[i].pos = (qry[i].l - 1) / block + 1;
     }
-    rep(i, 0, q) { ... }
-    sort(qry, qry + q, [&](Node a, Node b){ return pos[a.l] != pos[b.l] ? a.l < b.l : a.r < b.r; });
-    mo();
-    sort(qry, qry + q, [&](Node a, Node b){ return a.id < b.id; });
-    rep(i, 0, q) printf("%lld\n", qry[i].ans);
+    sort(qry, qry + q, [&](Node a, Node b){ return a.pos != b.pos ? a.l < b.l : a.r < b.r; }); // 3. 按块号排序
+    mo();   // 4. 莫队算法
+    sort(qry, qry + q, [&](Node a, Node b){ return a.id < b.id; }); // 5. 按序号排序
+    rep(i, 0, q) printf("%lld\n", qry[i].ans); // 6. 输出答案
 }
 
 // 带修改莫队  O(n^(5/3))
+
 bool cmp(Node a, Node b) {
     return pos[a.l] != pos[b.l] ? pos[a.l] < pos[b.l] :
            pos[a.r] != pos[b.r] ? pos[a.r] < pos[b.r] : a.pre < b.pre;
