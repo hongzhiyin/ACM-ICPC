@@ -22,7 +22,7 @@ struct P {
     db abs2() { return x * x + y * y; }
     db dis(P b) { return ((*this) - b).abs(); }
     P unit() { db w = abs(); return P(x / w, y / w); }
-    void scan() { db xx, yy; scanf("%lf%lf", &xx, &yy); x=xx; y=yy; }
+    void scan() { db xx, yy; scanf("%lf%lf", &xx, &yy); x = xx; y = yy; }
     void print() { printf("%f %f\n", x, y); }
     db getw() { return atan2(y, x); }  // 返回向量角度 (-pi, pi] 
     P getdel(){if (sign(x)==-1||(sign(x)==0&&sign(y)==-1)) return (*this)*(-1); else return (*this);}
