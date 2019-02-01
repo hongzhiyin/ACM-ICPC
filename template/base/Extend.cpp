@@ -24,6 +24,7 @@ int ID(string s) { return id.count(s) ? id[s] : id[s] = cnt++; }
 
 // gcd
 ll gcd(ll a, ll b) { return b ? gcd(b, a % b) : a; }
+db fgcd(db a, db b) { return b > eps ? fgcd(b, fmod(a, b)) : a; }  // eps = 1e-2
 
 // 文件输入输出
 #define IO(x) freopen(x".in", "r", stdin); freopen(x".out", "w", stdout);
