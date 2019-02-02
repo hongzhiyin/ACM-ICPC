@@ -12,6 +12,9 @@ void init()                  : 初始化
 void run(int n)              : 调用所需函数
 void SCC(int u)              : 求强联通分量
 void CutPoint(int u, int fa) : 求割点
+
+【注意事项】
+1. 缩点生成新图后，记得更新相应点权值
 */
 
 vi e[N];
