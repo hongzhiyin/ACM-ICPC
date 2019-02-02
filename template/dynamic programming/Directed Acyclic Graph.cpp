@@ -1,10 +1,7 @@
-void dfs(int u) {
+int dfs(int u) {
     if (dp[u] != -1) return dp[u];
-    int res = Init;   // 设初值
-    rep(i, 0, sz(e[u])) {
-        v = e[u][i];
-        // Cost: 代价  Profit(x): 关于 x 的收益
-        res = max(res, res - Cost + Profit(dfs(v)));
-    }
-    return dp[u] = res;
+    int res = Init, tmp = 0;   // 设初值
+    for (auto v : e[u]) // Cost: 代价  Profit(v): 关于 v 的收益
+        tmp = max(tmp, - Cost + Profit(dfs(v)));
+    return dp[u] = res + tmp;
 }
