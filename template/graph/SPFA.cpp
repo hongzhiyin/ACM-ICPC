@@ -1,35 +1,30 @@
-vector <pii> e[N];
-queue <int> Q;
-int d[N];
-bool vis[N];
+vi Q;
+ll d[N];
 int cnt[N];
-struct SPFA {
-    void init() {
-        memset(d, 0x3f, sizeof(d));   // 判正环时设为 0
-        memset(vis, 0, sizeof(vis));
-        memset(cnt, 0, sizeof(cnt));
-        while (!Q.empty()) Q.pop();
-    }
-    bool spfa(int s) {
-        d[s] = 0;   // 判正环时设为初值
-        vis[s] = cnt[s] = 1;
-        Q.push(s);
-        while (!Q.empty()) {
-            int u = Q.front(); Q.pop();
-            vis[u] = 0;
-            rep(i, 0, sz(e[u])) {
-                int v = e[u][i].fi, w = e[u][i].se;
-                if (d[v] > d[u] + w) {
-                    d[v] = d[u] + w;
-                    if (!vis[v]) {
-                        Q.push(v);
-                        vis[v] = 1;
-                        cnt[v]++;
-                        if (cnt[v] > n) return false;
-                    }
+bool vis[N];
+vector <pii> e[N];
+bool spfa(int s) {
+    memset(d, 0x3f, sizeof(d));   // 判正环时设为 0
+    memset(vis, 0, sizeof(vis));
+    memset(cnt, 0, sizeof(cnt));
+    Q.clear();
+    d[s] = 0;   // 判正环时设为初值
+    vis[s] = cnt[s] = 1;
+    Q.pb(s);
+    rep(i, 0, sz(Q)) {
+        int u = Q[i];
+        vis[u] = 0;
+        for (auto x : e[u]) {
+            int v = x.fi, w = x.se;
+            if (d[v] > d[u] + w) {
+                d[v] = d[u] + w;
+                if (!vis[v]) {
+                    Q.pb(v);
+                    cnt[v] += vis[v] = 1;
+                    if (cnt[v] > n) return 0;   // 存在负环
                 }
             }
         }
-        return true;
     }
-};
+    return 1; // 无负环
+}
