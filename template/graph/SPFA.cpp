@@ -7,10 +7,9 @@ bool spfa(int s) {
     memset(d, 0x3f, sizeof(d));   // 判正环时设为 0
     memset(vis, 0, sizeof(vis));
     memset(cnt, 0, sizeof(cnt));
-    Q.clear();
     d[s] = 0;   // 判正环时设为初值
     vis[s] = cnt[s] = 1;
-    Q.pb(s);
+    Q.clear(); Q.pb(s);
     rep(i, 0, sz(Q)) {
         int u = Q[i];
         vis[u] = 0;
