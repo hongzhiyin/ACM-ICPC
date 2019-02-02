@@ -15,6 +15,7 @@ void CutPoint(int u, int fa) : 求割点
 */
 
 vi e[N];
+vi e2[N]; int in[N];  // 缩点生成的新边集和入度列
 struct Tarjan {
     int dfn[N], low[N], tot;
     int scc[N], cnt; stack <int> S;
@@ -25,7 +26,7 @@ struct Tarjan {
         memset(scc, 0, sizeof(scc));
         memset(cut, 0, sizeof(cut));
     }
-    void run(int n) { rep(i, 1, n+1) if (!dfn[i]) function(i); }
+    void run(int n) { rep(i, 1, n+1) if (!dfn[i]) function(i); } // 点从 1 开始
     void SCC(int u) {   // 求强联通分量
         dfn[u] = low[u] = ++tot;
         S.push(u);
@@ -45,7 +46,16 @@ struct Tarjan {
             } while (x != u);
         }
     }
-    void CutPoint(int u, int fa) { // 求割点
+    void Shrink(int n) {  // 缩点
+        rep(i, 1, cnt+1) e2[i].clear(), in[i] = 0;
+        rep(u, 1, n+1) for(auto v : e[u]) {
+            if (scc[u] != scc[v]) {
+                e2[scc[u]].pb(scc[v]);
+                in[scc[v]]++;
+            }
+        }
+    }
+    void CutPoint(int u, int fa) {  // 求割点
         dfn[u] = low[u] = ++tot;
         int son = 0;
         for (auto v : e[u]) {
