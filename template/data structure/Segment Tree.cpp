@@ -43,47 +43,46 @@ T Qry(int L, int R, int l, int r, int rt)           : 查询区间 [L, R]
 
 #define lson l, m, rt << 1
 #define rson m + 1, r, rt << 1 | 1
-template <class T>
-struct SegTree {
-    int sz[N<<2]; T lazy[N<<2], t[N<<2];
-    inline T op(T a, T b) { return ? ; }
-    void PushUp(int rt) { t[rt] = op(t[rt<<1], t[rt<<1|1]); }
-    void PushDown(int rt) {
-        if (lazy[rt]) {
-            Add(rt << 1, lazy[rt]);
-            Add(rt << 1 | 1, lazy[rt]);
-            lazy[rt] = 0;
-        }
+int sz[N<<2]; ll lazy[N<<2], t[N<<2];
+inline ll op(ll a, ll b) { return a + b; } // ?
+void Add(int rt, ll val) {
+    lazy[rt] += val;
+    t[rt] += val * sz[rt];  // ?
+}
+void PushUp(int rt) {
+    t[rt] = op(t[rt << 1], t[rt << 1 | 1]);
+}
+void PushDown(int rt) {
+    if (lazy[rt]) {
+        Add(rt << 1, lazy[rt]);
+        Add(rt << 1 | 1, lazy[rt]);
+        lazy[rt] = 0;
     }
-    void Add(int rt, T val) {
-        lazy[rt] += val;
-        t[rt] += ? ;     // 最值 (val) ;  求和 (val*sz[rt])
-    }
-    void Build(T a[], int l, int r, int rt) {
-        lazy[rt] = 0; sz[rt] = r - l + 1;
-        if (l == r) { t[rt] = a[r]; return; }
-        int m = (l + r) >> 1;
-        Build(a, lson); Build(a, rson);
-        PushUp(rt);
-    }
-    void Upd(int L, int R, T val, int l, int r, int rt) {
-        if (L <= l && r <= R) { Add(rt, val); return ; }
-        PushDown(rt);
-        int m = (l + r) >> 1;
-        if (L <= m) Upd(L, R, val, lson);
-        if (m < R) Upd(L, R, val, rson);
-        PushUp(rt);
-    }
-    T Qry(int L, int R, int l, int r, int rt) {
-        if (L <= l && r <= R) return t[rt];
-        PushDown(rt);
-        int m = (l + r) >> 1;
-        T res = ? ;     // 最值 : -INF/INF ; 求和 : 0
-        if (L <= m) res = op(res, Qry(L, R, lson));
-        if (m < R) res = op(res, Qry(L, R, rson));
-        return res;
-    }
-};
+}
+void Build(ll a[], int l, int r, int rt) {
+    lazy[rt] = 0; sz[rt] = r - l + 1;
+    if (l == r) { t[rt] = a[r]; return; }
+    int m = (l + r) >> 1;
+    Build(a, lson); Build(a, rson);
+    PushUp(rt);
+}
+void Upd(int L, int R, ll val, int l, int r, int rt) {
+    if (L <= l && r <= R) { Add(rt, val); return ; }
+    PushDown(rt);
+    int m = (l + r) >> 1;
+    if (L <= m) Upd(L, R, val, lson);
+    if (m < R) Upd(L, R, val, rson);
+    PushUp(rt);
+}
+ll Qry(int L, int R, int l, int r, int rt) {
+    if (L <= l && r <= R) return t[rt];
+    PushDown(rt);
+    int m = (l + r) >> 1;
+    ll res = 0;
+    if (L <= m) res = op(res, Qry(L, R, lson));
+    if (m < R) res = op(res, Qry(L, R, rson));
+    return res;
+}
 
 ================================================== Problem Set ==================================================
 
@@ -116,91 +115,86 @@ int Solve() {
 // 区间加，区间乘，区间赋值，查询区间和，区间平方和，区间立方和
 #define lson l, m, rt << 1
 #define rson m + 1, r, rt << 1 | 1
-struct SegTree {
-    int sum[N << 2][4], sz[N << 2], lz_a[N << 2], lz_m[N << 2], lz_s[N << 2];
-    void PushUp(int rt) {
-        rep(i, 1, 4) sum[rt][i] = add(sum[rt << 1][i], sum[rt << 1 | 1][i]);
+int sum[N<<2][4], sz[N<<2], lz_a[N<<2], lz_m[N<<2], lz_s[N<<2];
+inline void Add(int rt, int val) {
+    lz_a[rt] = add(lz_a[rt], val);
+    int sum1 = sum[rt][1], sum2 = sum[rt][2], sum3 = sum[rt][3];
+    int val2 = mul(val, val), val3 = mul(val, val2);
+    sum[rt][1] = add(sum1, mul(sz[rt], val));
+    sum[rt][2] = add(sum2, add(mul(2ll * sum1, val), mul(sz[rt], val2)));
+    sum[rt][3] = add(sum3, mul(sz[rt], val3));
+    sum[rt][3] = add(sum[rt][3], add(mul(3ll * sum1, val2), mul(3ll * sum2, val)));
+}
+inline void Mul(int rt, int val) {
+    lz_m[rt] = mul(lz_m[rt], val);
+    if (lz_a[rt]) lz_a[rt] = mul(lz_a[rt], val);
+    int val2 = mul(val, val), val3 = mul(val, val2);
+    sum[rt][1] = mul(sum[rt][1], val);
+    sum[rt][2] = mul(sum[rt][2], val2);
+    sum[rt][3] = mul(sum[rt][3], val3);
+}
+inline void Set(int rt, int val) {
+    lz_a[rt] = 0; lz_m[rt] = 1;
+    lz_s[rt] = val;
+    int val2 = mul(val, val), val3 = mul(val, val2);
+    sum[rt][1] = mul(sz[rt], val);
+    sum[rt][2] = mul(sz[rt], val2);
+    sum[rt][3] = mul(sz[rt], val3);
+}
+void PushUp(int rt) {
+    rep(i, 1, 4) sum[rt][i] = add(sum[rt<<1][i], sum[rt<<1|1][i]);
+}
+inline void PushDown(int rt) {
+    if (lz_s[rt]) {
+        Set(rt << 1, lz_s[rt]);
+        Set(rt << 1 | 1, lz_s[rt]);
+        lz_s[rt] = 0;
     }
-    void PushDown(int rt) {
-        if (lz_s[rt]) {
-            Set(rt << 1, lz_s[rt]);
-            Set(rt << 1 | 1, lz_s[rt]);
-            lz_s[rt] = 0;
-        }
-        if (lz_m[rt]) {
-            Mul(rt << 1, lz_m[rt]);
-            Mul(rt << 1 | 1, lz_m[rt]);
-            lz_m[rt] = 0;
-        }
-        if (lz_a[rt]) {
-            Add(rt << 1, lz_a[rt]);
-            Add(rt << 1 | 1, lz_a[rt]);
-            lz_a[rt] = 0;
-        }
+    if (lz_m[rt] != 1) {
+        Mul(rt << 1, lz_m[rt]);
+        Mul(rt << 1 | 1, lz_m[rt]);
+        lz_m[rt] = 1;
     }
-    void build(int l, int r, int rt) {
-        lz_a[rt] = lz_m[rt] = lz_s[rt] = 0;
-        rep(i, 1, 4) sum[rt][i] = 0;
-        sz[rt] = r - l + 1;
-        if (l == r) {
-            return;
-        }
-        int m = (l + r) >> 1;
-        build(lson);
-        build(rson);
-        PushUp(rt);
+    if (lz_a[rt]) {
+        Add(rt << 1, lz_a[rt]);
+        Add(rt << 1 | 1, lz_a[rt]);
+        lz_a[rt] = 0;
     }
-    void Add(int rt, int val) {
-        lz_a[rt] = add(lz_a[rt], val);
-        int sum1 = sum[rt][1], sum2 = sum[rt][2], sum3 = sum[rt][3];
-        int val2 = mul(val, val), val3 = mul(val, val2);
-        sum[rt][1] = add(sum1, mul(sz[rt], val));
-        sum[rt][2] = add(sum2, add(mul(2ll * sum1, val), mul(sz[rt], val2)));
-        sum[rt][3] = add(sum3, mul(sz[rt], val3));
-        sum[rt][3] = add(sum[rt][3], add(mul(3ll * sum1, val2), mul(3ll * sum2, val)));
+}
+void build(int l, int r, int rt) {
+    lz_a[rt] = lz_s[rt] = 0; lz_m[rt] = 1;
+    rep(i, 1, 4) sum[rt][i] = 0;
+    sz[rt] = r - l + 1;
+    if (l == r) return ;
+    int m = (l + r) >> 1;
+    build(lson);
+    build(rson);
+    PushUp(rt);
+}
+void update(int op, int L, int R, int val, int l, int r, int rt) {
+    if (L <= l && r <= R) {
+        if (op == 1) Add(rt, val);
+        else if (op == 2) Mul(rt, val);
+        else Set(rt, val);
+        return ;
     }
-    void Mul(int rt, int val) {
-        lz_a[rt] = mul(lz_a[rt], val);      // 乘标记改变加标记
-        if (lz_m[rt]) lz_m[rt] = mul(lz_m[rt], val);
-        else lz_m[rt] = val;
-        sum[rt][1] = mul(sum[rt][1], val);
-        int val2 = mul(val, val), val3 = mul(val, val2);
-        sum[rt][2] = mul(sum[rt][2], val2);
-        sum[rt][3] = mul(sum[rt][3], val3);
+    PushDown(rt);
+    int m = (l + r) >> 1;
+    if (L <= m) update(op, L, R, val, lson);
+    if (m < R) update(op, L, R, val, rson);
+    PushUp(rt);
+}
+int query(int L, int R, int p, int l, int r, int rt) {
+    if (L <= l && r <= R) {
+        return sum[rt][p];
     }
-    void Set(int rt, int val) {
-        lz_a[rt] = lz_m[rt] = 0;        // 赋值标记将清空加、乘标记
-        lz_s[rt] = val;
-        sum[rt][1] = mul(sz[rt], val);
-        int val2 = mul(val, val), val3 = mul(val, val2);
-        sum[rt][2] = mul(sz[rt], val2);
-        sum[rt][3] = mul(sz[rt], val3);
-    }
-    void update(int op, int L, int R, int val, int l, int r, int rt) {
-        if (L <= l && r <= R) {
-            if (op == 1) Add(rt, val);
-            else if (op == 2) Mul(rt, val);
-            else Set(rt, val);
-            return ;
-        }
-        PushDown(rt);
-        int m = (l + r) >> 1;
-        if (L <= m) update(op, L, R, val, lson);
-        if (m < R) update(op, L, R, val, rson);
-        PushUp(rt);
-    }
-    int query(int L, int R, int p, int l, int r, int rt) {
-        if (L <= l && r <= R) {
-            return sum[rt][p];
-        }
-        PushDown(rt);
-        int m = (l + r) >> 1;
-        int ret = 0;
-        if (L <= m) ret = add(ret, query(L, R, p, lson));
-        if (m < R) ret = add(ret, query(L, R, p, rson));
-        return ret;
-    }
-};
+    PushDown(rt);
+    int m = (l + r) >> 1;
+    int ret = 0;
+    if (L <= m) ret = add(ret, query(L, R, p, lson));
+    if (m < R) ret = add(ret, query(L, R, p, rson));
+    return ret;
+}
 
 ----------------------------------------------------------------------------------------------------
 
