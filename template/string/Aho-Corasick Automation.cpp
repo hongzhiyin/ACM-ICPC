@@ -3,6 +3,9 @@
 1. insert 插入模式串
 2. build  构建失配指针
 3. run    根据需求修改
+
+【注意事项】
+1. 注释的地方都看一下是否修改正确
 */
 
 void init() { no = -1; newnode(); }
@@ -12,14 +15,13 @@ int no, trie[N][26], fail[N], isw[N], last[N], que[N];
 int newnode() {
     ++no;
     memset(trie[no], 0, sizeof(trie[no]));
-    fail[no] = 0;
-    isw[no] = 0;
+    fail[no] = last[no] = isw[no] = 0;
     return no;
 }
 void insert(char *s, int id) {
     int len = strlen(s), rt = 0;
     rep(i, 0, len) {
-        int id = s[i];    // 视情况而定
+        int id = s[i] - 'a';    // 视情况而定
         if(!trie[rt][id]) trie[rt][id] = newnode();
         rt = trie[rt][id];
     }
@@ -46,7 +48,7 @@ void build() {  // 构建失配指针
 void run(char *s) {
     int len = strlen(s), rt = 0;
     rep(i, 0, len) {
-        int id = s[i];
+        int id = s[i] - 'a';  // 视情况而定
         while (rt && !trie[rt][id]) rt = last[rt];
         int tmp = rt = trie[rt][id];
         while (tmp) {
