@@ -1,8 +1,8 @@
 vi dis;
-void Init() {
+void Discrete(int a[], int n) {
     dis.clear();
-    rep(i, 0, n) scanf("%d", a+i), dis.pb(a[i]);
+    rep(i, 1, n+1) dis.pb(a[i]);
     sort(all(dis));
     dis.erase(unique(all(dis)), dis.end());
-    rep(i, 0, n) d[i] = lower_bound(all(dis), a[i]) - dis.begin() + 1;  // 离散值从 1 开始
+    rep(i, 1, n+1) d[i] = lower_bound(all(dis), a[i]) - dis.begin() + 1;
 }
