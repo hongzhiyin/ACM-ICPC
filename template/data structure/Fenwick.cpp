@@ -10,20 +10,19 @@ void Add(int x, T d) : 第 x 个元素加上 d
 2. 如果下标过大，需要离散化
 */
 
-template <class T>
 struct Fenwick {
-    int n; T t[N]; // map <int, int> t;
+    int n; ll t[N]; // map <int, int> t;
     void Init(int n) {
         this->n = n;
         memset(t, 0, sizeof(t));
     }
-    T Sum(int x) {
-        T ret = 0;
+    ll Sum(int x) {
+        ll ret = 0;
         for (; x > 0; x -= x&-x) ret += t[x];
         return ret;
     }
-    T Qry(int l, int r) { return Sum(r) - Sum(l-1); }
-    void Add(int x, T d) { for (; x <= n; x += x&-x) t[x] += d; }
+    ll Qry(int l, int r) { return Sum(r) - Sum(l-1); }
+    void Add(int x, ll d) { for (; x <= n; x += x&-x) t[x] += d; }
 };
 
 /* 区间修改，区间查询
