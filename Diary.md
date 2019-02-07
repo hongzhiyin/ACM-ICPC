@@ -1,11 +1,16 @@
 ## 2019.2.7
 
+### Codeforces Global Round 1
+- A , B
+- Rating -79
+
 ### Codeforces
 - dp
 - 树状数组，离散化
 
 ### 洛谷模板
 - 线性基
+- 凸包
 
 --- 
 
