@@ -3,33 +3,36 @@ const db eps = 1e−7, pi = acosl(−1.);
 int sgn(T x) { return (x > eps) − (x < −eps); }
 struct P {
 	T x, y; P () {} P(T x, T y) : x(x), y(y) {}
-	P operator + (const P &b) const { return P(x + b.x, y + b.y); }
-	P operator − (const P &b) const { return P(x − b.x, y − b.y); }
-	T operator * (const P &b) const { return x * b.x + y * b.y; }
-	T operator / (const P &b) const { return x * b.y − y * b.x; }
-	P operator * (const T &k) const { return P(x * k, y * k); }
-	P operator / (const T &k) const { return P(x / k, y / k); }
-	bool operator < (const P &b) const { return sgn(x − b.x) ? x < b.x : y < b.y; }
-	bool operator == (const P &b) const{ return !sgn(x − b.x) && !sgn(y − b.y); }
-	P rot90(){return P(−y,x);}
-	db arg() const {return atan2(y,x);}
+	P operator + (const P &b) const { return P(x + b.x, y + b.y); }  // 向量加
+	P operator − (const P &b) const { return P(x − b.x, y − b.y); }  // 向量减
+	T operator * (const P &b) const { return x * b.x + y * b.y; }    // 向量点积
+	T operator / (const P &b) const { return x * b.y − y * b.x; }    // 向量叉积
+	P operator * (const T &k) const { return P(x * k, y * k); }      // 向量数乘
+	P operator / (const T &k) const { return P(x / k, y / k); }      // 向量数除
+	bool operator < (const P &b) const { return sgn(x − b.x) ? x < b.x : y < b.y; }  // 左下角最小，右上角最大
+	bool operator == (const P &b) const{ return !sgn(x − b.x) && !sgn(y − b.y); }    // 向量相等
+	P rot90() { return P(−y, x); }          // 向量旋转 90 度
+	db arg() const { return atan2(y, x); }  // 方位角 (-pi, pi]
 };
-T cross(P o, P a, P b) { return (a - o) / (b - o); }
-int Scross(P o, P a, P b) { return sgn(cross(o, a, b)); }
+T norm(P a) { return a * a; }
+T abs(P a) { return sqrtl(norm(a)); }
 
-bool SxS(P a, P b, P c, P d) {  // seg x seg
-    return
-    max(a.x, b.x) >= min(c.x, d.x) && max(c.x, d.x) >= min(a.x, b.x) &&
-    max(a.y, b.y) >= min(c.y, d.y) && max(c.y, d.y) >= min(a.y, b.y) &&
-    Scross(a, b, c) * Scross(a, b, d) <= eps &&
-    Scross(c, d, a) * Scross(c, d, b) <= eps;
-}
-P SxSP(P a, P b, P c, P d) {    // after SxS
-	T s1 = cross(a, b, c), s2 = cross(a, b, d);
-	P tmp;
-	tmp.x = (c.x * s2 - d.x * s1) / (s2 - s1);
-	tmp.y = (c.y * s2 - d.y * s1) / (s2 - s1);
-	return tmp;
+typedef vector<P> polygon;
+polygon convex(polygon A) {  // 求凸包 , 逆时针排序 , <= : <=180 , < : <180
+    int n = sz(A), m = 0;
+    polygon B; B.resize(n+1);
+    sort(all(A));
+    rep(i, 0, n) {
+        while (m > 1 && sgn((B[m-1] - B[m-2]) / (A[i] - B[m-2])) < 0) --m;
+        B[m++] = A[i];
+    }
+    per(i, 0, n - 1) {
+        while (m > 1 && sgn((B[m-1] - B[m-2]) / (A[i] - B[m-2])) < 0) --m;
+        B[m++] = A[i];
+    }
+    B.resize(m);
+    if(sz(B) > 1) B.pop_back();
+    return B;
 }
 
 struct C {
@@ -46,8 +49,6 @@ C getC(P a,P b,P c){  // 三点确定一个圆 （ 三角形外接圆 ）
 
 --------------------------------------------------------------------------------------------------
 
-T norm(P a){return a*a;}
-T abs(P a) {return sqrtl(norm(a));}
 P proj(P p,P a,P b){return (b−a)*((p−a)*(b−a)/norm(b−a))+a;}
 P reflect(P p,P a,P b){return proj(p,a,b)*2−p;}
 T cross(P o,P a,P b){return (a−o)/(b−o);}
@@ -89,23 +90,6 @@ return disPL(p,a);
 db disSS(L a,L b){ // seg x seg dis
 if(isSS(a,b)) return 0;
 return min(min(disPS(a.s,b),disPS(a.t,b)),min(disPS(b.s,a),disPS(b.t,a)));
-}
-typedef vector<P> polygon;
-polygon convex(polygon A){ // counter−clockwise , <= : <=180 , < : <180
-int n=sz(A),m=0;
-polygon B;B.resize(n+1);
-sort(all(A));
-rep(i,0,n){
-while(m > 1 && sgn((B[m−1]−B[m−2])/(A[i]−B[m−2]))<=0) −−m;
-B[m++]=A[i];
-}
-per(i,0,n−1){
-while(m > 1 && sgn((B[m−1]−B[m−2])/(A[i]−B[m−2]))<=0) −−m;
-B[m++]=A[i];
-}
-B.resize(m);
-if(sz(B) > 1) B.pop_back();
-return B;
 }
 T area(polygon A) { // multiple 2 with integer type
 T res=0;
