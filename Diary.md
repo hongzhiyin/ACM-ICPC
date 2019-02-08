@@ -1,3 +1,13 @@
+## 2019.2.8
+
+### Codeforces
+- 枚举
+- 递归
+- 贪心
+- gcd
+
+--- 
+
 ## 2019.2.7
 
 ### Codeforces Global Round 1
