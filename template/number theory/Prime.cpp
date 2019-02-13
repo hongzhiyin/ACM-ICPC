@@ -41,17 +41,17 @@ bool check(ll x) {      // 判断 x 是否是质数
 
 // Decompose Prime Factor 分解质因数
 // 预处理 [2, sqrt(x)] 的质数
-set <int> S;
+vi pf;
 void DPF(int x) {
-    rep(i, 0, sz(prim)) {
-        int p = prim[i];
+    pf.clear();
+    for(auto p : prim) {
         if (p > x) break;
         if (x % p == 0) {
-            S.insert(p);
+            pf.pb(p);
             while (x % p == 0) x /= p;
         }
     }
-    if (x != 1) S.insert(x);
+    if (x != 1) pf.pb(x);
 }
 
 ================================================== Problem Set ==================================================
