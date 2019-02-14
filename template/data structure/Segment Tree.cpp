@@ -1,4 +1,15 @@
 /*
+【线段树思想】
+1. PushUp
+    用于区间查询，到相应区间结点便可获得信息
+2. PushDown 及 lazy
+    用于延迟修改，当有新修改要作用于子节点时，应先把父节点的修改传递下去，并消除父节点的修改
+3. Upd 和 PushDown 中的 Add()
+    可能有多个修改累积在同一个结点上，因此 Upd 和 PushDown 的修改应用函数 Add() 可能不同，
+    取决于 lazy 标记是否记录了所有修改累积的信息。
+*/
+
+/*
 // zkw 线段树
 // 《统计的力量》 —— 清华大学 张昆玮
 
@@ -54,8 +65,8 @@ void PushUp(int rt) {
 }
 void PushDown(int rt) {
     if (lazy[rt]) {
-        Add(rt << 1, lazy[rt]);
-        Add(rt << 1 | 1, lazy[rt]);
+        Add2(rt << 1, lazy[rt]);
+        Add2(rt << 1 | 1, lazy[rt]);
         lazy[rt] = 0;
     }
 }
