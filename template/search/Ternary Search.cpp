@@ -1,14 +1,13 @@
+// 凸函数求最大值
+
+// 整数 ( 边界这样取是因为 : 对于整数，不存在 M 和 M + 1 落在最高点两端的情况 )
 ll L = min, R = max;
-while (L < R - 1) {
-    ll m1 = L + (R - L) / 3, m2 = L + 2 * (R - L) / 3;
-    if (work(m1) > work(m2)) {
-        if (R == m2) R = m2 - 1;
-        else R = m2;
-    } else {
-        if (L == m1) L = m1 + 1;
-        else L = m1;
-    }
+while (L < R) {
+    int M = L + ((R - L) >> 1);
+    if (work(M) > work(M + 1)) R = M;
+    else L = M + 1;
 }
+printf("%lld\n", L);
 
 // 浮点数
 db L = min, R = max;
