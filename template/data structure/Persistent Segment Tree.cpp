@@ -32,3 +32,10 @@ void Upd(int &x, int pos, int val, int l, int r, int y) {
     else Upd(t[x].r, pos, val, rson);
     PushUp(x);
 }
+int Qry(int x, int k, int l, int r, int y) {
+	if (l == r) return l;
+	int m = (l + r) >> 1;
+	int sum = t[t[y].l].val - t[t[x].l].val;
+	if (sum >= k) return Qry(t[x].l, k, lson);
+	else return Qry(t[x].r, k-sum, rson);
+}
