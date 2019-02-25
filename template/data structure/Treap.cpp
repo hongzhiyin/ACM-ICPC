@@ -1,63 +1,60 @@
+/*
+【平衡树思想】
+0. 无论是以序列位置为排序关键字，还是以值为排序关键字的二叉平衡树，都想象成一个长条的数组，然后对其分裂与合并。
+*/
+
 // 非旋转可持久化 Treap （待填坑）
 
 // https://www.cnblogs.com/nbwzyzngyl/p/7977369.html
 
 // 非旋转 Treap （功能待完善）
 // https://www.cnblogs.com/DriverLao/p/8087423.html
-void Init() { no = 0; obj.init(); }
-#define lson T[u].ch[0]
-#define rson T[u].ch[1]
-struct Node {
-    int key, rnd, sz, rev, ch[2];
-    void setval(int val) {
-        static int seed = 3312;
-        key = val;
-        rnd = seed = (int)((ll)seed * 48271 % 2147483647);
-        sz = 1; ch[0] = ch[1] = rev = 0;
+
+// 针对序列操作
+// 二叉搜索树按序列排序，左子树结点表示在序列中位置在根结点前面，右子树反之。
+// 待填坑 http://bailian.openjudge.cn/practice/4090/
+#define lson t[rt].l
+#define rson t[rt].r
+int rt, no;
+struct Node { int l, r, val, rnd, sz, rev; } t[N];
+void Clear() { no = 0; }
+int newnode(int val) { t[++no] = (Node){ 0, 0, val, rand(), 1, 0 }; return no; }
+void PushUp(int rt) { t[rt].sz = t[lson].sz + t[rson].sz + 1; }
+void PushDown(int rt) {
+    if (t[rt].rev) {
+        t[rt].rev = 0;
+        swap(lson, rson);
+        t[lson].rev ^= 1;
+        t[rson].rev ^= 1;
     }
-};
-int no;
-Node T[N];
-struct Treap {		// 适合序列查找第 k 个元素
-    int root;
-    void init() { root = 0; }
-    int newnode(int val) { T[++no].setval(val); return no; }
-    void pushup(int u) { T[u].sz = T[lson].sz + T[rson].sz + 1; }
-    void pushdown(int u) {
-        if (T[u].rev) {
-            T[u].rev ^= 1;
-            swap(lson, rson);
-            T[lson].rev ^= 1;
-            T[rson].rev ^= 1;
-        }
+}
+void split(int rt, int k, int &x, int &y) {
+    PushDown(rt);
+    if (!k) { x = 0; y = rt; return ; }
+    if (t[rt].sz == k) { x = rt; y = 0; return ; }
+    if (t[lson].sz >= k) { split(lson, k, x, lson); y = rt; }
+    else { split(rson, k-t[lson].sz-1, rson, y); x = rt; }
+    PushUp(rt);
+}
+int merge(int x, int y) {
+    if (!x || !y) return x + y;
+    PushDown(x); PushDown(y);
+    if (t[x].rnd < t[y].rnd) {
+        t[x].r = merge(t[x].r, y);
+        PushUp(x); return x;
+    } else {
+        t[y].l = merge(x, t[y].l);
+        PushUp(y); return y;
     }
-    void split(int u, int k, int &x, int &y) {
-        pushdown(u);
-        if (!k) { x = 0; y = u; return; }
-        if (T[u].sz == k) { x = u; y = 0; return ; }
-        if (T[lson].sz >= k) split(lson, k, x, lson), y = u;
-        else split(rson, k - T[lson].sz - 1, rson, y), x = u;
-        pushup(u);
-    }
-    int merge(int x, int y) {
-        if (!x || !y) return x + y;
-        pushdown(x); pushdown(y);
-        if (T[x].rnd < T[y].rnd) {
-            T[x].ch[1] = merge(T[x].ch[1], y);
-            pushup(x); return x;
-        } else {
-            T[y].ch[0] = merge(x, T[y].ch[0]);
-            pushup(y); return y;
-        }
-    }
-    void ins(int x) { root = merge(root, newnode(x)); }
-    int del(int k) {	// 删除第 k 个位置的元素，返回被删除元素的值
-		int x, y, z;
-		split(root, k-1, x, y); split(y, 1, y, z);
-		root = merge(x, z);
-		return T[y].key;
-    }
-};
+}
+vi vout;
+void out(int rt) {
+    PushDown(rt);
+    if (lson) out(lson);
+    vout.pb(t[rt].val);
+    if (rson) out(rson);
+}
+
 
 // 旋转 Treap
 void Init() {
