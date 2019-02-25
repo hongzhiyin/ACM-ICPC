@@ -13,6 +13,7 @@
 // 针对序列操作
 // 二叉搜索树按序列排序，左子树结点表示在序列中位置在根结点前面，右子树反之。
 // 待填坑 http://bailian.openjudge.cn/practice/4090/
+// https://blog.csdn.net/qq_34374664/article/details/77888508
 #define lson t[rt].l
 #define rson t[rt].r
 int rt, no;
