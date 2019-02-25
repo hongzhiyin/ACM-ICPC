@@ -1,8 +1,14 @@
 // IOI 2009 国家集训队论文 罗穗骞《后缀数组——处理字符串的有力工具》
 
-// for -> rep 如果超时了试试换回来？
+/*
+【使用方法】
+1. 读取字符串，将字符串转换为数字存在 s[] 中
+2. 调用 calsa() 获得 sa[]
+3. 调用 calheight() 获得 rk[] , height[]
+*/
+
 // sa[i] 表示排在第 i 位的是后缀 sa[i], 注意：因为 s[len] = 0, 所以 sa[0] = len
-// rk[i] 表示后缀 i 排第 rk[i]
+// rk[i] 表示后缀 i 排在第 rk[i] 位
 // height[i] = LCP(sa[i], sa[i-1]), LCP: 最长公共前缀
 int s[N], len, id[N];
 int sa[N], rk[N], height[N];
