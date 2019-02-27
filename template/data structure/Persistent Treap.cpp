@@ -1,6 +1,9 @@
 // https://www.cnblogs.com/nbwzyzngyl/p/7977369.html
 // 基本与非持久化版本相同，修改部分在注释中用 [ 可持久化 ] 注明
 
+// 针对有序可重集合操作
+// 二叉搜索树按 !! 元素值 !! 排序，左子树结点表示所有元素值比根结点元素值小的结点，右子树反之。
+
 #define lson t[rt].l
 #define rson t[rt].r
 int rt[N], no;  // [ 可持久化 ] rt ==> rt[N]
