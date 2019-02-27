@@ -1,6 +1,9 @@
 /*
 【平衡树思想】
 0. 无论是以序列位置为排序关键字，还是以值为排序关键字的二叉平衡树，都想象成一个长条的数组，然后对其分裂与合并。
+1. 虽然结构与线段树类似，但关键的区别在于，对于非叶子结点，在线段树中代表区间，在平衡树中代表一个独立的值。
+2. 一棵树，代表一个区间，即一个长条数组，而树的根节点，是这个区间中的一个元素，左子树表示其左端区间，右子树同理，这是与线段树的本质区别。
+3. 分裂就是把一个长条分成两个长条，合并就是把两个长条按拼在一起。
 */
 
 // 非旋转可持久化 Treap （待填坑）
@@ -12,32 +15,53 @@
 
 // 针对序列操作
 // 二叉搜索树按序列排序，左子树结点表示在序列中位置在根结点前面，右子树反之。
-// 待填坑 http://bailian.openjudge.cn/practice/4090/
-// https://blog.csdn.net/qq_34374664/article/details/77888508
 #define lson t[rt].l
 #define rson t[rt].r
 int rt, no;
-struct Node { int l, r, val, rnd, sz, rev; } t[N];
-void Clear() { no = 0; }
-int newnode(int val) { t[++no] = (Node){ 0, 0, val, rand(), 1, 0 }; return no; }
-void PushUp(int rt) { t[rt].sz = t[lson].sz + t[rson].sz + 1; }
+struct Node { int l, r, val, sum, mi, rnd, sz, rev, ad; } t[N];
+void Clear() {  // 初始化， t[0] 表示空结点，注意其值的初始化，例如在处理最值的时候
+    rt = no = 0;
+    t[0] = (Node){ 0, 0, 0, 0, INF, rand(), 0, 0, 0 };
+}
+int newnode(int val) { t[++no] = (Node){ 0, 0, val, val, val, rand(), 1, 0, 0 }; return no; }
+void ADD(int rt, int val) {  // 区间加
+    if (rt == 0) return;
+    t[rt].ad += val;
+    t[rt].sum += t[rt].sz * val;
+    t[rt].val += val;
+    t[rt].mi += val;
+}
+void REV(int rt) {  // 区间反转
+    if (rt == 0) return;
+    t[rt].rev ^= 1;
+    swap(lson, rson);
+}
+void PushUp(int rt) {
+    t[rt].sz = t[lson].sz + t[rson].sz + 1;
+    t[rt].sum = t[lson].sum + t[rson].sum + t[rt].val;
+    t[rt].mi = min(t[rt].val, min(t[lson].mi, t[rson].mi));
+}
 void PushDown(int rt) {
     if (t[rt].rev) {
+        REV(lson);
+        REV(rson);
         t[rt].rev = 0;
-        swap(lson, rson);
-        t[lson].rev ^= 1;
-        t[rson].rev ^= 1;
+    }
+    if (t[rt].ad) {
+        ADD(lson, t[rt].ad);
+        ADD(rson, t[rt].ad);
+        t[rt].ad = 0;
     }
 }
-void split(int rt, int k, int &x, int &y) {
+void split(int rt, int k, int &x, int &y) {  // 将 rt 对应的一段区间分成长度为 k 和 len-k 的两段，对应两颗树，根结点分别为 x 和 y
     PushDown(rt);
     if (!k) { x = 0; y = rt; return ; }
-    if (t[rt].sz == k) { x = rt; y = 0; return ; }
+    if (t[rt].sz <= k) { x = rt; y = 0; return ; }
     if (t[lson].sz >= k) { split(lson, k, x, lson); y = rt; }
     else { split(rson, k-t[lson].sz-1, rson, y); x = rt; }
     PushUp(rt);
 }
-int merge(int x, int y) {
+int merge(int x, int y) {  // 将 x 和 y 对应的区间按 x 区间在左， y 区间在右的顺序合并起来，返回合并后的根结点
     if (!x || !y) return x + y;
     PushDown(x); PushDown(y);
     if (t[x].rnd < t[y].rnd) {
@@ -48,6 +72,46 @@ int merge(int x, int y) {
         PushUp(y); return y;
     }
 }
+void INS(int pos, int val) {  // 在 pos 位置的 !! 后面 !! 插入值为 val 的元素
+    int x, y;
+    split(rt, pos, x, y);
+    rt = merge(merge(x, newnode(val)), y);
+}
+void DEL(int pos) {  // 删除 pos 位置上的元素
+    int x, y, z;
+    split(rt, pos-1, x, y); split(y, 1, y, z);
+    rt = merge(x, z);
+}
+void SHR(int rt, int val, int len) {  // rt 对应的区间循环右移 val 次，想循环左移只需要 val 取负值即可
+    int x, y;
+    val = (val % len + len) % len;
+    split(rt, len-val, x, y);
+    merge(y, x);
+}
+void Build(int a[], int n) {  // 初始序列 a[] ，从 1 开始
+    rep(i, 1, n+1) rt = merge(rt, newnode(a[i]));
+}
+void Upd(int l, int r, int op, int val) {  // 区间更新 ( 1. 区间加 ; 2. 区间反转 ; 3. 区间循环右移 )
+    int x, y, z;
+    split(rt, l-1, x, y); split(y, r-l+1, y, z);
+    switch (op) {
+        case 1 : ADD(y, val); break;
+        case 2 : REV(y); break;
+        case 3 : SHR(y, val, r - l + 1); break;
+    }
+    rt = merge(merge(x, y), z);
+}
+int Qry(int l, int r, int op) {  // 区间查询 ( 1. 最小值 ; 2. 区间和 )
+    int x, y, z;
+    split(rt, l-1, x, y); split(y, r-l+1, y, z);
+    int res;
+    switch (op) {
+        case 1 : res = t[y].mi; break;
+        case 2 : res = t[y].sum; break;
+    }
+    rt = merge(merge(x, y), z);
+    return res;
+}
 vi vout;
 void out(int rt) {
     PushDown(rt);
@@ -55,90 +119,11 @@ void out(int rt) {
     vout.pb(t[rt].val);
     if (rson) out(rson);
 }
-
-
-// 旋转 Treap
-void Init() {
-    treap_cnt = 1;
-    T[0].key = T[0].pri = T[0].sz = T[0].son[0] = T[0].son[1] = 0;
+void print(int rt) {  // 输出 rt 对应区间
+    vout.clear();
+    out(rt);
+    rep(i, 0, sz(vout)) printf("%d%c", vout[i], " \n"[i==sz(vout)-1]);
 }
-
-struct Node {
-    int key, pri, sz, son[2];
-    void setval(int x) {
-        static int seed = 3312;
-        key = x;
-        pri = seed = (int)((ll)seed * 48271 % 2147483647);
-        sz = 1;
-        son[0] = son[1] = 0;
-    }
-};
-int treap_cnt;    // 在 Init() 里初始化，通过一个 cnt 和 一个 T[N] 给多个 Treap 分配节点
-Node T[N];
-struct Treap {		// 适合集合查找第 k 大元素
-    int root;
-    void init() { root = 0; }
-    void rotate(int &x, int p) {
-        int y = T[x].son[!p];
-        T[x].son[!p] = T[y].son[p];
-        T[y].son[p] = x;
-        T[y].sz = T[x].sz;
-        T[x].sz = T[T[x].son[0]].sz + 1 + T[T[x].son[1]].sz;
-        x = y;
-    }
-    // 执行插入和删除操作前要用 find(ans.root, x) 检验操作是否合法
-    void ins(int &x, int val) {     // 往集合中插入值 val，调用方法：ans.ins(ans.root, val)
-        if (x == 0) {
-            T[x = treap_cnt++].setval(val);
-        } else {
-            ++T[x].sz;
-            int p = val > T[x].key;
-            ins(T[x].son[p], val);
-            if (T[x].pri > T[T[x].son[p]].pri)
-                rotate(x, !p);
-        }
-    }
-    void del(int &x, int val) {     // 从集合中删除值 val
-        if (T[x].key == val) {
-            if (T[x].son[0] && T[x].son[1]) {
-                --T[x].sz;
-                int p = T[T[x].son[0]].pri < T[T[x].son[1]].pri;
-                rotate(x, p);
-                del(T[x].son[p], val);
-            } else {
-                if (!T[x].son[0]) x = T[x].son[1];
-                else x = T[x].son[0];
-            }
-        } else {
-            --T[x].sz;
-            int p = T[x].key < val;
-            del(T[x].son[p], val);
-        }
-    }
-    int findKth(int &x, int k) {    // 查找集合中第 k 小的元素，返回值为对应元素的编号，若不存在，则返回 -1
-        if (k <= 0 || x == 0 || k > T[x].sz) return -1;
-        if (k == T[T[x].son[0]].sz + 1) return x;
-        if (k > T[T[x].son[0]].sz + 1)
-            return findKth(T[x].son[1], k - T[T[x].son[0]].sz - 1);
-        return findKth(T[x].son[0], k);
-    }
-    int find(int &x, int val) {     // 查找集合中值为 val 的元素，返回值为对应元素的编号，若不存在，则返回 -1
-        if (x == 0) return -1;
-        if (val == T[x].key) return x;
-        return find(T[x].son[T[x].key < val], val);
-    }
-    int Count(int &x, int val) {    // 查找集合中小于值 val 的元素个数，返回值为元素个数，同时也表示 val 是集合中第 Count+1 小的元素
-        if (x == 0) return 0;
-        if (val < T[x].key) return Count(T[x].son[0], val);
-        if (val == T[x].key) return T[T[x].son[0]].sz;
-        return T[x].sz - T[T[x].son[1]].sz + Count(T[x].son[1], val);
-    }
-    void Merge(int &src) {          // 把根为 src 的 treap 合并到根为 root 的本 treap 中
-        if (T[src].son[0]) Merge(T[src].son[0]);
-        if (T[src].son[1]) Merge(T[src].son[1]);
-        ins(root, T[src].key);
-    }
-};
 
 ================================================== Problem Set ==================================================
 
