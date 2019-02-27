@@ -136,10 +136,10 @@ void Clear() {
 int newnode(int val) { t[++no] = (Node){ 0, 0, val, rand(), 1 }; return no; }
 void PushUp(int rt) { t[rt].sz = t[lson].sz + t[rson].sz + 1; }
 void split(int rt, int k, int &x, int &y) {  // 将 rt 对应的一段区间分成元素值 小于等于 k 和 大于 k 的两段，根结点分别为 x 和 y
-	if (!rt) { x = y = 0; return ; }
-	if (t[rt].val <= k) { x = rt; split(rson, k, rson, y); }
-	else { y = rt; split(lson, k, x, lson); }
-	PushUp(rt);
+    if (!rt) { x = y = 0; return ; }
+    if (t[rt].val <= k) { x = rt; split(rson, k, rson, y); }
+    else { y = rt; split(lson, k, x, lson); }
+    PushUp(rt);
 }
 int merge(int x, int y) {  // 将 x 和 y 对应的区间按 x 区间在左， y 区间在右的顺序合并起来，返回合并后的根结点
     if (!x || !y) return x + y;
@@ -165,35 +165,34 @@ void Build(int a[], int n) {  // 初始序列 a[] ，从 1 开始
     rep(i, 1, n+1) INS(a[i]);
 }
 int RANK(int val) {  // 查询值为 val 的元素的排名 ( 排名定义为 值比 val 小的元素 的个数 + 1 , 即最前面的 值为 val 的元素 的位置 )
-	int x, y, rank;
-	split(rt, val-1, x, y);
-	rank = t[x].sz + 1;
-	rt = merge(x, y);
-	return rank;
+    int x, y, rank;
+    split(rt, val-1, x, y);
+    rank = t[x].sz + 1;
+    rt = merge(x, y);
+    return rank;
 }
 int VAL(int rt, int rank) {  // 查询 rt 对应区间内排名为 rank 的元素的值 val ( rank 相当于位置，具有相同值的元素也有不同的位置 )
-	for (;;) {
-		if (rank == t[lson].sz + 1) return t[rt].val;
-		if (rank <= t[lson].sz) rt = lson;
-		else { rank -= t[lson].sz + 1; rt = rson; }
-	}
+    for (;;) {
+        if (rank == t[lson].sz + 1) return t[rt].val;
+        if (rank <= t[lson].sz) rt = lson;
+        else { rank -= t[lson].sz + 1; rt = rson; }
+    }
 }
 int PRE(int val) {  // 返回小于 val 且最大的元素值
-	int x, y, rank, pre;
-	split(rt, val-1, x, y);
-	if (!x) return -INF;  // 若不存在，则返回负无穷
-	rank = t[x].sz;
-	pre = VAL(x, rank);
-	rt = merge(x, y);
-	return pre;
+    int x, y, pre;
+    split(rt, val-1, x, y);
+    if (!x) return -INF;  // 若不存在，则返回负无穷
+    pre = VAL(x, t[x].sz);
+    rt = merge(x, y);
+    return pre;
 }
 int NET(int val) {  // 返回大于 val 且最小的元素值
-	int x, y, net;
-	split(rt, val, x, y);
-	if (!y) return INF;  // 若不存在，则返回正无穷
-	net = VAL(y, 1);
-	rt = merge(x, y);
-	return net;
+    int x, y, net;
+    split(rt, val, x, y);
+    if (!y) return INF;  // 若不存在，则返回正无穷
+    net = VAL(y, 1);
+    rt = merge(x, y);
+    return net;
 }
 vi vout;
 void out(int rt) {
