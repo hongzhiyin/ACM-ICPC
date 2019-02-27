@@ -57,8 +57,8 @@ void split(int rt, int k, int &x, int &y) {  // 将 rt 对应的一段区间分�
     PushDown(rt);
     if (!k) { x = 0; y = rt; return ; }
     if (t[rt].sz <= k) { x = rt; y = 0; return ; }
-    if (t[lson].sz >= k) { split(lson, k, x, lson); y = rt; }
-    else { split(rson, k-t[lson].sz-1, rson, y); x = rt; }
+    if (t[lson].sz >= k) { y = rt; split(lson, k, x, lson); }
+    else { x = rt; split(rson, k-t[lson].sz-1, rson, y); }
     PushUp(rt);
 }
 int merge(int x, int y) {  // 将 x 和 y 对应的区间按 x 区间在左， y 区间在右的顺序合并起来，返回合并后的根结点
