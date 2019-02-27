@@ -1,16 +1,16 @@
-// 非旋转可持久化 Treap （待填坑）
 // https://www.cnblogs.com/nbwzyzngyl/p/7977369.html
+// 基本与非持久化版本相同，修改部分在注释中用 [ 可持久化 ] 注明
 
 #define lson t[rt].l
 #define rson t[rt].r
 int rt[N], no;  // [ 可持久化 ] rt ==> rt[N]
 struct Node { int l, r, val, rnd, sz; } t[N<<5];  // t[N] ==> t[N<<5]
 void Clear() {
-    rt[0] = no = 0;
+    rt[0] = no = 0;  // [ 可持久化 ] rt ==> rt[0]
     t[0] = (Node){ 0, 0, 0, rand(), 0 };
 }
 int newnode(int val) { t[++no] = (Node){ 0, 0, val, rand(), 1 }; return no; }
-int copynode(int rt) { t[++no] = t[rt]; return no; }  // [ 可持久化 ] 增加 copynode()
+int copynode(int rt) { t[++no] = t[rt]; return no; }  // [ 可持久化 ] 增加 copynode() , 用于 split() 中复制结点
 void PushUp(int rt) { t[rt].sz = t[lson].sz + t[rson].sz + 1; }
 void split(int rt, int k, int &x, int &y) {  // 将 rt 对应的一段区间分成元素值 小于等于 k 和 大于 k 的两段，根结点分别为 x 和 y
     if (!rt) { x = y = 0; return ; }
@@ -39,7 +39,7 @@ void DEL(int &rt, int val) {  // 删除 随机一个 值等于 val 的元素，�
     rt = merge(merge(x, merge(t[y].l, t[y].r)), z);
 }
 void Build(int a[], int n) {  // 初始序列 a[] ，从 1 开始
-    rep(i, 1, n+1) INS(rt[0], a[i]);
+    rep(i, 1, n+1) INS(rt[0], a[i]);  // [ 可持久化 ] rt ==> rt[0]
 }
 // [ 可持久化 ] 查询操作的函数参数只需要用 rt ，并且复制出来的链不需要合并，因为和原链是一样的，相当于丢弃了这条链
 int RANK(int rt, int val) {  // 查询值为 val 的元素的排名 ( 排名定义为 值比 val 小的元素 的个数 + 1 , 即最前面的 值为 val 的元素 的位置 )
