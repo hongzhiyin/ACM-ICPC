@@ -1,3 +1,5 @@
+// 返回树的重心，树的重心可能有 1 个或 2 个
+
 int g[2], sz[N], minsz;
 void Gravity (int u, int f) {
     if (f == 0) { g[0] = g[1] = -1; minsz = INF; }
