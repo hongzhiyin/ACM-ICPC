@@ -1,10 +1,11 @@
 //求前 n 行
 ll C[N][N];
-memset(C, 0, sizeof(C));
-rep(i, 0, N) {
-    C[i][0] = C[i][i] = 1;
-    rep(j, 1, i)
-        C[i][j] = (C[i - 1][j - 1] + C[i - 1][j]) % MOD;
+void Yanghui() {
+    memset(C, 0, sizeof(C));
+    rep(i, 0, N) {
+        C[i][0] = C[i][i] = 1;
+        rep(j, 1, i) C[i][j] = add(C[i-1][j-1], C[i-1][j]);
+    }
 }
 
 //求第 n 行（不取模）
