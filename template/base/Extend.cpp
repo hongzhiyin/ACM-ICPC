@@ -45,3 +45,6 @@ int __builtin_ctz (unsigned int x)      // 返回末尾 0 的个数，如果 x =
 int __builtin_popcount (unsigned int x) // 返回 1 的个数。
 int __builtin_parity (unsigned int x)   // 返回 1 的个数的奇偶性，奇为 1 ，偶为 0 。
 // x 若为 unsigned long long 类型，只需要在函数名后加 ll 即可，如 int __builtin_ffsll (unsigned long long x)
+
+// 访问数组负数下标
+int tmp[N<<1], *a = tmp + N;  // 使用 a[x] 和 a[-x]
