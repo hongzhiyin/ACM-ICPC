@@ -58,6 +58,8 @@ void Upd(int L, int R, T val, int l, int r, int rt) : 区间 [L, R] 都加上 va
 T Qry(int L, int R, int l, int r, int rt)           : 查询区间 [L, R]
 */
 
+#define ls (rt << 1)
+#define rs (rt << 1 | 1)
 #define lson l, m, rt << 1
 #define rson m + 1, r, rt << 1 | 1
 int sz[N<<2]; ll lazy[N<<2], t[N<<2];
