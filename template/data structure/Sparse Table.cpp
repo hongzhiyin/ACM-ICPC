@@ -9,10 +9,10 @@ T Qry(int L, int R)     : 询问区间 [L, R] 的最值
 3. 固定起点的区间的最值具有单调性，可依此进行二分
 */
 
-int lg[N]; T d[N][25];
+int lg[N]; T d[N][21];
 void st_init(int a[], int n) {
     rep(i, 1, n+1) d[i][0] = a[i];
-    rep(j, 1, 25) for (int i = 1; i + (1 << j) - 1 <= n; ++i)
+    rep(j, 1, 21) for (int i = 1; i + (1 << j) - 1 <= n; ++i)
         d[i][j] = op(d[i][j-1], d[i + (1 << (j-1) )][j-1]);
     lg[1] = 0; rep(i, 2, n+1) lg[i] = lg[i>>1] + 1;
 }
