@@ -8,29 +8,29 @@ int lca(int u, int v)	      : 返回 u 和 v 的最近公共祖先
 */
 
 struct LCA {
-    int f[N][30], dep[N];
+    int f[N][21], dep[N];
     void dfs(int u, int p, int d) {	// dfs(rt, rt, 0)
         f[u][0] = p; dep[u] = d;
-        rep(j, 1, 30) f[u][j] = f[f[u][j-1]][j-1];
+        rep(j, 1, 21) f[u][j] = f[f[u][j-1]][j-1];
         for (auto v : e[u]) if (v != p) dfs(v, u, d+1);
     }
     int lca(int u, int v) {
         if (dep[u] < dep[v]) swap(u, v);
-        for (int i = 29, d = dep[u] - dep[v]; i >= 0; --i)
+        for (int i = 20, d = dep[u] - dep[v]; i >= 0; --i)
             if (d >> i & 1) u = f[u][i];
         if (u == v) return u;
-        per(i, 0, 30) if (f[u][i] != f[v][i])
+        per(i, 0, 21) if (f[u][i] != f[v][i])
             u = f[u][i], v = f[v][i];
         return f[u][0];
     }
 };
 
 // 求路径长度、最值
-    ll sum[N][30];
+    ll sum[N][21];
     ll op(ll a, ll b) { return ? ; }
     void dfs(int u, int p, int d, ll w) {
         f[u][0] = p; dep[u] = d; sum[u][0] = w;
-        rep(j, 1, 30) {
+        rep(j, 1, 21) {
             f[u][j] = f[f[u][j-1]][j-1];
             sum[u][j] = op(sum[f[u][j-1]][j-1], sum[u][j-1]);
         }
@@ -39,9 +39,9 @@ struct LCA {
     ll dist(int u, int v) {
         int p = lca(u, v);
         ll d1 = 0, d2 = 0;
-        for (int i = 29, d = dep[u] - dep[p]; i >= 0; --i)
+        for (int i = 20, d = dep[u] - dep[p]; i >= 0; --i)
             if (d >> i & 1) d1 = op(d1, sum[u][i]), u = f[u][i];
-        for (int i = 29, d = dep[v] - dep[p]; i >= 0; --i)
+        for (int i = 20, d = dep[v] - dep[p]; i >= 0; --i)
             if (d >> i & 1) d2 = op(d2, sum[v][i]), v = f[v][i];
         return op(d1, d2);
     }
