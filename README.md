@@ -1,6 +1,6 @@
 # Summary
 
-![Progress](http://progressed.io/bar/5?title=Difficulty:2300~2400|tag:dp)
+![Progress](http://progressed.io/bar/7?title=Difficulty:2300~2400|tag:dp)
 
 |　　一　　|　　二　　|　　三　　|　　四　　|　　五　　|　　六　　|　　日　　|
 | :--: | :--: | :--: | :--: | :--: | :--: | :--: |
@@ -13,13 +13,19 @@
 |  20  |  21  |  22  |  23  |  24  |  25  |  26  |
 |      |  | ✔2 |      |      |  |      |
 |  27  |  28  |  29  |  30  |  31  |      |      |
-|      |      | ✔3 |      |      |      |      |
+|      |      | ✔5 |      |      |      |      |
 
 ---
 
 # Dairy
 
 ## 2019.05.29
+
+### Codeforces 679B （dp + 递归）
+
+### Codeforces 571B （dp + 贪心）
+
+- dp 方程不一定要 i-1 转移到 i ，也可以用 dp[next] = min(dp[next], dp[cur]) ，用当前已知去更新之后的未知。
 
 ### Codeforces 494B （dp + string）
 
