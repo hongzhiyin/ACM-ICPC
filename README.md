@@ -1,6 +1,6 @@
 # Summary
 
-![Progress](http://progressed.io/bar/2?title=Difficulty:2300~2400|tag:dp)
+![Progress](http://progressed.io/bar/5?title=Difficulty:2300~2400|tag:dp)
 
 |　　一　　|　　二　　|　　三　　|　　四　　|　　五　　|　　六　　|　　日　　|
 | :--: | :--: | :--: | :--: | :--: | :--: | :--: |
@@ -13,11 +13,32 @@
 |  20  |  21  |  22  |  23  |  24  |  25  |  26  |
 |      |  | ✔2 |      |      |  |      |
 |  27  |  28  |  29  |  30  |  31  |      |      |
-|      |      |      |      |      |      |      |
+|      |      | ✔3 |      |      |      |      |
 
 ---
 
 # Dairy
+
+## 2019.05.29
+
+### Codeforces 494B （dp + string）
+
+- 还是数学归纳法，假设 i-1 已经完成，那 dp[i] 就只有取第 i 位和不取第 i 位，那么不取就直接等于 dp[i-1] ，如果取，就想该怎么取。
+- dp[i] = dp[j] + cost(i, j) ，这里 cost(i, j) 要整段考虑，不要再拆分了。
+
+### Codeforces 487B （dp + multiset）
+
+- 遇到涉及区间更新，区间查询最值的问题时，试试看能不能用 set 或 multiset 实现，比自己写数据结构简洁得多。
+- 最小值 S.begin() ，最大值 S.rbegin()
+- 类似用数学归纳法，假设已知 dp[i-1] 及其对应的 dp[j] 的信息，如何获取转移到 dp[i] 所需要的信息。
+
+### Codeforces 319C （斜率优化）
+
+### Essay
+
+- 学习了斜率优化，整理了模板
+
+---
 
 ## 2019.05.22
 
