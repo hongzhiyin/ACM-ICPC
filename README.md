@@ -1,23 +1,51 @@
 # Summary
 
-![Progress](http://progressed.io/bar/7?title=Difficulty:2300~2400|tag:dp)
+![Progress](http://progressed.io/bar/13?title=Difficulty:2300~2400|tag:dp)
 
 |　　一　　|　　二　　|　　三　　|　　四　　|　　五　　|　　六　　|　　日　　|
 | :--: | :--: | :--: | :--: | :--: | :--: | :--: |
 |      |      |  1   | 2 |  3   |  4   |  5   |
 |      |      |      |    |      |    |  |
 |  6   |  7   |  8   |  9   |  10  |  11  |  12  |
-|  |  |      |      |      |      |      |
+|  |  |      |      |      |  |      |
 |  13  |  14  |  15  |  16  |  17  |  18  |  19  |
 |      |      |      |      |      |      |      |
 |  20  |  21  |  22  |  23  |  24  |  25  |  26  |
 |      |  | ✔2 |      |      |  |      |
 |  27  |  28  |  29  |  30  |  31  |      |      |
-|      |      | ✔5 |      |      |      |      |
+|      |      | ✔5 | ✔6 |      |      |      |
 
 ---
 
 # Dairy
+
+## 2019.05.30
+
+### Codeforces 55D （数位dp + lcm）
+
+- a 是 b1 ~ bn 的倍数 等价于 a % lcm(b1, ... , bn) == 0
+- b1 ~ bn 全集的 lcm 是 子集的 lcm 的倍数
+- b1 ~ bn 所有子集能组成的 lcm 都是 全集lcm 的约数
+- 数位 dp 里面 for 循环里，转移到下一层 dfs 的参数是涉及 i 的
+
+### Codeforces 713C （dp + 排序）
+
+- 把数列变成非严格递增
+- dp[i]\[j] 表示前 i 个数，最后一个数等于 a[j] 的最小代价
+- 变成严格递增，只需要对原序列操作： a[i] = a[i] - i
+
+### Codeforces 360B （dp + 二分）
+
+### Codeforces 466D （dp + 括号匹配）
+
+- 可相交但不完全覆盖的若干线段可以看成括号匹配
+- dp 第二维表示待匹配左括号
+
+### Codeforces 1006F （meet in the middle）
+
+- 起点和终点确定的曼哈顿路径数等于 C(n+m, n)
+
+### Codeforces 383D （dp + 计数）
 
 ## 2019.05.29
 
