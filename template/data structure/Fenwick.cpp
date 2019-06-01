@@ -12,7 +12,7 @@ void Add(int x, T d) : 第 x 个元素加上 d
 
 ll t[N]; // map <int, int> t;
 
-ll Sum(int x) { ll ret = 0; for (; x > 0; x -= x&-x) ret += t[x]; return ret; }
+ll Sum(int x) { ll res = 0; for (; x > 0; x -= x&-x) res += t[x]; return res; }
 
 void Add(int x, ll d) { for (; x <= ?; x += x&-x) t[x] += d; }
 
