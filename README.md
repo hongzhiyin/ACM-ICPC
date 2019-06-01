@@ -1,11 +1,11 @@
 # Summary
 
-![Progress](http://progressed.io/bar/15?title=Difficulty:2300~2400|tag:dp)
+![Progress](http://progressed.io/bar/17?title=Difficulty:2300~2400|tag:dp)
 
 |　　一　　|　　二　　|　　三　　|　　四　　|　　五　　|　　六　　|　　日　　|
 | :--: | :--: | :--: | :--: | :--: | :--: | :--: |
 |      |      |     |  |     |  1   |  2   |
-|      |      |      |    | ✔14 | ✔1 |  |
+|      |      |      |    | ✔14 | ✔3 |  |
 |  3   |  4   |  5   |  6   |  7  |  8  |  9  |
 |  |  |      |      |      |  |      |
 |  10  |  11  |  12  |  13  |  14  |  15  |  16  |
@@ -20,6 +20,10 @@
 # Dairy
 
 ## 2019.06.01
+
+### Codeforces 158E （dp）
+
+### Codeforces 314C （dp + 计数 + 树状数组）
 
 ### Codeforces 449D （位运算 + 容斥原理）
 
