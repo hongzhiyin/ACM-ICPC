@@ -10,8 +10,8 @@ inline void readint(int &x) {
 }
 
 // 取模加，取模乘
-inline int add(ll a, int b) { if ((a += b) >= MOD) a -= MOD; return a; }
-inline int mul(ll a, int b) { if ((a *= b) >= MOD) a %= MOD; return a; }
+inline int add(ll a, ll b) { if ((a += b) >= MOD) a -= MOD; return a; }
+inline int mul(ll a, ll b) { if ((a *= b) >= MOD) a %= MOD; return a; }
 
 // 快速乘，快速幂
 ll mulmod(ll a, ll b) { ll res = 0; for(a %= MOD; b; b >>= 1) { if (b & 1) res = add(res, a); a = add(a, a); } return res; }
