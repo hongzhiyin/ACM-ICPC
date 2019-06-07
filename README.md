@@ -1,13 +1,13 @@
 # Summary
 
-![Progress](http://progressed.io/bar/24?title=Difficulty:2300~2400|tag:dp)
+![Progress](http://progressed.io/bar/38?title=Difficulty:2300~2400|tag:dp)
 
 |　　一　　|　　二　　|　　三　　|　　四　　|　　五　　|　　六　　|　　日　　|
 | :--: | :--: | :--: | :--: | :--: | :--: | :--: |
 |      |      |     |  |     |  1   |  2   |
 |      |      |      |    | ✔14 | ✔3 |  |
 |  3   |  4   |  5   |  6   |  7  |  8  |  9  |
-| ✔2 | ✔5 |      |      |      |  |      |
+| ✔2 | ✔5 | ✔5 | ✔5 | ✔4 |  |      |
 |  10  |  11  |  12  |  13  |  14  |  15  |  16  |
 |      |      |      |      |      |      |      |
 |  17  |  18  |  19  |  20  |  21  |  22  |  23  |
@@ -18,6 +18,42 @@
 ---
 
 # Dairy
+
+## 2019.06.07
+
+### Codeforces 1157F (构造 + 环)
+
+- 构造相邻元素绝对值相差小于等于 1 的环 等价于 找到一个相邻元素绝对值相差 1 的递增序列，其中头尾至少出现一次，中间元素至少出现两次以上。
+
+### Codeforces 311B (斜率优化)
+
+### Codeforces 689E (差分 + 组合数)
+
+### Codeforces 1073E (数位dp)
+
+## 2019.06.06
+
+### Codeforces 932E (组合数 + 求导 + dp)
+
+### Codeforces 677D (dp + 分治暴力)
+
+### Codeforces 922E (dp + 复杂度分析)
+
+### Codeforces 988F (dp)
+
+### Codeforces 626F (dp + 括号匹配)
+
+## 2019.06.05
+
+### Codeforces 486E (LIS)
+
+### Codeforces 508E (括号匹配 + 贪心)
+
+### Codeforces 21C (前缀和)
+
+### Codeforces 258C (枚举 + lcm)
+
+### Codeforces 587B (dp)
 
 ## 2019.06.04
 
