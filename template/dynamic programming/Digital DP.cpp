@@ -1,14 +1,29 @@
 // https://blog.csdn.net/wust_zzwh/article/details/52100392
 
-memset(dp, -1, sizeof(dp));     // 如果多组数据不影响 dp[][] ，就放在 while() 外面
+// 如果多组数据不影响 dp[][] ，就放在 while() 外面
+memset(dp, -1, sizeof(dp));
 
 int dp[ 数位长度 ][ 状态数 ], num[ 数位长度 ];
-int dfs(int pos, int state, bool limit) {   // pos ：当前枚举位， state ：当前状态， limit ：当前枚举位是否有限制
-    if (pos == -1) return check(state);               // 枚举完毕，判断状态合法性，返回相应值
-    if (!limit && dp[pos][state] != -1) return dp[pos][state];    // 记忆化搜索
-    int ans = 0, up = limit ? num[pos] : 9;          // 确定上界
+
+// pos ：当前枚举位， state ：当前状态， limit ：当前枚举位是否有限制
+T dfs(int pos, int state, bool limit) {
+    
+    // 枚举完毕，判断状态合法性，返回相应值
+    if (pos == -1) return check(state);
+    
+    // 记忆化搜索
+    if (!limit && dp[pos][state] != -1) return dp[pos][state];
+    
+    // 确定上界
+    int up = limit ? num[pos] : 9;
+    
+    T ans = 0;
     rep(i, 0, up+1) {
-        if (!check(state, i)) continue;     // 状态非法
+        
+        // 状态非法
+        if (!check(state, i)) continue;
+        
+        // 累加贡献
         ans += dfs(pos-1, change(state, i), limit && i==num[pos]);
     }
     return limit ? ans : dp[pos][state] = ans;
