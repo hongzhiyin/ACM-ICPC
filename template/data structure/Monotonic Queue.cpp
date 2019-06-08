@@ -1,50 +1,12 @@
-struct MQ {  // 单调队列
-    int id, l, r;
-    pii mx;
-    deque <pii> q;
-    void init() { id = 0; while (!q.empty()) q.pop_back(); }
-    int front() { return q.front().fi; }
-    void push(int x) {
-        id++; r++;
-        while (!q.empty() && q.back().fi < x) q.pop_back();     // 单调递减，求最大值
-        // while (!q.empty() && q.back().fi > x) q.pop_back();     // 单调递增，求最小值
-        q.pb(mp(x, id));
-        maintain();
-    }
-    void maintain() {
-        while (q.back().se - q.front().se > len) q.pop_front();   // 窗口长度限制 len
-    }
-};
+deque < pair<ll, int> > Q;
+void Clear() { Q.clear(); }
 
+void Push(ll val, int id) {
+    while (!Q.empty() && Q.back().fi < val) Q.pop_back();
+    Q.pb(mp(val, id));
+}
 
-// 窗口内 max - min <= k
-struct MQ {  // 单调队列
-    int id, l, r;
-    pii mi, ma;
-    deque <pii> maxq, minq;
-    void init() {
-        id = r = 0; l = 1;
-        while (!maxq.empty()) maxq.pop_back();
-        while (!minq.empty()) minq.pop_back();
-    }
-    void push(int x) {
-        id++; r++;
-        while (!maxq.empty() && maxq.back().fi <= x) maxq.pop_back();   //单调递减，队首最大
-        maxq.push_back({x, id});
-        while (!minq.empty() && minq.back().fi >= x) minq.pop_back();   //单调递增，队首最小
-        minq.push_back({x, id});
-        maintain();
-    }
-    void maintain() {
-        while (maxq.front().fi - minq.front().fi > k) {
-            if (maxq.front().se < minq.front().se) {
-                l = maxq.front().se + 1;
-                maxq.pop_front();
-            } else {
-                l = minq.front().se + 1;
-                minq.pop_front();
-            }
-        }
-    }
-    int size() { return r - l + 1; }
-};
+ll Front(int id) {
+    while (!Q.empty() && id - Q.front().se > K) Q.pop_front(); 
+    return Q.front().fi;
+}
