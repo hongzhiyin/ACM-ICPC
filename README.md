@@ -1,13 +1,13 @@
 # Summary
 
-![Progress](http://progressed.io/bar/38?title=Difficulty:2300~2400|tag:dp)
+![Progress](http://progressed.io/bar/42?title=Difficulty:2300~2400|tag:dp)
 
 |　　一　　|　　二　　|　　三　　|　　四　　|　　五　　|　　六　　|　　日　　|
 | :--: | :--: | :--: | :--: | :--: | :--: | :--: |
 |      |      |     |  |     |  1   |  2   |
 |      |      |      |    | ✔14 | ✔3 |  |
 |  3   |  4   |  5   |  6   |  7  |  8  |  9  |
-| ✔2 | ✔5 | ✔5 | ✔5 | ✔4 |  |      |
+| ✔2 | ✔5 | ✔5 | ✔5 | ✔4 | ✔4 |      |
 |  10  |  11  |  12  |  13  |  14  |  15  |  16  |
 |      |      |      |      |      |      |      |
 |  17  |  18  |  19  |  20  |  21  |  22  |  23  |
@@ -18,6 +18,16 @@
 ---
 
 # Dairy
+
+## 2019.06.08
+
+### Codeforces 283C (dp + 拓扑排序 + 完全背包)
+
+### Codeforces 1077F (dp + 单调队列)
+
+### Codeforces 1032E (背包dp)
+
+### Codeforces 743E (状压dp)
 
 ## 2019.06.07
 
