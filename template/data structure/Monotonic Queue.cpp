@@ -1,5 +1,4 @@
 deque < pair<ll, int> > Q;
-void Clear() { Q.clear(); }
 
 void Push(ll val, int id) {
     while (!Q.empty() && Q.back().fi < val) Q.pop_back();
