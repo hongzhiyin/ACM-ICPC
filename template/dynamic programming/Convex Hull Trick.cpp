@@ -11,9 +11,10 @@ struct P {
 #define K(i) (...)   // 直线斜率
 
 int Solve() {
+    // 注意 dp 转移过程中是否会用到 dp[0] ，如果会，则注意设置初值
     deque <P> Q; Q.pb(P(X(0), Y(0)));    // 设置初值
     rep(i, 1, n+1) {
-        // 队首斜率 小于 直线斜率
+        // 当队首斜率 小于 直线斜率
         while (sz(Q) > 1 && (Q[1].y - Q[0].y) < (Q[1].x - Q[0].x) * K(i)) Q.pop_front();
         
         // dp 转移式
@@ -22,8 +23,8 @@ int Solve() {
         // 第 i 个结点待入队
         P a(X(i), Y(i));
         
-        // 队尾元素是否下凸
-        while (sz(Q) > 1 && !((Q[sz(Q)-2] - a) ^ (Q.back() - a))) Q.pop_back();
+        // 当队尾元素下凸
+        while (sz(Q) > 1 && ((Q[sz(Q)-2] - a) ^ (Q.back() - a))) Q.pop_back();
         
         // 第 i 个结点入队
         Q.pb(a);
