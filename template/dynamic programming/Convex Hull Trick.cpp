@@ -6,8 +6,8 @@ struct P {
     // 叉积可能爆 long long ，返回叉积是否大于 0
     bool operator ^ (const P &rhs) const { return (db)x * rhs.y > (db)y * rhs.x; }
 };
-#define X(i) (...)   // 点的横坐标
-#define Y(i) (...)   // 点的纵坐标
+#define X(j) (...)   // 点的横坐标
+#define Y(j) (...)   // 点的纵坐标
 #define K(i) (...)   // 直线斜率
 
 int Solve() {
