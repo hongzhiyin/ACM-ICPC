@@ -10,12 +10,12 @@ inline void readint(int &x) {
 }
 
 // 取模加，取模乘
-inline int add(ll a, ll b) { if ((a += b) >= MOD) a -= MOD; return a; }
-inline int mul(ll a, ll b) { if ((a *= b) >= MOD) a %= MOD; return a; }
+inline int add(int a, int b) { return (a += b) >= MOD ? a - MOD : a; }
+inline int mul(int a, int b) { return 1ll * a * b % MOD; }
 
 // 快速乘，快速幂
-ll mulmod(ll a, ll b) { ll res = 0; for(a %= MOD; b; b >>= 1) { if (b & 1) res = add(res, a); a = add(a, a); } return res; }
-ll powmod(ll a, ll b) { ll res = 1; for(a %= MOD; b; b >>= 1) { if (b & 1) res = mul(res, a); a = mul(a, a); } return res; }
+ll qmul(ll a, ll b) { ll r = 0; for (a %= MOD; b; a = (a + a) % MOD, b >>= 1) if (b & 1) r = (r + a) % MOD; return r; }
+ll qpow(ll a, ll b) { ll r = 1; for (a %= MOD; b; a = a * a % MOD, b >>= 1) if (b & 1) r = r * a % MOD; return r; }
 
 // 字符串映射
 int cnt = 0;
