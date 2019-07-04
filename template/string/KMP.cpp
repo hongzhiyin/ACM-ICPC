@@ -6,7 +6,7 @@ struct KMP {
             if (j == -1 || p[i] == p[j]) net[++i] = ++j;
             else j = net[j];
         }
-        // 最小循环节长度
+        // 最小循环节长度 ( m 也可以是当前字符串的前缀长度，求前缀字符串的最小循环节 )
         // if (m % (m - net[m]) == 0) return m - net[m]; else return m;
         // 最小循环节个数
         // if (m % (m - net[m]) == 0) return m / (m - net[m]); else return 1;
