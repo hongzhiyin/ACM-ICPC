@@ -1,23 +1,25 @@
-// 最终的二分值 L 未必符合期望，应该带入公式判断是否正确。
+/*
+    1. 终止条件 L == R
+    2. 求最大值不会取到 L ，求最小值不会取到 R
+    3. [l, r] 表示二分区间， l-1 和 r+1 表示越界下标，如果 L == R 等于越界下标，说明无解
+*/
 
 // 求最大值
-int L = 0, R = max;
+int L = l - 1, R = r;
 while (L < R) {
-    int M = L + (R - L + 1 >> 1);     // 防止溢出，溢出可能造成TLE
+    int M = L + R + 1 >> 1
     if (check(M)) L = M; else R = M - 1;
 }
-printf("%d\n", L);
 
 // 求最小值
-int L = 0, R = max;
+int L = l, R = r + 1;
 while (L < R) {
-    int M = L + (R - L >> 1);
+    int M = L + R >> 1
     if (check(M)) R = M; else L = M + 1;
 }
-printf("%d\n", L);
 
 // 浮点数
-db L = 0, R = max;
+db L = l, R = r;
 while (!eq(L, R)) {     // 精度太小可能 TLE ，可以用固定次数的循环
     db M = (L + R) / 2;
     if (check(M)) L = M; else R = M;
