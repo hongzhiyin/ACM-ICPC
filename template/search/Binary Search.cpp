@@ -7,14 +7,14 @@
 // 求最大值
 int L = l - 1, R = r;
 while (L < R) {
-    int M = L + R + 1 >> 1
+    int M = L + R + 1 >> 1;
     if (check(M)) L = M; else R = M - 1;
 }
 
 // 求最小值
 int L = l, R = r + 1;
 while (L < R) {
-    int M = L + R >> 1
+    int M = L + R >> 1;
     if (check(M)) R = M; else L = M + 1;
 }
 
