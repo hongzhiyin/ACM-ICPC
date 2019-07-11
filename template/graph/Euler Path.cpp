@@ -1,4 +1,4 @@
-int eno, to[N], net[N], head[N];
+int eno, to[N<<1], net[N<<1], head[N];
 void AddEdge(int u, int v) {
     to[++eno] = v; net[eno] = head[u]; head[u] = eno;
 }
