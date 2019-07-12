@@ -68,9 +68,6 @@ inline void Add(int rt, ll val) {
     lazy[rt] += val;
     t[rt] += val * sz[rt];  // ?
 }
-inline void PushUp(int rt) {
-    t[rt] = op(t[ls], t[rs]);
-}
 inline void PushDown(int rt) {
     if (lazy[rt]) {
         Add2(ls, lazy[rt]);
@@ -83,7 +80,7 @@ inline void Build(int l, int r, int rt) {
     if (l == r) { t[rt] = a[r]; return; }
     int m = (l + r) >> 1;
     Build(lson); Build(rson);
-    PushUp(rt);
+    t[rt] = op(t[ls], t[rs]);
 }
 inline void Upd(int L, int R, ll val, int l, int r, int rt) {
     if (L <= l && r <= R) { Add(rt, val); return ; }
@@ -91,7 +88,7 @@ inline void Upd(int L, int R, ll val, int l, int r, int rt) {
     int m = (l + r) >> 1;
     if (L <= m) Upd(L, R, val, lson);
     if (m < R) Upd(L, R, val, rson);
-    PushUp(rt);
+    t[rt] = op(t[ls], t[rs]);
 }
 inline ll Qry(int L, int R, int l, int r, int rt) {
     if (L <= l && r <= R) return t[rt];
