@@ -58,34 +58,34 @@ void Upd(int L, int R, T val, int l, int r, int rt) : 区间 [L, R] 都加上 va
 T Qry(int L, int R, int l, int r, int rt)           : 查询区间 [L, R]
 */
 
-#define ls (rt << 1)
-#define rs (rt << 1 | 1)
-#define lson l, m, rt << 1
-#define rson m + 1, r, rt << 1 | 1
+#define ls rt << 1
+#define rs rt << 1 | 1
+#define lson l, m, ls
+#define rson m + 1, r, rs
 int sz[N<<2]; ll lazy[N<<2], t[N<<2];
 inline ll op(ll a, ll b) { return a + b; } // ?
-void Add(int rt, ll val) {
+inline void Add(int rt, ll val) {
     lazy[rt] += val;
     t[rt] += val * sz[rt];  // ?
 }
-void PushUp(int rt) {
-    t[rt] = op(t[rt << 1], t[rt << 1 | 1]);
+inline void PushUp(int rt) {
+    t[rt] = op(t[ls], t[rs]);
 }
-void PushDown(int rt) {
+inline void PushDown(int rt) {
     if (lazy[rt]) {
-        Add2(rt << 1, lazy[rt]);
-        Add2(rt << 1 | 1, lazy[rt]);
+        Add2(ls, lazy[rt]);
+        Add2(rs, lazy[rt]);
         lazy[rt] = 0;
     }
 }
-void Build(ll a[], int l, int r, int rt) {
+inline void Build(int l, int r, int rt) {
     lazy[rt] = 0; sz[rt] = r - l + 1;
     if (l == r) { t[rt] = a[r]; return; }
     int m = (l + r) >> 1;
-    Build(a, lson); Build(a, rson);
+    Build(lson); Build(rson);
     PushUp(rt);
 }
-void Upd(int L, int R, ll val, int l, int r, int rt) {
+inline void Upd(int L, int R, ll val, int l, int r, int rt) {
     if (L <= l && r <= R) { Add(rt, val); return ; }
     PushDown(rt);
     int m = (l + r) >> 1;
@@ -93,7 +93,7 @@ void Upd(int L, int R, ll val, int l, int r, int rt) {
     if (m < R) Upd(L, R, val, rson);
     PushUp(rt);
 }
-ll Qry(int L, int R, int l, int r, int rt) {
+inline ll Qry(int L, int R, int l, int r, int rt) {
     if (L <= l && r <= R) return t[rt];
     PushDown(rt);
     int m = (l + r) >> 1;
