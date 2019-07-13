@@ -1,3 +1,8 @@
+/*
+【注意】
+  1. 缩点时，因为遍历的是原图的点，所以只需要加单向边，另一个方向的边在遍历到对面的点时就会加入。
+*/
+
 bool bri[N];
 vector <pii> e[N];
 int dfn[N], low[N], bcc[N], S[N], top, cnt, no;
