@@ -1,16 +1,8 @@
 // 求 C(n, m)
-ll C(int n, int m) {
-    ll res = 1;
-    rep(i, 0, m) res = res * (n-i) / (i+1);
-    return res;
-}
+ll C(int n, int m) { ll r = 1; rep(i, 0, m) r = r * (n-i) / (i+1); return r; }
 
 // 求 C(n, m) （取模）
-int C(int n, int m) {
-    int res = 1;
-    rep(i, 0, m) res = mul(mul(res, n-i), inv[i+1]);
-    return res;
-}
+int C(int n, int m) { int r = 1; rep(i, 0, m) r = mul(mul(r, n-i), inv[i+1]); return r; }
 
 // 求前 n 行
 ll C[N][N];
