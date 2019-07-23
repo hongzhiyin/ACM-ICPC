@@ -11,11 +11,15 @@ struct P {
 	P operator / (const T &k) const { return P(x / k, y / k); }      // 向量数除
 	bool operator < (const P &b) const { return sgn(x − b.x) ? x < b.x : y < b.y; }  // 左下角最小，右上角最大
 	bool operator == (const P &b) const{ return !sgn(x − b.x) && !sgn(y − b.y); }    // 向量相等
-	P rot90() { return P(−y, x); }          // 向量旋转 90 度
+	P rot90() { return P(−y, x); }          // 向量逆时针旋转 90 度
 	db arg() const { return atan2(y, x); }  // 方位角 (-pi, pi]
 };
-T norm(P a) { return a * a; }
-T abs(P a) { return sqrtl(norm(a)); }
+T norm(P a) { return a * a; }          // 向量模长的平方
+T abs(P a) { return sqrtl(norm(a)); }  // 向量模长
+P proj(P p, P a, P b) { return (b−a) * ( (p−a) * (b−a) / norm(b−a) ) + a; }  // p 关于直线 ab 的投影点
+P reflect(P p, P a, P b) { return proj(p, a, b) * 2 − p; }                   // p 关于直线 ab 的对称点
+T cross(P o, P a, P b) { return (a − o) / (b − o); }         // 向量 oa 与向量 ob 的叉积
+int crossSgn(P o, P a, P b) { return sgn(cross(o, a, b)); }  // 向量 oa 与向量 ob 的叉积符号
 
 typedef vector<P> polygon;
 polygon convex(polygon A) {  // 求凸包 , 逆时针排序 , <= : <=180 , < : <180
@@ -49,10 +53,6 @@ C getC(P a,P b,P c){  // 三点确定一个圆 （ 三角形外接圆 ）
 
 --------------------------------------------------------------------------------------------------
 
-P proj(P p,P a,P b){return (b−a)*((p−a)*(b−a)/norm(b−a))+a;}
-P reflect(P p,P a,P b){return proj(p,a,b)*2−p;}
-T cross(P o,P a,P b){return (a−o)/(b−o);}
-int crossOp(P o,P a,P b){return sgn(cross(o,a,b));}
 db rad(P p1,P p2){return atan2l(p1/p2,p1*p2);}
 bool onPS(P p,P s,P t){return sgn((t−s)/(p−s))==0&&sgn((p−s)*(p−t))<=0;}
 bool order(const P&a,const P&b){ return a.arg() < b.arg();}
