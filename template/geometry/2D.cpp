@@ -69,7 +69,7 @@ db disSS(L a, L b){                                                        // �
     if(isSS(a,b)) return 0;
     return min( min( disPS(a.s,b), disPS(a.t,b) ), min( disPS(b.s,a), disPS(b.t,a) ) );
 }
-db disLL(L a, L b) { return (a.t-a.s) / (b.t-b.s) ? 0 ：disPL(a.s, b); }   // 直线 a 到直线 b 的距离
+db disLL(L a, L b) { return (a.t-a.s) / (b.t-b.s) ? 0 : disPL(a.s, b); }   // 直线 a 到直线 b 的距离
 
 typedef vector<P> polygon;
 polygon convex(polygon A) {  // 求凸包 , 逆时针排序 , <= : <=180 , < : <180
