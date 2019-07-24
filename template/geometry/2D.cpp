@@ -33,11 +33,11 @@ bool order(const P &a, const P &b) { return a.arg() < b.arg(); }  // 比较向�
 P proj(P p, P a, P b) { return (b-a) * ( (p-a) * (b-a) / norm(b-a) ) + a; }      // 点 p 关于直线 ab 的投影点
 P reflect(P p, P a, P b) { return proj(p, a, b) * 2 - p; }                       // 点 p 关于直线 ab 的对称点
 bool onPS(P p, P s, P t) { return sgn((t-s)/(p-s))==0 && sgn((p-s)*(p-t))<=0; }  // 点 p 是否在线段 st 上
-bool inVal(T a, T p, T b) { return sgn(a-p)==0 || sgn(b-p)==0 || (a<p != b<p); }      // 数 p 在区间 [a, b] 内（包括边界）
-bool inRec(P p, L a) { return inVal(a.s.x, p.x, a.t.x) && inVal(a.s.y, p.y, a.t.y); } // 点 p 在以直线 a 为对角线的矩形内
 
 // 线段、直线
 struct L { P s, t; L () {} L(P s, P t) : s(s), t(t) {} };
+bool inVal(T a, T p, T b) { return sgn(a-p)==0 || sgn(b-p)==0 || (a<p != b<p); }      // 数 p 在区间 [a, b] 内（包括边界）
+bool inRec(P p, L a) { return inVal(a.s.x, p.x, a.t.x) && inVal(a.s.y, p.y, a.t.y); } // 点 p 在以直线 a 为对角线的矩形内
 bool isSSr(const L &a, const L &b) {  // 线段 a 和线段 b 严格相交
     T c1 = (a.t-a.s) / (b.s-a.s), c2 = (a.t-a.s) / (b.t-a.s);
     T c3 = (b.t-b.s) / (a.s-b.s), c4 = (b.t-b.s) / (a.t-b.s);
