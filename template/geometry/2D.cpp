@@ -38,12 +38,12 @@ bool onPS(P p, P s, P t) { return sgn((t-s)/(p-s))==0 && sgn((p-s)*(p-t))<=0; } 
 struct L { P s, t; L () {} L(P s, P t) : s(s), t(t) {} };
 bool inVal(T a, T p, T b) { return sgn(a-p)==0 || sgn(b-p)==0 || (a<p != b<p); }      // 数 p 在区间 [a, b] 内（包括边界）
 bool inRec(P p, L a) { return inVal(a.s.x, p.x, a.t.x) && inVal(a.s.y, p.y, a.t.y); } // 点 p 在以直线 a 为对角线的矩形内
-bool isSSr(const L &a, const L &b) {  // 线段 a 和线段 b 严格相交
+bool insSSr(const L &a, const L &b) {  // 线段 a 和线段 b 严格相交
     T c1 = (a.t-a.s) / (b.s-a.s), c2 = (a.t-a.s) / (b.t-a.s);
     T c3 = (b.t-b.s) / (a.s-b.s), c4 = (b.t-b.s) / (a.t-b.s);
     return sgn(c1) * sgn(c2) < 0 && sgn(c3) * sgn(c4) < 0;
 }
-bool isSS(L a, L b) {                 // 线段 a 和线段 b 不严格相交
+bool insSS(L a, L b) {                 // 线段 a 和线段 b 不严格相交
     T c1 = (a.t-a.s) / (b.s-a.s), c2 = (a.t-a.s) / (b.t-a.s);
     T c3 = (b.t-b.s) / (a.s-b.s), c4 = (b.t-b.s) / (a.t-b.s);
     return sgn(c1) * sgn(c2) <= 0 && sgn(c3) * sgn(c4) <= 0 &&
@@ -60,32 +60,27 @@ P insLL(L a, L b) {  // 直线 a 和直线 b 的交点，注意平行（-LINF）
 }
 db disPL(P p, L a) { return fabs( (a.t-a.s) / (p-a.s) ) / abs(a.t-a.s); }  // 点 p 到直线 a 的距离
 db disPS(P p, L a){                                                        // 点 p 到线段 a 的距离
-    if(sgn( (a.t-a.s) * (p-a.s) ) == -1) return abs(p-a.s);
-    if(sgn( (a.s-a.t) * (p-a.t) ) == -1) return abs(p-a.t);
+    if (sgn( (a.t-a.s) * (p-a.s) ) == -1) return abs(p-a.s);
+    if (sgn( (a.s-a.t) * (p-a.t) ) == -1) return abs(p-a.t);
     return disPL(p, a);
 }
 db disSS(L a, L b){                                                        // 线段 a 到线段 b 的距离
-    if(isSS(a,b)) return 0;
+    if (isSS(a,b)) return 0;
     return min( min( disPS(a.s,b), disPS(a.t,b) ), min( disPS(b.s,a), disPS(b.t,a) ) );
 }
 db disLL(L a, L b) { return (a.t-a.s) / (b.t-b.s) ? 0 : disPL(a.s, b); }   // 直线 a 到直线 b 的距离
 
 // 多边形、凸包
 typedef vector<P> polygon;
-polygon convex(polygon A) {  // 求凸包 , 逆时针排序 , <= : <=180 , < : <180
-    int n = sz(A), m = 0;
-    polygon B; B.resize(n+1);
+polygon Convex(polygon A) {  // 求凸包，逆时针排序（ 内角 <180 : (<=) ; 内角 <=180 : (<) ）
+    int n = sz(A); if (n <= 1) return A;
     sort(all(A));
-    rep(i, 0, n) {
-        while (m > 1 && sgn((B[m-1] - B[m-2]) / (A[i] - B[m-2])) < 0) --m;
-        B[m++] = A[i];
-    }
-    per(i, 0, n - 1) {
-        while (m > 1 && sgn((B[m-1] - B[m-2]) / (A[i] - B[m-2])) < 0) --m;
-        B[m++] = A[i];
-    }
-    B.resize(m);
-    if(sz(B) > 1) B.pop_back();
+    polygon B;
+    for (int i = 0; i < n; B.pb(A[i++]))
+        while (sz(B) > 1 && crossSgn(B[sz(B)-2], B.back(), A[i]) < 0) B.pop_back();  // 更改这里的 <
+    for (int i = n - 2, t = sz(B); i >= 0; B.pb(A[i--]))
+        while (sz(B) > t && crossSgn(B[sz(B)-2], B.back(), A[i]) < 0) B.pop_back();  // 同上
+    B.pop_back();
     return B;
 }
 T area(polygon A) {  // 多边形 A 的面积，整型可以返回面积的两倍，保持精度
@@ -93,7 +88,22 @@ T area(polygon A) {  // 多边形 A 的面积，整型可以返回面积的两�
     rep(i, 0, sz(A)) res += A[i] / A[ (i+1) % sz(A) ];
     return fabs(res) / 2;
 }
-
+bool isConvex(polygon A) {  // 多边形 A 是否是凸包，要求 A 的点集按逆时针排序
+    rep(i, 0, 2) A.pb(A[i]);
+    rep(i, 0, sz(A)-2) if ( (A[i+1]-A[i]) / (A[i+2]-A[i]) < 0 ) return 0;
+    return 1;
+}
+int inPpolygon(P p, polygon A) {  // 点和多边形关系 ( -1 : on , 0 : out , 1 : in )
+    int res = 0;
+    rep(i, 0, sz(A)) {
+        P u = A[i], v = A[ (i+1) % sz(A) ];
+        if (onPS(p, u, v)) return -1;
+        T cross = sgn((v-u)/(p-u)), d1 = sgn(u.y-p.y), d2 = sgn(v.y-p.y);
+        if (cross > 0 && d1 <= 0 && d2 > 0) ++res;
+        if (cross < 0 && d2 <= 0 && d1 > 0) --res;
+    }
+    return res != 0;
+}
 
 struct C {
     P o; db r; C () {} C (P o, db r) : o(o), r(r) {}
@@ -110,23 +120,6 @@ C getC(P a,P b,P c){  // 三点确定一个圆 （ 三角形外接圆 ）
 --------------------------------------------------------------------------------------------------
 
 
-bool isconvex(polygon A){ // counter-clockwise
-    bool ok = 1; int n = sz(A);
-    rep(i, 0, 2) A.pb(A[i]);
-    rep(i, 0, n) ok &= ((A[i+1]-A[i])/(A[i+2]-A[i]))>=0;
-    return ok;
-}
-int inPpolygon(P p,polygon A){ // -1 : on , 0 : out , 1 : in
-int res=0;
-rep(i,0,sz(A)){
-P u=A[i],v=A[(i+1)%sz(A)];
-if(onPS(p,u,v)) return -1;
-T cross = sgn((v-u)/(p-u)) , d1 = sgn(u.y-p.y) , d2 = sgn(v.y-p.y);
-if(cross > 0 && d1 <= 0 && d2 > 0) ++res;
-if(cross < 0 && d2 <= 0 && d1 > 0) --res;
-}
-return res != 0;
-}
 T diameter(polygon A) { // longest distance
 int n=sz(A);if(n <= 1) return 0;
 int l=0,r=0;rep(i,1,n) (A[i]<A[l])&&(l=i),(A[r]<A[i])&&(r=i);
