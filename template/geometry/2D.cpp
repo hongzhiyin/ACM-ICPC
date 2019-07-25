@@ -58,7 +58,6 @@ P insLL(L a, L b) {  // 直线 a 和直线 b 的交点，注意平行（-LINF）
     if (k2 == 0) return k1 ? P(-LINF, -LINF) : P(LINF, LINF);
     return a.s + v * (k1 / k2);
 }
-
 db disPL(P p, L a) { return fabs( (a.t-a.s) / (p-a.s) ) / abs(a.t-a.s); }  // 点 p 到直线 a 的距离
 db disPS(P p, L a){                                                        // 点 p 到线段 a 的距离
     if(sgn( (a.t-a.s) * (p-a.s) ) == -1) return abs(p-a.s);
@@ -71,6 +70,7 @@ db disSS(L a, L b){                                                        // �
 }
 db disLL(L a, L b) { return (a.t-a.s) / (b.t-b.s) ? 0 : disPL(a.s, b); }   // 直线 a 到直线 b 的距离
 
+// 多边形、凸包
 typedef vector<P> polygon;
 polygon convex(polygon A) {  // 求凸包 , 逆时针排序 , <= : <=180 , < : <180
     int n = sz(A), m = 0;
@@ -88,6 +88,12 @@ polygon convex(polygon A) {  // 求凸包 , 逆时针排序 , <= : <=180 , < : <
     if(sz(B) > 1) B.pop_back();
     return B;
 }
+T area(polygon A) {  // 多边形 A 的面积，整型可以返回面积的两倍，保持精度
+    T res = 0;
+    rep(i, 0, sz(A)) res += A[i] / A[ (i+1) % sz(A) ];
+    return fabs(res) / 2;
+}
+
 
 struct C {
     P o; db r; C () {} C (P o, db r) : o(o), r(r) {}
@@ -103,16 +109,12 @@ C getC(P a,P b,P c){  // 三点确定一个圆 （ 三角形外接圆 ）
 
 --------------------------------------------------------------------------------------------------
 
-T area(polygon A) { // multiple 2 with integer type
-T res=0;
-rep(i,0,sz(A)) res+=A[i]/(A[(i+1)%sz(A)]);
-return fabs(res) / 2;
-}
+
 bool isconvex(polygon A){ // counter-clockwise
-bool ok=1;int n=sz(A);
-rep(i,0,2) A.pb(A[i]);
-rep(i,0,n) ok&=((A[i+1]-A[i])/(A[i+2]-A[i]))>=0;
-return ok;
+    bool ok = 1; int n = sz(A);
+    rep(i, 0, 2) A.pb(A[i]);
+    rep(i, 0, n) ok &= ((A[i+1]-A[i])/(A[i+2]-A[i]))>=0;
+    return ok;
 }
 int inPpolygon(P p,polygon A){ // -1 : on , 0 : out , 1 : in
 int res=0;
