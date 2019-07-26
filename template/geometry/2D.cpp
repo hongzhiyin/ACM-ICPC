@@ -133,6 +133,24 @@ polygon ConvexCut(polygon A, L a) {  // 半平面 a 切割凸包 A 形成的凸�
     }
     return res;
 }
+T _closePP(polygon &A, int l, int r) {  // 调用下面的 closePP(A)
+    if (r - l < 6) {
+        T res = 1e20;
+        rep(i, l, r+1) rep(j, i+1, r+1) res = min(res, dis(A[i], A[j]));
+        return res;
+    }
+    int m = l + r >> 1;
+    T res = min(_closePP(A, l, m), _closePP(A, m+1, r));
+    polygon B; rep(i, l, r+1) if (fabs(A[i].x - A[m].x) < res) B.pb(A[i]);
+    sort(all(B), [&](P p1, P p2){ return p1.y < p2.y; });
+    rep(i, 0, sz(B)) for (int j = i+1; j < sz(B) && B[j].y - B[i].y < res; j++)
+        res = min(res, dis(B[i], B[j]));
+    return res;
+}
+T closePP(polygon A) {  // 点集 A 中的最近点对
+    sort(all(A), [&](P a, P b){ return a.x < b.x; });
+    return _closePP(A, 0, sz(A)-1);
+}
 
 struct C {
     P o; db r; C () {} C (P o, db r) : o(o), r(r) {}
