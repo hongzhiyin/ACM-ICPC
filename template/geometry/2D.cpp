@@ -111,6 +111,28 @@ int inPpo(P p, polygon A) {  // 点和多边形关系 ( 2 : in , 1 : on , 0 : ou
     }
     return res << 1;
 }
+T ConvexDiameter(polygon A) {  // 凸包 A 的直径，即凸包 A 上的最远点对
+    int now = 0, n = sz(A); T res = 0;
+    if (n <= 1) return 0;
+    rep(i, 0, sz(A)) {
+        now = max(now, i);
+        while (1) {
+            T t1 = dis(A[i], A[now%n]), t2 = dis(A[i], A[(now+1)%n]);
+            res = max(res, max(t1, t2));
+            if (t2 > t1) now++; else break;
+        }
+    }
+    return res;
+}
+polygon ConvexCut(polygon A, L a) {  // 半平面 a 切割凸包 A 形成的凸包（直线 a 逆时针方向）
+    int n = sz(A); A.pb(A[0]); polygon res;
+    rep(i, 0, n) {
+        int w1 = crossSgn(a.s, a.t, A[i]), w2 = crossSgn(a.s, a.t, A[i+1]);
+        if (w1 >= 0) res.pb(A[i]);
+        if (w1 * w2 < 0) res.pb(xLL(a, L(A[i], A[i+1])));
+    }
+    return res;
+}
 
 struct C {
     P o; db r; C () {} C (P o, db r) : o(o), r(r) {}
