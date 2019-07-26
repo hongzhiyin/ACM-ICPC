@@ -69,7 +69,7 @@ P xLL(L a, L b) {  // 直线 a 和直线 b 的交点
 }
 db disPL(P p, L a) { return fabs( (a.t-a.s) / (p-a.s) ) / (a.t-a.s).abs(); }  // 点 p 到直线 a 的距离
 db disPS(P p, L a) {                                                          // 点 p 到线段 a 的距离
-    return sgn( (a.t-a.s) * (p-a.s) ) * sgn( (a.s-a.t) * (p-a.t) ) != 1
+    return sgn( (a.t-a.s) * (p-a.s) ) * sgn( (a.s-a.t) * (p-a.t) ) == 1
            ? disPL(p, a) : min( (p-a.s).abs(), (p-a.t).abs() );
 }
 db disSS(L a, L b){                                                           // 线段 a 到线段 b 的距离
