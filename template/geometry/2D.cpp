@@ -100,7 +100,7 @@ bool isConvex(polygon A) {  // 多边形 A 是否是凸包，要求 A 的点集�
     rep(i, 0, sz(A)-2) if ( sgn( (A[i+1]-A[i]) / (A[i+2]-A[i]) ) < 0 ) return 0;
     return 1;
 }
-int inPpo(P p, polygon A) {  // 点和多边形关系 ( 2 : in , 1 : on , 0 : out )
+int inPPo(P p, polygon A) {  // 点和多边形关系 ( 2 : in , 1 : on , 0 : out )
     int res = 0; A.pb(A[0]);
     rep(i, 1, sz(A)) {
         P u = A[i-1], v = A[i];
