@@ -100,16 +100,16 @@ bool isConvex(polygon A) {  // 多边形 A 是否是凸包，要求 A 的点集�
     rep(i, 0, sz(A)-2) if ( sgn( (A[i+1]-A[i]) / (A[i+2]-A[i]) ) < 0 ) return 0;
     return 1;
 }
-int inPpolygon(P p, polygon A) {  // 点和多边形关系 ( -1 : on , 0 : out , 1 : in )
-    int res = 0;
-    rep(i, 0, sz(A)) {
-        P u = A[i], v = A[ (i+1) % sz(A) ];
-        if (onPS(p, L(u, v))) return -1;
-        T cross = sgn((v-u)/(p-u)), d1 = sgn(u.y-p.y), d2 = sgn(v.y-p.y);
-        if (cross > 0 && d1 <= 0 && d2 > 0) ++res;
-        if (cross < 0 && d2 <= 0 && d1 > 0) --res;
+int inPpo(P p, polygon A) {  // 点和多边形关系 ( 2 : in , 1 : on , 0 : out )
+    int res = 0; A.pb(A[0]);
+    rep(i, 1, sz(A)) {
+        P u = A[i-1], v = A[i];
+        if (onPS(p, L(u, v))) return 1;
+        if (sgn(u.y - v.y) > 0) swap(u, v);
+        if (sgn(u.y - p.y) >= 0 || sgn(v.y - p.y) < 0) continue;
+        if (crossSgn(v, u, p) < 0) res ^= 1;
     }
-    return res != 0;
+    return res << 1;
 }
 
 struct C {
