@@ -9,7 +9,7 @@
 typedef db T;
 const db eps = 1e-7, pi = acosl(-1.);
 int sgn(T x) { return (x > eps) - (x < -eps); }
-bool inMid(T a, T x, T b) { return sgn(a - x) * sgn(b - x) <= 0; }  // 数 x 在区间 [a, b] 内（包括边界）
+bool inMid(T l, T x, T r) { return sgn(l - x) * sgn(r - x) <= 0; }  // 数 x 在区间 [l, r] 内（包括边界）
 
 // 点、向量
 struct P {
@@ -30,7 +30,7 @@ struct P {
     P unit() { return (*this) / abs(); }     // 单位向量
     void scan() { db tx, ty; scanf("%lf%lf", &tx, &ty); x = tx; y = ty; }  // 输入
     void print() { printf("%.11lf %.11lf\n", x, y); }                      // 输出
-    P toR() { return (sgn(x) == -1 || !sgn(x) && sgn(y) == -1) ? (*this)*(-1) : (*this); }  // 若向量在 2 3 象限，则取其相反向量
+    P toR() { return (sgn(x) == -1 || !sgn(x) && sgn(y) == -1) ? (*this)*(-1) : (*this); }  // 若向量在 2 3 象限，则取相反向量
     bool isUp() const { return sgn(y) == 1 || !sgn(y) && sgn(x) == -1; }                    // 向量是否在 1 2 象限
 };
 T dis(P a, P b) { return (b - a).abs(); }   // 点 a 到点 b 的距离
@@ -42,10 +42,10 @@ bool order(const P &a, const P &b) { return a.isUp() < b.isUp() || a.isUp() == b
 
 // 线段、直线
 struct L { P s, t; L () {} L(P s, P t) : s(s), t(t) {} };
-bool onPS(P p, L a) { return sgn((a.t-a.s)/(p-a.s))==0 && sgn((p-a.s)*(p-a.t))<=0; }   // 点 p 是否在线段 st 上
+bool onPS(P p, L a) { return sgn((a.t-a.s)/(p-a.s))==0 && sgn((p-a.s)*(p-a.t))<=0; }   // 点 p 是否在线段 a 上
 bool inRec(P p, L a) { return inMid(a.s.x, p.x, a.t.x) && inMid(a.s.y, p.y, a.t.y); }  // 点 p 在以直线 a 为对角线的矩形内
-P proj(P p, L a) { return (a.t-a.s) * ( (p-a.s) * (a.t-a.s) / (a.t-a.s).abs2() ) + a.s; }   // 点 p 关于直线 a 的投影点
-P reflect(P p, L a) { return proj(p, a) * 2 - p; }                                          // 点 p 关于直线 a 的对称点
+P proj(P p, L a) { return (a.t-a.s) * ( (p-a.s) * (a.t-a.s) / (a.t-a.s).abs2() ) + a.s; }  // 点 p 关于直线 a 的投影点
+P reflect(P p, L a) { return proj(p, a) * 2 - p; }                                         // 点 p 关于直线 a 的对称点
 bool xSSr(const L &a, const L &b) {  // 线段 a 和线段 b 严格相交
     T c1 = (a.t-a.s) / (b.s-a.s), c2 = (a.t-a.s) / (b.t-a.s);
     T c3 = (b.t-b.s) / (a.s-b.s), c4 = (b.t-b.s) / (a.t-b.s);
