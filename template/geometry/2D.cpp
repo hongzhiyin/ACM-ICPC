@@ -64,7 +64,7 @@ bool xSL(L a, L b) {  // 线段 a 与直线 b 相交 ( 不严格 : <= ; 严格 :
     return sgn( (b.t - b.s) / (a.s - b.s) ) * sgn( (b.t - b.s) / (a.t - b.s) ) <= 0;
 }
 P xLL(L a, L b) {  // 直线 a 和直线 b 的交点
-    T s1 = (b.t - b.s) / (a.s - b.s), s2 = -( (b.t - b.s) / (a.t - b.s) );
+    T s1 = (b.t - b.s) / (a.s - b.s), s2 = (a.t - b.s) / (b.t - b.s);
     return (a.s * s2 + a.t * s1) / (s1 + s2);
 }
 db disPL(P p, L a) { return fabs( (a.t-a.s) / (p-a.s) ) / (a.t-a.s).abs(); }  // 点 p 到直线 a 的距离
@@ -152,9 +152,24 @@ T closePP(polygon A) {  // 点集 A 中的最近点对
     return _closePP(A, 0, sz(A)-1);
 }
 
-struct C {
-    P o; db r; C () {} C (P o, db r) : o(o), r(r) {}
-};
+struct C { P o; T r; C () {} C (P o, T r) : o(o), r(r) {} };
+
+int relCC(C A, C B) {  // 两圆关系，返回公切线数量 ( 4 : 相离 ; 3 : 外切 ; 2 : 相交 ; 1 : 内切 ; 0 : 内含 )
+    T dis = (A.o - B.o).abs();
+    if (sgn(dis - (A.r + B.r)) == 1) return 4;
+    if (sgn(dis - (A.r + B.r)) == 0) return 3;
+    if (sgn(dis - fabs(A.r - B.r)) == 1) return 2;
+    if (sgn(dis - fabs(A.r - B.r)) == 0) return 1;
+    return 0;
+}
+
+vector<P> xCL(C A, L b) {  // 圆 A 与直线 b 的交点
+    P k = proj(A.o, b);
+    T d = A.r * A.r - (k - A.o).abs2();
+    if (sgn(d) == -1) return {};
+    P del = (b.s - b.t).unit() * sqrt(max(d, 0.0));
+    return { k - del, k + del };
+}
 
 C getC(P a,P b,P c){  // 三点确定一个圆 （ 三角形外接圆 ）
     db a1 = b.x - a.x, b1 = b.y - a.y, c1 = (a1 * a1 + b1 * b1) / 2;
