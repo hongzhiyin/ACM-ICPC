@@ -90,7 +90,7 @@ polygon Convex(polygon A) {  // 求凸包，逆时针排序（ 内角 <180 : (<=
         while (sz(B) > t && crossSgn(B[sz(B)-2], B.back(), A[i]) < 0) B.pop_back();  // 同上
     B.pop_back(); return B;
 }
-T area(polygon A) {  // 多边形 A 的面积，整型可以返回面积的两倍，保持精度
+T areaPoly(polygon A) {  // 多边形 A 的面积，整型可以返回面积的两倍，保持精度
     T res = 0;
     rep(i, 0, sz(A)) res += A[i] / A[ (i+1) % sz(A) ];
     return fabs(res) / 2;
@@ -100,7 +100,7 @@ bool isConvex(polygon A) {  // 多边形 A 是否是凸包，要求 A 的点集�
     rep(i, 0, sz(A)-2) if ( sgn( (A[i+1]-A[i]) / (A[i+2]-A[i]) ) < 0 ) return 0;
     return 1;
 }
-int inPPo(P p, polygon A) {  // 点和多边形关系 ( 2 : in , 1 : on , 0 : out )
+int relPPoly(P p, polygon A) {  // 点和多边形关系 ( 2 : in , 1 : on , 0 : out )
     int res = 0; A.pb(A[0]);
     rep(i, 1, sz(A)) {
         P u = A[i-1], v = A[i];
