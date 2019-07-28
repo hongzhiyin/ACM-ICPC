@@ -171,6 +171,54 @@ vector<P> xCL(C A, L b) {  // 圆 A 与直线 b 的交点
     return { k - del, k + del };
 }
 
+vector<P> xCC(C A, C B) {  // 圆 A 与圆 B 的交点
+    int pd = relCC(A, B); if (pd == 0 || pd == 4) return {};
+    T a = (B.o - A.o).abs2();
+    T cosA = (A.r * A.r + a - B.r * B.r) / (2 * A.r * sqrt(max(a, 0.0)));
+    T b = A.r * cosA, c = sqrt(max(0.0, A.r * A.r - b * b));
+    P k = (B.o - A.o).unit(), m = A.o + k * b, del = k.rot90() * c;
+    return { m - del, m + del };
+}
+
+vector<P> tCP(C A, P p) {  // 过点 p 的切线与圆 A 的切点
+    T a = (p - A.o).abs(), b = A.r * A.r / a, c = sqrt(max(0.0, A.r * A.r - b * b));
+    P k = (p - A.o).unit(), m = A.o + k * b, del = k.rot90() * c;
+    return { m - del, m + del };
+}
+
+vector<L> extCC(C A, C B) {  // 圆 A 与圆 B 的外公切线
+    int pd = relCC(A, B); if (pd == 0) return {};
+    if (pd == 1) { P k = xCC(A, B)[0]; return { L(k, k) }; }
+    if (sgn(A.r - B.r) == 0) {
+        P del = (B.o - A.o).unit().rot90().toR();
+        return { L(A.o - del * A.r, B.o - del * B.r), L(A.o + del * A.r, B.o + del * B.r) };
+    } else {
+        P p = (B.o * A.r - A.o * B.r) / (A.r - B.r);
+        vector<P> a = tCP(A, p), b  = tCP(B, p);
+        vector<L> res;
+        rep(i, 0, sz(a)) res.pb(L(a[i], b[i]));
+        return res;
+    }
+}
+
+vector<L> intCC(C A, C B) {  // 圆 A 与圆 B 的内公切线
+    int pd = relCC(A, B); if (pd <= 2) return {};
+    if (pd == 3) { P k = xCC(A, B)[0]; return { L(k, k) }; }
+    P p = (B.o * A.r + A.o * B.r) / (A.r + B.r);
+    vector<P> a = tCP(A, p), b = tCP(B, p);
+    vector<L> res;
+    rep(i, 0, sz(a)) res.pb(L(a[i], b[i]));
+    return res;
+}
+
+vector<L> tCC(C A, C B) {  // 圆 A 与圆 B 的公切线
+    int f = 0; if (A.r < B.r) swap(A, B), f = 1;
+    vector<L> a = extCC(A, B), b = intCC(A, B);
+    for (L o : b) a.pb(o);
+    if (f) for (L &o : a) swap(o.s, o.t);
+    return a;
+}
+
 C getC(P a,P b,P c){  // 三点确定一个圆 （ 三角形外接圆 ）
     db a1 = b.x - a.x, b1 = b.y - a.y, c1 = (a1 * a1 + b1 * b1) / 2;
     db a2 = c.x - a.x, b2 = c.y - a.y, c2 = (a2 * a2 + b2 * b2) / 2;
