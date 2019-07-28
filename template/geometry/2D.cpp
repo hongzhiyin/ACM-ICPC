@@ -219,6 +219,29 @@ vector<L> tCC(C A, C B) {  // 圆 A 与圆 B 的公切线
     return a;
 }
 
+T areaCTri(T r, P s, P t) {  // 圆 (o, r) 与三角形 (o, s, t) 相交的面积；由 areaCPoly() 调用，用来计算圆与多边形相交的面积
+    vector<P> p12 = xCL(C(P(0, 0), r), L(s, t));
+    if (sz(p12) == 0) return r * r * rad(s, t);
+    P p1 = p12[0], p2 = p12[1];
+    bool b1 = sgn(s.abs2() - r * r) == 1, b2 = sgn(t.abs2() - r * r) == 1;
+    if (b1 && b2) {
+        if (sgn((s - p1) * (t - p1)) <= 0 && sgn((s - p2) * (t - p2)) <= 0)
+            return r * r * (rad(s, p2) + rad(p1, t)) + p2 / p1;
+        else return r * r * rad(s, t);
+    } else if (b1) return r * r * rad(s, p2) + p2 / t;
+    else if (b2) return r * r * rad(p1, t) + s / p1;
+    return s / t;
+}
+
+T areaCPoly(C A, polygon B) {  // 圆 A 与多边形 B 相交的面积
+    T res = 0; B.pb(B[0]);
+    rep(i, 1, sz(B)) {
+        P u = B[i-1], v = B[i];
+        res += areaCTri(A.r, u - A.o, v - A.o);
+    }
+    return fabs(res) / 2;
+}
+
 C getC(P a,P b,P c){  // 三点确定一个圆 （ 三角形外接圆 ）
     db a1 = b.x - a.x, b1 = b.y - a.y, c1 = (a1 * a1 + b1 * b1) / 2;
     db a2 = c.x - a.x, b2 = c.y - a.y, c2 = (a2 * a2 + b2 * b2) / 2;
