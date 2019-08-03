@@ -1,5 +1,5 @@
 inline int week(int y, int m, int d) {
-    if (y < 1600 || y > 9999) return -1;
+    if (y < L || y > R) return -1;
     if (m < 1 || m > 12) return -1;
     if (d < 1 || d > day[m] + (m==2 && (y%400==0||y%100!=0&&y%4==0))) return -1;
     int tm = m >= 3 ? (m - 2) : (m + 10);
