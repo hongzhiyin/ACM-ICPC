@@ -14,8 +14,18 @@ inline int add(int a, int b) { return (a += b) >= MOD ? a - MOD : a; }
 inline int mul(int a, int b) { return 1ll * a * b % MOD; }
 
 // 快速乘，快速幂
-ll qmul(ll a, ll b) { ll r = 0; for (a %= MOD; b; a = (a + a) % MOD, b >>= 1) if (b & 1) r = (r + a) % MOD; return r; }
-ll qpow(ll a, ll b) { ll r = 1; for (a %= MOD; b; a = a * a % MOD, b >>= 1) if (b & 1) r = r * a % MOD; return r; }
+int qmul(ll a, ll b) {
+    int res = 0;
+    for (a %= MOD; b; a = (a + a) % MOD, b >>= 1) if (b & 1)
+        res = (res + a) % MOD;
+    return res;
+}
+int qpow(ll a, ll b) {
+    int res = 1;
+    for (a %= MOD; b; a = a * a % MOD, b >>= 1) if (b & 1)
+        res = res * a % MOD;
+    return res;
+}
 
 // 字符串映射
 int cnt = 0;
