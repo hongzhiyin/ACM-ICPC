@@ -4,7 +4,7 @@ void msort(int l, int r) {
     msort(l, m);
     msort(m+1, r);
     int i = l, j = m+1;
-    b.clear();
+    vi b;
     while (i <= m && j <= r)
         if (a[i] < a[j]) b.pb(a[i++]);
         else ans += m - i + 1, b.pb(a[j++]);  // ans 为逆序对数
