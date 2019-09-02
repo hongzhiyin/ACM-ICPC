@@ -1,41 +1,33 @@
-https://blog.csdn.net/Stupid_Turtle/article/details/80445998
-
 /*
 【可持久化线段树思想】
-1. 每一个版本的线段树其实代表一条链，通过 rt[] 标识根节点。（如果有初始版本，则调用 Build() 先生成一棵二叉树）
-2. 参数中的 y 代表所依赖的版本， x 代表正在生成的新版本，每次生成新版本，即为复制依赖版本的一条链，并稍加修改
-3. 结点空间 t[] ，通过 ++no 申请新的结点， t[0] 用于在尚未有依赖版本的结点时，所复制的结点，相当于新建结点，对 t[0] 可能需要初始化
+1. 每一个版本的线段树其实代表一条链，通过 rt[] 标识根节点。
+2. 每次生成新版本，即为复制依赖版本的一条链，并稍加修改
 */
 
-#define lson l, m, t[y].l
-#define rson m + 1, r, t[y].r
 int rt[N], no;
-struct Node { int l, r, val; } t[N<<5];
-void Clear() {
+struct { int sum, l, r; } t[N<<5];
+inline void upd(int &now, int pos, int val, int l, int r) {
+    t[++no] = t[now]; now = no;
+    t[now].sum += val;
+    if (l == r) return ;
+    int m = l + r >> 1;
+    if (pos <= m) upd(t[now].l, pos, val, l, m);
+    else upd(t[now].r, pos, val, m + 1, r);
+}
+inline int mink(int L, int R, int k, int l, int r) {
+    if (l == r) return l;
+    int m = l + r >> 1, sum = t[t[R].l].sum - t[t[L].l].sum;
+    if (sum >= k) return mink(t[L].l, t[R].l, k, l, m);
+    return mink(t[L].r, t[R].r, k - sum, m + 1, r);
+}
+int Qrymink(int l, int r, int k) {
+    return mink(rt[l-1], rt[r], k, -INF, INF);  // 根据具体情况设置值域
+}
+int Qrymaxk(int l, int r, int k) {
+    return Qrymink(l, r, r - l - k + 2);
+}
+
+void init() {
     no = 0;
-    t[0].l = t[0].r = 0;
-}
-void PushUp(int rt) {
-    t[rt].val = op(t[t[rt].l].val, t[t[rt].r].val);
-}
-void Build(int &x, int l, int r) {
-    x = ++no;
-    if (l == r) { t[x].val = a[l]; return; }
-    int m = (l + r) >> 1;
-    Build(t[x].l, l, m); Build(t[x].r, m + 1, r);
-}
-void Upd(int &x, int pos, int val, int l, int r, int y) {
-    t[x=++no] = t[y];
-    if (l == r) { t[x].val = val; return; }
-    int m = (l + r) >> 1;
-    if (pos <= m) Upd(t[x].l, pos, val, lson);
-    else Upd(t[x].r, pos, val, rson);
-    PushUp(x);
-}
-int Qry(int x, int k, int l, int r, int y) {
-	if (l == r) return l;
-	int m = (l + r) >> 1;
-	int sum = t[t[y].l].val - t[t[x].l].val;
-	if (sum >= k) return Qry(t[x].l, k, lson);
-	else return Qry(t[x].r, k-sum, rson);
+    rep(i, 1, n+1) upd(rt[i]=rt[i-1], a[i], 1, -INF, INF);  // 根据具体情况设置值域
 }
