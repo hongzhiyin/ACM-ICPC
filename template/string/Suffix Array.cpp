@@ -2,21 +2,21 @@
 
 /*
 【使用方法】
-1. 读取字符串，将字符串转换为数字存在 s[] 中
-2. 调用 calsa() 获得 sa[]
-3. 调用 calheight() 获得 rk[] , height[]
+1. 读取字符串 str
+2. 调用 calsa(str) 获得 sa[]
+3. 调用 calheight(str) 获得 rk[] , h[]
 */
 
 // sa[i] 表示排在第 i 位的是后缀 sa[i], 注意：因为 s[len] = 0, 所以 sa[0] = len
 // rk[i] 表示后缀 i 排在第 rk[i] 位
 // height[i] = LCP(sa[i], sa[i-1]), LCP: 最长公共前缀
-int s[N], len, id[N];
-int sa[N], rk[N], height[N];
-int wa[N], wb[N], wc[N], wd[N];    // 不要问这些数组是什么意思，因为我也不知道，抄就对了
+int len, id[N];
+int sa[N], rk[N], h[N];
+int wa[N], wb[N], wc[N], wd[N];
 struct SuffixArray {
     int cmp(int *s, int a, int b, int l) { return s[a] == s[b] && s[a+l] == s[b+l]; }
-    void calsa(int *s, int n, int m) {     // s[len] = 0, n = len + 1, m 为字符种类 ( m = 128 + d )
-        int *x = wa, *y = wb, *t;
+    void calsa(char *s) {
+        int *x = wa, *y = wb, *t, n = len + 1, m = 128; // 字符种类数 : m = 128 + d ， d 为偏移值
         rep(i, 0, m) wc[i] = 0;
         rep(i, 0, n) wc[x[i]=s[i]]++;
         rep(i, 1, m) wc[i] += wc[i-1];
@@ -33,13 +33,13 @@ struct SuffixArray {
             rep(i, 1, n) x[sa[i]] = cmp(y, sa[i-1], sa[i], j) ? p-1 : p++;
         }
     }
-    void calheight(int *s, int n) {    // n = len
-        rep(i, 1, n+1) rk[sa[i]] = i;
-        for(int i = 0, j, k = 0; i < n; height[rk[i++]] = k)
+    void calheight(char *s) {
+        rep(i, 1, len+1) rk[sa[i]] = i;
+        for(int i = 0, j, k = 0; i < len; h[rk[i++]] = k)
             for(k ? k-- : 0, j = sa[rk[i]-1]; s[i+k] == s[j+k]; k++);
     }
     // 把 n 个字符串连接起来，中间插入未出现字符
-    int connect(int *s, int n) {    // 将 n 个字符串连接成 s
+    int connect(char *s, int n) {    // 将 n 个字符串连接成 s
         int len = 0, d = n;     // 注意偏移值 d 是否需要修改
         rep(i, 0, n) {
             scanf("%s", str);
@@ -55,7 +55,7 @@ struct SuffixArray {
         s[--len] = 0;
         return len;
     }
-};
+} Sa;
 
 ================================================== Problem Set ==================================================
 
@@ -66,12 +66,13 @@ struct SuffixArray {
 // 给定一个字符串，询问某两个字符串的最长公共前缀
 // 求两个后缀的最长公共前缀可以转化为求 height[] 某个区间上的最小值 (RMQ)
 
-ST rmq;     // a[] 从 1 开始
-void initrmq(int len) { rmq.init(height, len); }
-int lcp(int i, int j) {
+ST rmq;
+void init() { rmq.init(h, len); }
+int lcp(int i, int j) {  // 后缀 i 和 后缀 j 的最长公共前缀长度
+    if (i == j) return len - sa[i]; 
     int l = rk[i], r = rk[j];
     if (l > r) swap(l, r);
-    return rmq.query(l+1, r);
+    return rmq.qry(l+1, r);
 }
 
 ----------------------------------------------------------------------------------------------------
