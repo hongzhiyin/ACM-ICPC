@@ -1,5 +1,44 @@
-int add(ll a, int b) { if ((a += b) >= MOD) a -= MOD; return a; }
-int mul(ll a, int b) { if ((a *= b) >= MOD) a %= MOD; return a; }
+inline int add(int a, int b) { return (a += b) >= MOD ? a - MOD : a; }
+inline int mul(int a, int b) { return 1ll * a * b % MOD; }
+struct Mat {
+    int n, a[M][M];
+    Mat () {}
+    Mat (int _n) { n = _n; rep(i, 0, n) rep(j, 0, n) a[i][j] = 0; }
+    Mat operator * (Mat b) {
+        Mat r(n);
+        /*
+        rep(i, 0, n) rep(j, 0, n) rep(k, 0, n)
+            r.a[i][j] = add(r.a[i][j], mul(a[i][k], b.a[k][j]));
+        return r;
+        */
+        //  当 r.a[i][j] 的最大值不会溢出时
+        rep(i, 0, n) rep(j, 0, n) {
+            ll tmp = 0;
+            rep(k, 0, n) tmp += 1ll * a[i][k] * b.a[k][j];
+            r.a[i][j] = tmp % MOD;
+        }
+        return r;
+    }
+    Mat operator + (Mat b) {
+        Mat r(n);
+        rep(i, 0, n) rep(j, 0, n) r.a[i][j] = add(a[i][j], b.a[i][j]);
+        return r;
+    }
+    Mat operator ^ (ll b) {
+        Mat r(n), t = *this;
+        rep(i, 0, n) r.a[i][i] = 1;
+        for (; b; b >>= 1) {
+            if (b & 1) r = r * t;
+            t = t * t;
+        }
+        return r;
+    }
+    void out() {
+        rep(i, 0, n) rep(j, 0, n) printf("%d%c", a[i][j], " \n"[i==n-1]);
+    }
+};
+
+// vector 版本
 struct Mat {
     vector<vi> a;
     Mat() {}
