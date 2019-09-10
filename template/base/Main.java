@@ -3,23 +3,23 @@ import java.math.*;
 import java.util.*;
 
 public class Main {
-	public static Scanner in = new Scanner(System.in);
-	public static PrintStream out = new PrintStream(System.out);
+    public static Scanner in = new Scanner(System.in);
+    public static PrintStream out = new PrintStream(System.out);
 
-	public static void Pre() {}
-	
-	public static void Init() {}
-	
-	public static void Solve() {}
-	
-	public static void main(String[] args) {
-		Pre();
-		//int t; t = in.nextInt(); while (t-- >= 1) {
-		while (in.hasNext()) {
-			Init();
-			Solve();
-		}
-	}
+    public static void Pre() {}
+    
+    public static void Init() {}
+    
+    public static void Solve() {}
+    
+    public static void main(String[] args) {
+        Pre();
+        //int t; t = in.nextInt(); while (t-- >= 1) {
+        while (in.hasNext()) {
+            Init();
+            Solve();
+        }
+    }
 }
 
 -------------------------------------------------- Extend --------------------------------------------------
@@ -46,7 +46,7 @@ PrintWriter out = new PrintWriter(new File("output.txt"));
 
 // Note: must close file!
 in.close();out.close();
-		
+
 -------------------------------------------------- Example --------------------------------------------------
 
 import java.io.*;
@@ -54,32 +54,32 @@ import java.math.*;
 import java.util.*;
 
 public class Main {
-	public static Scanner in = new Scanner(System.in);
-	public static PrintStream out = new PrintStream(System.out);
-	
-	public static BigInteger jc[] = new BigInteger[1007];
-	public static int n;
-	
-	public static void Pre() {
-		jc[0] = BigInteger.valueOf(1);
-		for (int i = 1; i < 1007; ++i)
-			jc[i] = jc[i-1].multiply(BigInteger.valueOf(i));
-	}
-	
-	public static void Init() {
-		n = in.nextInt();
-		out.println(n + "!");
-	}
-	
-	public static void Solve() {
-		out.println(jc[n]);
-	}
-	
-	public static void main(String[] args) {
-		Pre();
-		while (in.hasNext()) {
-			Init();
-			Solve();
-		}
-	}
+    public static Scanner in = new Scanner(System.in);
+    public static PrintStream out = new PrintStream(System.out);
+    
+    public static BigInteger jc[] = new BigInteger[1007];
+    public static int n;
+    
+    public static void Pre() {
+        jc[0] = BigInteger.valueOf(1);
+        for (int i = 1; i < 1007; ++i)
+            jc[i] = jc[i-1].multiply(BigInteger.valueOf(i));
+    }
+    
+    public static void Init() {
+        n = in.nextInt();
+        out.println(n + "!");
+    }
+    
+    public static void Solve() {
+        out.println(jc[n]);
+    }
+    
+    public static void main(String[] args) {
+        Pre();
+        while (in.hasNext()) {
+            Init();
+            Solve();
+        }
+    }
 }
