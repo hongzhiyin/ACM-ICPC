@@ -1,12 +1,21 @@
 // 读取所需字符   // islower(), isupper(), isalpha(), isdigit(), isalnum()
 inline void readchar(char &c) { do c = getchar(); while (!isdigit(c)); }
 
-// 读取整数
-inline void readint(int &x) {
-    int f = 1, res = 0; char c = getchar();
-    while (!isdigit(c)) c == '-' && (f = -1), c = getchar();
-    while (isdigit(c)) res = res * 10 + c - '0', c = getchar();
-    x = res * f;
+// 输入输出
+template <class T>
+inline void read(T &x) {
+    int f = 1, r = 0; char c = getchar();
+    while (c < '0' || '9' < c) c == '-' && (f = -1), c = getchar();
+    while ('0' <= c && c <= '9') r = r * 10 + c - '0', c = getchar();
+    x = r * f;
+}
+
+template <class T>
+inline void write(T x) {
+    if (x < 0) putchar('-'), x = -x;
+    char s[50]; int i = 0;
+    while (x || !i) s[i++] = x % 10 + '0', x /= 10;
+    while (i--) putchar(s[i]);
 }
 
 // 取模加，取模乘
