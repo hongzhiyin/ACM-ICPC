@@ -12,13 +12,13 @@
 const db eps = 1e-7;
 bool used[N];
 db x[N], a[N][N];
-int Gaussian_Elimination(int n, int m) {  // 1 : 唯一解 ; 0 : 多解 ; -1 : 无解
+int Gaussian_Elimination(int n, int m) {
     int row, col;
     for (row = col = 0; row < n && col < m; ++row, ++col) {
         int mxr = row;
         rep(i, row+1, n) if (fabs(a[i][col]) > fabs(a[mxr][col])) mxr = i;    // 寻找列主元，即系数最大
         if (fabs(a[mxr][col]) < eps) { --row; continue; }                     // 如果该列系数都为 0 ，从下一列开始
-        if (mxr != row) swap(a[row], a[mxr]);                                 // 将列主元所在行与当前行交换
+        if (mxr != row) swap(a[row], a[mxr]);                                 // 交换列主元所在行与当前行
         rep(i, 0, n) if (i != row && fabs(a[i][col]) > eps)                   // 如果其他行尚未消元
             per(j, col, m+1) a[i][j] -= a[row][j] * a[i][col] / a[row][col];  // 对其他行进行消元
     }
@@ -32,9 +32,42 @@ int Gaussian_Elimination(int n, int m) {  // 1 : 唯一解 ; 0 : 多解 ; -1 : �
         int cnt = 0, ind = -1;
         rep(j, 0, m) if (fabs(a[i][j]) > eps && !used[j])                     // 统计该行系数不为 0 的自由元数量
             ++cnt, ind = j;
-        if (cnt == 1)                                                         // 如果自由元只有一个
-            x[ind] = a[i][m] / a[i][ind], used[ind] = 1;                      // 则该变量非自由元，求出对应的解
+        if (cnt == 1) x[ind] = a[i][m] / a[i][ind], used[ind] = 1;            // 自由元只有一个，则非自由元，求出对应解
     }
     rep(i, 0, m) if (!used[i]) return 0;                                      // 若存在自由元，返回多解
     return 1;                                                                 // 返回唯一解
+}
+
+---
+
+// 取模版本，使用方式同上
+
+bool used[N];
+int x[N], a[N][N];
+int Gaussian_Elimination(int n, int m) {
+    int row, col;
+    for (row = col = 0; row < n && col < m; ++row, ++col) {
+        int r = row;
+        while (r < n && !a[r][col]) ++r;                              // 找到列主元，即系数非 0
+        if (r == n) { --row; continue; }                              // 如果该列系数都为 0 ，从下一列开始
+        if (r != row) swap(a[row], a[r]);                             // 交换列主元所在行与当前行
+        ll tmp = qpow(a[row][col], MOD-2);                            // 求列主元的逆元
+        rep(j, col, m+1) a[row][j] = mul(a[row][j], tmp);             // 该行所有数乘以列主元的逆元
+        rep(i, 0, n) if (i != row && a[i][col]) per(j, col, m+1)      // 如果其他行尚未消元
+            a[i][j] = add(a[i][j], MOD - mul(a[row][j], a[i][col]));  // 对其他行进行消元
+    }
+    if (row == n && n == m) {                                         // 若成功化为对角阵
+        rep(i, 0, n) x[i] = a[i][m];                                  // 求出解向量
+        return 1;                                                     // 返回唯一解
+    }
+    rep(i, row, n) if (a[i][m]) return -1;                            // 系数为 0 ，结果不为 0 ，返回无解
+    memset(used, false, sizeof(used[0]) * m);                         // 初始化设所有解都为自由元
+    rep(i, 0, row) {
+        int cnt = 0, ind = -1;
+        rep(j, 0, m) if (a[i][j] && !used[j])                         // 统计该行系数不为 0 的自由元数量
+            ++cnt, ind = j;
+        if (cnt == 1) x[ind] = a[i][m], used[ind] = 1;                // 自由元只有一个，则非自由元，求出对应解
+    }
+    rep(i, 0, m) if (!used[i]) return 0;                              // 若存在自由元，返回多解
+    return 1;                                                         // 返回唯一解
 }
