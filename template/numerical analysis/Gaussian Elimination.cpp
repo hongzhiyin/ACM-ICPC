@@ -11,7 +11,7 @@
 
 const db eps = 1e-7;
 bool used[N];
-double x[N], a[N][N];
+db x[N], a[N][N];
 int Gaussian_Elimination(int n, int m) {  // 1 : 唯一解 ; 0 : 多解 ; -1 : 无解
     int row, col;
     for (row = col = 0; row < n && col < m; ++row, ++col) {
