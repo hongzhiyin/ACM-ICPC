@@ -18,7 +18,7 @@ int Gaussian_Elimination(int n, int m) {
         int mxr = row;
         rep(i, row+1, n) if (fabs(a[i][col]) > fabs(a[mxr][col])) mxr = i;    // 寻找列主元，即系数最大
         if (fabs(a[mxr][col]) < eps) { --row; continue; }                     // 如果该列系数都为 0 ，从下一列开始
-        if (mxr != row) swap(a[row], a[mxr]);                                 // 交换列主元所在行与当前行
+        if (mxr != row) rep(j, col, m+1) swap(a[row][j], a[mxr][j]);          // 交换列主元所在行与当前行
         rep(i, 0, n) if (i != row && fabs(a[i][col]) > eps)                   // 如果其他行尚未消元
             per(j, col, m+1) a[i][j] -= a[row][j] * a[i][col] / a[row][col];  // 对其他行进行消元
     }
@@ -50,7 +50,7 @@ int Gaussian_Elimination(int n, int m) {
         int r = row;
         while (r < n && !a[r][col]) ++r;                              // 找到列主元，即系数非 0
         if (r == n) { --row; continue; }                              // 如果该列系数都为 0 ，从下一列开始
-        if (r != row) swap(a[row], a[r]);                             // 交换列主元所在行与当前行
+        if (r != row) rep(j, col, m+1) swap(a[row][j], a[r][j]);      // 交换列主元所在行与当前行
         ll tmp = qpow(a[row][col], MOD-2);                            // 求列主元的逆元
         rep(j, col, m+1) a[row][j] = mul(a[row][j], tmp);             // 该行所有数乘以列主元的逆元
         rep(i, 0, n) if (i != row && a[i][col]) per(j, col, m+1)      // 如果其他行尚未消元
@@ -70,4 +70,31 @@ int Gaussian_Elimination(int n, int m) {
     }
     rep(i, 0, m) if (!used[i]) return 0;                              // 若存在自由元，返回多解
     return 1;                                                         // 返回唯一解
+}
+
+---
+
+/*  矩阵求逆
+【准备】
+    原矩阵和单位矩阵 a[n][n<<1] ，下标从 0 开始
+
+【使用】
+    调用 Matrix_Inversion(n) ， n 为原矩阵的大小，得：
+      1. 返回值 ( 1 : 矩阵可逆 ; 0 : 矩阵不可逆 )
+      2. 将原矩阵化为单位矩阵后，原单位矩阵即为逆矩阵
+*/
+
+int a[N][N<<1];
+int Matrix_Inversion(int n) {
+    rep(r, 0, n) {
+        int row = r;
+        while (row < n && !a[row][r]) ++row;                      // 找到列主元，即系数非 0
+        if (row == n) return 0;                                   // 该列系数都为 0 ，矩阵不可逆
+        if (row != r) rep(j, r, n+n) swap(a[row][j], a[r][j]);    // 交换列主元所在行与当前行
+        ll tmp = qpow(a[r][r], MOD-2);                            // 求列主元的逆元
+        rep(j, r, n+n) a[r][j] = mul(a[r][j], tmp);               // 该行所有数乘以列主元的逆元
+        rep(i, 0, n) if (i != r && a[i][r]) per(j, r, n+n)        // 如果其他行尚未消元
+            a[i][j] = add(a[i][j], MOD - mul(a[r][j], a[i][r]));  // 对其他行进行消元
+    }
+    return 1;                                                     // 矩阵可逆
 }
