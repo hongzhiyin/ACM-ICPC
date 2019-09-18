@@ -46,3 +46,65 @@ struct FFT{
         fft(a, 1);
     }
 } fft;
+
+---
+
+/*  更快的 FFT
+【准备】
+    1. n 次多项式 a 和 m 次多项式 b ，即 a[i] = 第 i 项系数 ;
+    2. N 为大于 n+m+1 的 2 的幂
+
+【使用】
+    1. 调用 fft.Mul(a, b, n+1, m+1)
+    2. 乘积系数保存在 a[i]
+*/
+
+const db pi = acos(-1.0);
+struct C{
+    db r, i;
+    C () {} C (db r, db i) : r(r), i(i) {}
+    C operator + (const C &b) { return C(r + b.r, i + b.i); }
+    C operator - (const C &b) { return C(r - b.r, i - b.i); }
+    C operator * (const C &b) { return C(r * b.r - i * b.i, i * b.r + r * b.i); }
+    C operator * (const db k) { return C(k * r, k * i); }
+    C operator ! () { return C(r, -i); }
+} x[N|1], y[N|1], z[N|1], w[N|1];
+
+struct FFT {
+    int L;
+    void fft(C *x, int f){
+        for (int i = 0, j = 0; i < L; ++i) {
+            if (i > j) swap(x[i], x[j]);
+            for (int l = L>>1; (j^=l) < l; l >>= 1);
+        }
+        w[0] = C(1, 0);
+        for (int i = 2; i <= L; i <<= 1) {
+            C g = C(cos(2*pi/i), (f ? -1 : 1) * sin(2*pi/i));
+            for (int j = i>>1; j >= 0; j -= 2) w[j] = w[j>>1];
+            for (int j = 1; j < i>>1; j+=2) w[j] = w[j-1] * g;
+            for (int j = 0; j < L; j += i) {
+                C *a = x + j, *b = a + (i>>1);
+                for (int l = 0; l < i>>1; ++l){
+                    C o = b[l] * w[l];
+                    b[l] = a[l] - o;
+                    a[l] = a[l] + o;
+                }
+            }
+        }
+        if (f) rep(i, 0, L) x[i] = C(x[i].r / L, x[i].i / L);
+    }
+    void Mul(int *a, int *b, int na, int nb) { 
+        for (L = 1; L <= na + nb >> 1; L <<= 1);
+        rep(i, 0, L) x[i] = y[i] = C(0, 0);
+        rep(i, 0, na+1) (i & 1 ? x[i>>1].i : x[i>>1].r) = a[i];
+        rep(i, 0, nb+1) (i & 1 ? y[i>>1].i : y[i>>1].r) = b[i];
+        fft(x, 0); fft(y, 0);
+        rep(i, 0, L) {
+            int j = L - 1 & L - i;
+            C tmp = (i & L>>1) ? C(1, 0) - w[i^L>>1] : w[i] + C(1, 0); 
+            z[i] = (x[i] * y[i] * 4 - (x[i] - !x[j]) * (y[i] - !y[j]) * tmp) * 0.25;
+        }
+        fft(z, 1);
+        rep(i, 0, na+nb+1) a[i] = i & 1 ? z[i>>1].i + 0.1 : z[i>>1].r + 0.1;
+    }
+} fft;
