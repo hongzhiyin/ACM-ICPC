@@ -1,48 +1,50 @@
 /*
-【使用方法】
-1. 多项式系数按 a[i] 表示 x ^ i 的系数存在两个 vector 里
-2. 调用 vi Mul(vi &x, vi &y)
-3. 返回值即为乘积结果多项式的各项系数，规则与 a[i] 同理
+【准备】
+    1. n 次多项式 a 和 m 次多项式 b ，即 a[i] = C( 第 i 项系数 , 0 );
+    2. M 为大于 n+m+1 的 2 的幂
+
+【使用】
+    1. 调用 fft.Mul(a, b, n+1, m+1)
+    2. 乘积系数保存在 a[i].r ，输出需取整，即 (int)(a[i].r + 0.5)
 */
 
-const db PI = acos(-1);
+const int M = 1 << 17 << 1;
+const db pi = acos(-1);
+
 struct C {
-    double r, i;
-    C () { r = i = 0; }
-    C (db r, db i) : r(r), i(i) {}
-    C operator + (const C &p) const { return C(r + p.r, i + p.i); }
-    C operator - (const C &p) const { return C(r - p.r, i - p.i); }
-    C operator * (const C &p) const { return C(r*p.r - i*p.i, r*p.i + i*p.r); }
-};
-void fft(vector<C> &x, int rev) {
-    int n = sz(x), i, j, k, t;
-    for (i = 1; i < n; ++i) {
-        for (j = 0, k = n >> 1, t = i; k; k >>= 1, t >>= 1)
-            j = (j << 1) | (t & 1);
-        if (i < j) swap(x[i], x[j]);
+    db r, i;
+    C () {} C (db r, db i) : r(r), i(i) {}
+    C operator + (const C &b) { return C(r + b.r, i + b.i); }
+    C operator - (const C &b) { return C(r - b.r, i - b.i); }
+    C operator * (const C &b) { return C(r * b.r - i * b.i, r * b.i + i * b.r); }
+} a[M], b[M], w[2][M];
+
+struct FFT{
+    int N, pre = -1, na, nb, rev[M];
+    void fft(C *a, int f) {
+        C x, y;
+        rep(i, 0, N) if (i < rev[i]) swap(a[i], a[rev[i]]);
+        for (int i = 1; i < N; i <<= 1)
+            for (int j = 0, t = N/(i<<1); j < N; j += i<<1)
+                for (int k = 0, l = 0; k < i; k++, l += t) 
+                    x = w[f][l] * a[j+k+i], y = a[j+k], a[j+k] = y+x, a[j+k+i] = y-x;
+        if (f) rep(i, 0, N) a[i].r /= N;
     }
-    for (int s = 2, ds = 1; s <= n; ds = s, s <<= 1) {
-        C w = C(1, 0), t;
-        C wn = C(cos(2 * rev * PI / s), sin(2 * rev * PI / s));
-        for (k = 0; k < ds; ++k, w = w * wn)
-            for (i = k; i < n; i += s) {
-                t = w * x[i + ds];
-                x[i + ds] = x[i] - t;
-                x[i] = x[i] + t;
-            }
+    void Pre() {
+        int d = __builtin_ctz(N);
+        rep(i, 0, N) {
+            rev[i] = (rev[i>>1] >> 1) | ((i&1) << (d-1));
+            w[1][i] = w[0][i] = C(cos(2*pi*i/N), sin(2*pi*i/N));
+            w[1][i].i = -w[1][i].i;
+        }
     }
-    if (rev == -1) for (i = 0; i < n; ++i) x[i].r /= n;
-}
-vi Mul(vi &x, vi &y) {
-    int L = 1;
-    while (L < sz(x) + sz(y)) L <<= 1;
-    vector<C> A(L), B(L);
-    rep(i, 0, sz(x)) A[i] = C(x[i], 0);
-    rep(i, 0, sz(y)) B[i] = C(y[i], 0);
-    fft(A, 1), fft(B, 1);
-    rep(i, 0, L) A[i] = A[i] * B[i];
-    fft(A, -1);
-    vi ret(L);
-    rep(i, 0, L) ret[i] = (int)(A[i].r + 0.5);
-    return ret;
-}
+    void Mul(C *a, C *b, int na, int nb) { // [0, na)
+        for (N = 1; N < na + nb - 1; N <<= 1);
+        rep(i, na, N) a[i] = C(0, 0);
+        rep(i, nb, N) b[i] = C(0, 0);
+        if (pre != N && Pre()) pre = N;
+        fft(a, 0), fft(b, 0);
+        rep(i, 0, N) a[i] = a[i] * b[i];
+        fft(a, 1);
+    }
+} fft;
