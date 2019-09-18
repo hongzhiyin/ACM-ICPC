@@ -42,8 +42,8 @@ struct FFT{
         for (N = 1; N < na + nb - 1; N <<= 1);
         rep(i, na, N) a[i] = C(0, 0);
         rep(i, nb, N) b[i] = C(0, 0);
-        if (pre != N && Pre()) pre = N;
-        fft(a, 0), fft(b, 0);
+        if (pre != N) Pre(), pre = N;
+        fft(a, 0); fft(b, 0);
         rep(i, 0, N) a[i] = a[i] * b[i];
         fft(a, 1);
     }
