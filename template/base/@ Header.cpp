@@ -28,11 +28,11 @@ typedef pair<int,int> pii;
 #define se second
 //INF = 1 061 109 567 ; INF + INF = 2 122 219 134 ;
 //LINF = 4 557 430 888 798 830 399 ; LINF + LINF = 9 114 861 777 597 660 798 ;
-const int INF = 0x3f3f3f3f;     // -INF: 0xc0   abs(-INF) = INF + 1
+const int INF = 0x3f3f3f3f;          // -INF: 0xc0   abs(-INF) = INF + 1
 const ll LINF = 0x3f3f3f3f3f3f3f3f;
-/*}}}*/                         // zr, zm
-const int MOD = (int)1e9+7;     // when MOD = 1e9+7, inv2 = 500000004
-const int N = (int)-1;
+/*}}}*/                              // zr, zm
+const int MOD = (int)1e9+7;          // inv2 = 500000004 (mod 1e9+7)
+const int N = (int)-1;               // (1 << [17, 18, 20, 21] ) > [1e5, 2e5, 1e6, 2e6]
 
 // ------- 变量 ------- //
 
