@@ -6,6 +6,10 @@
 【使用】
     1. 调用 fft.Mul(a, b, n+1, m+1)
     2. 乘积系数保存在 a[i].r ，输出需取整，即 (int)(a[i].r + 0.5)
+
+【注意】
+    1. 传入的 a 和 b 数组都会改变， a 为乘积系数， b 未做逆变换，
+       可用 memcpy(dest, src, sizeof(type) * len) 复制临时数组。
 */
 
 const db pi = acos(-1);
