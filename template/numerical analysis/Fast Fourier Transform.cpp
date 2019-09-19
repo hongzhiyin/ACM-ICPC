@@ -36,7 +36,7 @@ struct FFT{
             w[1][i].i = -w[1][i].i;
         }
     }
-    void Mul(C *a, C *b, int na, int nb) { // [0, na)
+    void Mul(C *a, C *b, int na, int nb) {
         for (L = 1; L < na + nb - 1; L <<= 1);
         rep(i, na, L) a[i] = C(0, 0);
         rep(i, nb, L) b[i] = C(0, 0);
