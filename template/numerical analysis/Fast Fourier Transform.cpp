@@ -72,7 +72,7 @@ struct C{
 
 struct FFT {
     int L;
-    void fft(C *x, int f){
+    void fft(C *x, int f) {
         for (int i = 0, j = 0; i < L; ++i) {
             if (i > j) swap(x[i], x[j]);
             for (int l = L>>1; (j^=l) < l; l >>= 1);
@@ -106,5 +106,77 @@ struct FFT {
         }
         fft(z, 1);
         rep(i, 0, na+nb+1) a[i] = i & 1 ? z[i>>1].i + 0.1 : z[i>>1].r + 0.1;
+    }
+} fft;
+
+---
+
+/*  可取模的 FFT
+【准备】
+    1. n 次多项式 a 和 m 次多项式 b ，即 a[i] = 第 i 项系数 ;
+    2. N 为大于 n+m+1 的 2 的幂
+
+【使用】
+    1. 调用 fft.Mul(a, b, n+1, m+1)
+    2. 乘积系数保存在 a[i]
+*/
+
+const db pi = acos(-1);
+struct C {
+    db r, i;
+    C () {} C (db r, db i) : r(r), i(i) {}
+    C operator + (const C &b) { return C(r + b.r, i + b.i); }
+    C operator - (const C &b) { return C(r - b.r, i - b.i); }
+    C operator * (const C &b) { return C(r * b.r - i * b.i, i * b.r + r * b.i); }
+    C operator ! () { return C(r, -i); }
+} w[N], A[N], B[N], D[N], E[N];
+
+struct FFTMOD {
+    int L, bit, mask;
+    void fft(C *p, int n) {
+        for (int i = 1, j = 0; i < n - 1; ++i) {
+            for (int s = n; j ^= (s >>= 1), ~j & s;);
+            if (i < j) swap(p[i], p[j]);
+        }
+        for (int d = 0; (1 << d) < n; ++d) {
+            int m = 1 << d, m2 = m * 2, rm = n >> (d + 1);
+            for (int i = 0; i < n; i += m2) rep(j, 0, m) {
+                C &p1 = p[i + j + m], &p2 = p[i + j];
+                C t = w[rm * j] * p1;
+                p1 = p2 - t, p2 = p2 + t;
+            }
+        }
+    }
+    void Mul(int *a, int *b, int na, int nb) {
+        for (L = 1; L < na + nb - 1; L <<= 1);
+        rep(i, 0, na) a[i] = (a[i] % P + P) % P; rep(i, na, L) a[i] = 0;
+        rep(i, 0, nb) b[i] = (b[i] % P + P) % P; rep(i, nb, L) b[i] = 0;
+        bit = 15; mask = (1 << bit) - 1;
+        rep(i, 0, L) w[i] = C(cos(2 * i * pi / L), sin(2 * i * pi / L));
+        rep(i, 0, L) {
+            A[i] = C(a[i] >> bit, a[i] & mask);
+            B[i] = C(b[i] >> bit, b[i] & mask);
+        }
+        mul(a);
+    }
+    void mul(int *a) {
+        fft(A, L), fft(B, L);
+        rep(i, 0, L) {
+            int j = (L - i) % L;
+            C da = (A[i] - !A[j]) * C(0, -0.5);
+            C db = (A[i] + !A[j]) * C(0.5, 0);
+            C dc = (B[i] - !B[j]) * C(0, -0.5);
+            C dd = (B[i] + !B[j]) * C(0.5, 0);
+            D[j] = da * dd + da * dc * C(0, 1);
+            E[j] = db * dd + db * dc * C(0, 1);
+        }
+        fft(D, L), fft(E, L);
+        rep(i, 0, L) {
+            ll da = (ll)(D[i].i / L + 0.5) % P;
+            ll db = (ll)(D[i].r / L + 0.5) % P;
+            ll dc = (ll)(E[i].i / L + 0.5) % P;
+            ll dd = (ll)(E[i].r / L + 0.5) % P;
+            a[i] = ((dd << (bit * 2)) + ((db + dc) << bit) + da) % P;
+        }
     }
 } fft;
