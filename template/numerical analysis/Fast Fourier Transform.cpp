@@ -10,6 +10,8 @@
 【注意】
     1. 传入的 a 和 b 数组都会改变， a 为乘积系数， b 未做逆变换，
        可用 memcpy(dest, src, sizeof(type) * len) 复制临时数组。
+    2. 求多项式 a 的平方不可以直接用 fft.Mul(a, a, n+1, n+1) ，
+       要删除或修改 Mul() 里有关 b 的部分。
 */
 
 const db pi = acos(-1);
