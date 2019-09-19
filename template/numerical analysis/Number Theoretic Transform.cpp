@@ -1,52 +1,46 @@
 /*
+【准备】
+    1. n 次多项式 a 和 m 次多项式 b ，即 a[i] = 第 i 项系数 ;
+    2. N 为大于 n+m+1 的 2 的幂
+
 【使用】
-  1. 声明一个 C ，无须初始化，调用 mul(A, B, &C);
-  2. 不传 &C 时，调用 mul(A, B); 等价于 A *= B;
+    1. 调用 ntt.Mul(a, b, n+1, m+1)
+    2. 乘积系数保存在 a[i]
 
 【注意】
-  1. mxlen : 计算过程中多项式的最大长度
-  2. N 取大于 mxlen 的 2 的幂次
-  3. 模数通常为 : 998244353, 1004535809, 469762049, 即 k * 2 ^ x + 1
+    1. 传入的 a 和 b 数组都会改变， a 为乘积系数， b 未做逆变换，
+       可用 memcpy(dest, src, sizeof(type) * len) 复制临时数组。
+    2. 求多项式 a 的平方不可以直接用 fft.Mul(a, a, n+1, n+1) ，
+       要删除或修改 Mul() 里有关 b 的部分。
+    3. NTT 的模数通常为 : 998244353, 1004535809, 469762049, 即 P = k * 2 ^ x + 1
 */
 
-ll qpow(ll a, ll b) { ll r = 1; for (a %= MOD; b; a = a * a % MOD, b >>= 1) if (b & 1) r = r * a % MOD; return r; }
-
-#define T int
-#define vT vector<T>
 struct NTT {
-    vT aa, bb;
-    int mxlen = 1000000;
-    T w[2][N*2+5], rev[N*2+5], tmp;
-    void ntt(vT &A, int m, int op) {
-        int n = 1<<m; T w0 = qpow(3, (MOD-1)/n);
+    static const int G = 3, P = 998244353;
+    int L, pre = -1, w[2][N], rev[N];
+    void fft(int *a, int f) {
+        rep(i, 0, L) if (i < rev[i]) swap(a[i], a[rev[i]]);
+        for (int i = 1; i < L; i <<= 1)
+            for (int j = 0, t = L / (i<<1); j < L; j += i<<1)
+                for (int k = 0, l = 0, x, y; k < i; ++k, l += t)
+                    x = (ll)w[f][l] * a[j+k+i] % P, y = a[j+k], a[j+k] = (y+x) % P, a[j+k+i] = (y-x+P) % P;
+        if (f) for (int i = 0, x = qpow(L, P-2); i < L; ++i) a[i] = (ll)a[i] * x % P;
+    }
+    void Pre() {
+        int d = __builtin_ctz(L);
         w[0][0] = w[1][0] = 1;
-        rep(i, 1, n) w[0][i] = w[1][n-i] = (ll)w[0][i-1] * w0 % MOD;
-        rep(i, 1, n) rev[i] = (rev[i>>1] >> 1) | (i & 1) << (m-1);
-        rep(i, 0, n) if (i < rev[i]) swap(A[i], A[rev[i]]);
-        for (int i = 1; i < n; i <<= 1)
-            for (int j = 0, t = n/(i<<1); j < n; j += i<<1)
-                for (int k = j, l = 0; k < j+i; k++, l += t) {
-                    T x = A[k], y = (ll)w[op][l] * A[k+i] % MOD;
-                    A[k] = (x+y) % MOD, A[k+i] = (x-y+MOD) % MOD;
-                }
-        if (op) {
-            tmp = qpow(n, MOD-2);
-            rep(i,0,n) A[i] = (ll)A[i] * tmp % MOD;
+        for (int i = 1, x = qpow(G, (P-1) / L), y = qpow(x, P-2); i < L; i++) {
+            rev[i] = (rev[i>>1] >> 1) | ((i&1) << (d-1));
+            w[0][i] = (ll)x * w[0][i-1] % P, w[1][i] = (ll)y * w[1][i-1] % P;
         }
     }
-    vT& mul(vT &A, vT &B, vT *C = NULL, int op = 0) {
-        int lena = sz(A), lenb = sz(B), len = 1, L = 0;
-        aa = A, bb = B;
-        while (len < 2 * max(lena, lenb)) len <<= 1, ++L;
-        aa.resize(len), bb.resize(len);
-        if (op) reverse(all(bb));
-        ntt(aa, L, 0), ntt(bb, L, 0);
-        if (!C) C = &A;
-        (*C).resize(len);
-        rep(i, 0, len) (*C)[i] = (ll)aa[i] * bb[i] % MOD;
-        ntt(*C, L, 1); 
-        if (op) reverse(all(*C));
-        if (len-1 > mxlen) (*C).resize(mxlen+1); 
-        return *C;
+    void Mul(int *a, int *b, int na, int nb) {
+        for (L = 1; L < na + nb - 1; L <<= 1);
+        rep(i, na, L) a[i] = 0;
+        rep(i, nb, L) b[i] = 0;
+        if (pre != L) Pre(), pre = L;
+        fft(a, 0), fft(b, 0);
+        rep(i, 0, L) a[i] = (ll)a[i] * b[i] % P;
+        fft(a, 1);
     }
-} obj;
+} ntt;
