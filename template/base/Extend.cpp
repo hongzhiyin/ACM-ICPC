@@ -24,16 +24,16 @@ inline int mul(int a, int b) { return 1ll * a * b % MOD; }
 
 // 快速乘，快速幂
 int qmul(ll a, ll b) {
-    int res = 0;
-    for (a %= MOD; b; a = (a + a) % MOD, b >>= 1) if (b & 1)
-        res = (res + a) % MOD;
-    return res;
+    int r = 0;
+    for (a %= MOD; b; a = (a + a) % MOD, b >>= 1)
+        if (b & 1) r = (r + a) % MOD;
+    return r;
 }
 int qpow(ll a, ll b) {
-    int res = 1;
-    for (a %= MOD; b; a = a * a % MOD, b >>= 1) if (b & 1)
-        res = res * a % MOD;
-    return res;
+    int r = 1;
+    for (a %= MOD; b; a = a * a % MOD, b >>= 1)
+        if (b & 1) r = r * a % MOD;
+    return r;
 }
 
 // 字符串映射
