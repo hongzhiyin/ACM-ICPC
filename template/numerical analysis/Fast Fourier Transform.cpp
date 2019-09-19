@@ -59,7 +59,7 @@ struct FFT{
     2. 乘积系数保存在 a[i]
 */
 
-const db pi = acos(-1.0);
+const db pi = acos(-1);
 struct C{
     db r, i;
     C () {} C (db r, db i) : r(r), i(i) {}
