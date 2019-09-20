@@ -44,7 +44,7 @@ struct Linear_Recursion {
     void dot(int *a, int *b) {
         rep(i, 0, L) a[i] = 1ll * a[i] * b[i] % MOD;
     }
-    void calc(int n, int *f, int m) {
+    void calc(ll n, int *f, int m) {
         if (n < m) { c[m-n] = 1; return; }
         calc(n>>1, f, m);
         dft(c, 1); dot(c, c); dft(c, -1);
@@ -56,7 +56,7 @@ struct Linear_Recursion {
         dft(g, 1); dot(g, f); dft(g, -1);
         rep(i, 0, m+1) c[i] = (c[i+m] - g[i+m]) % MOD, c[i+m] = 0;
     }
-    int qry(int *f, int *a, int m, int n) {
+    int qry(int *f, int *a, int m, ll n) {
         memset(b, 0, sizeof(b));
         f[0] = 1; rep(i, 1, m+1) f[i] = -f[i];
         rep(i, m+1, N) f[i] = 0;
