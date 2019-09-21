@@ -1,17 +1,17 @@
 /*
-【准备】
+< 准备 >
     1. n 次多项式 a 和 m 次多项式 b ，即 a[i] = C( 第 i 项系数 , 0 );
     2. N 为大于 n+m+1 的 2 的幂
 
-【使用】
+< 使用 >
     1. 调用 fft.Mul(a, b, n+1, m+1)
     2. 乘积系数保存在 a[i].r ，输出需取整，即 (int)(a[i].r + 0.5)
 
-【注意】
-    1. 传入的 a 和 b 数组都会改变， a 为乘积系数， b 未做逆变换，
-       可用 memcpy(dest, src, sizeof(type) * len) 复制临时数组。
-    2. 求多项式 a 的平方不可以直接用 fft.Mul(a, a, n+1, n+1) ，
-       要删除或修改 Mul() 里有关 b 的部分。
+< 注意 >
+    1. 传入的 a 和 b 数组都会改变， a 为乘积系数， b 未做逆变换
+    .. 可用 memcpy(dest, src, sizeof(type) * len) 复制临时数组。
+    2. 求多项式 a 的平方不可以直接用 fft.Mul(a, a, n+1, n+1)
+    .. 要删除或修改 Mul() 里有关 b 的部分。
 */
 
 const db pi = acos(-1);
@@ -30,7 +30,7 @@ struct FFT{
         rep(i, 0, L) if (i < rev[i]) swap(a[i], a[rev[i]]);
         for (int i = 1; i < L; i <<= 1)
             for (int j = 0, t = L/(i<<1); j < L; j += i<<1)
-                for (int k = 0, l = 0; k < i; k++, l += t) 
+                for (int k = 0, l = 0; k < i; k++, l += t)
                     x = w[f][l] * a[j+k+i], y = a[j+k], a[j+k] = y+x, a[j+k+i] = y-x;
         if (f) rep(i, 0, L) a[i].r /= L;
     }
@@ -55,12 +55,12 @@ struct FFT{
 
 ---
 
-/*  更快的 FFT
-【准备】
+/* ----- 更快的 FFT -----
+< 准备 >
     1. n 次多项式 a 和 m 次多项式 b ，即 a[i] = 第 i 项系数 ;
     2. N 为大于 n+m+1 的 2 的幂
 
-【使用】
+< 使用 >
     1. 调用 fft.Mul(a, b, n+1, m+1)
     2. 乘积系数保存在 a[i]
 */
@@ -99,7 +99,7 @@ struct FFT {
         }
         if (f) rep(i, 0, L) x[i] = C(x[i].r / L, x[i].i / L);
     }
-    void Mul(int *a, int *b, int na, int nb) { 
+    void Mul(int *a, int *b, int na, int nb) {
         for (L = 1; L <= na + nb >> 1; L <<= 1);
         rep(i, 0, L) x[i] = y[i] = C(0, 0);
         rep(i, 0, na+1) (i & 1 ? x[i>>1].i : x[i>>1].r) = a[i];
@@ -107,7 +107,7 @@ struct FFT {
         fft(x, 0); fft(y, 0);
         rep(i, 0, L) {
             int j = L - 1 & L - i;
-            C tmp = (i & L>>1) ? C(1, 0) - w[i^L>>1] : w[i] + C(1, 0); 
+            C tmp = (i & L>>1) ? C(1, 0) - w[i^L>>1] : w[i] + C(1, 0);
             z[i] = (x[i] * y[i] * 4 - (x[i] - !x[j]) * (y[i] - !y[j]) * tmp) * 0.25;
         }
         fft(z, 1);
@@ -117,12 +117,12 @@ struct FFT {
 
 ---
 
-/*  可取模的 FFT
-【准备】
+/* ----- 可取模的 FFT -----
+< 准备 >
     1. n 次多项式 a 和 m 次多项式 b ，即 a[i] = 第 i 项系数 ;
     2. N 为大于 n+m+1 的 2 的幂
 
-【使用】
+< 使用 >
     1. 调用 fft.Mul(a, b, n+1, m+1)
     2. 乘积系数保存在 a[i]
 */
