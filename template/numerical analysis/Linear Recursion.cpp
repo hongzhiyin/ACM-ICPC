@@ -1,12 +1,14 @@
 /*
-【准备】
+< 准备 >
     1. 数列前 m 项， a[0] ~ a[m-1]
     2. 系数前 m 项， f[1] ~ f[m]
     3. a[m] = f[1] * a[m-1] + f[2] * a[m-2] .. + f[m] * a[0]
     4. N 为大于 2m+1 的 2 的幂
-【使用】
+
+< 使用 >
     1. 调用 lr.qry(f, a, m, n) 求 a[n]
-【注意】
+
+< 注意 >
     1. 模数需支持 NTT
 */
 
@@ -74,3 +76,37 @@ struct Linear_Recursion {
         return (res + MOD) % MOD;
     }
 } lr;
+
+---
+
+/* ----- 任意模数，复杂度 O(m^2 * logn) -----
+< 准备 >
+    1. 数列前 m 项， a[0] ~ a[m-1]
+    2. 系数前 m 项， f[1] ~ f[m]
+    3. a[m] = f[1] * a[m-1] + f[2] * a[m-2] .. + f[m] * a[0]
+    4. N 大于 m
+
+< 使用 >
+    1. 调用 Linear_Recurrence(f, a, m, n) 求 a[n]
+
+*/
+
+ll v[N], u[N<<1];
+int Linear_Recurrence(int *f, int *a, int m, ll n) {
+	if (n < m) return (a[n] + MOD) % MOD;
+    memset(v, 0, sizeof(ll) * m);
+	v[0] = 1;
+	for (ll x = 0, w = n ? 1ll<<(63 - __builtin_clzll(n)) : 0; w; w >>= 1, x <<= 1) {
+        memset(u, 0, sizeof(ll) * 2 * m);
+		int b = !!(n & w); if(b) x++;
+		if (x < m) u[x] = 1;
+		else {
+			rep(i, 0, m) rep(j, 0, m) (u[i+b+j] += v[i] * v[j]) %= MOD;
+			per(i, m, 2*m) rep(j, 0, m) (u[i-m+j] += f[m-j] * u[i]) %= MOD;
+		}
+        memcpy(v, u, sizeof(ll) * m);
+	}
+	ll ans = 0;
+	rep(i, 0, m) (ans += v[i] * a[i]) %= MOD;
+	return (ans + MOD) % MOD;
+}
