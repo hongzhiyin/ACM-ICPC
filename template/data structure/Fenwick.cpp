@@ -1,19 +1,22 @@
 /*
-【函数功能】
-void Init(int n)     : 初始化大小为 n 的树状数组
-T Sum(int x)         : 返回前 x 个元素之和
-T Qry(int l, int r)  : 返回区间 [l, r] 内元素之和
-void Add(int x, T d) : 第 x 个元素加上 d
-
-【注意事项】
-1. 下标从 1 开始
-2. 如果下标过大，需要离散化
+< 准备 >
+    0. 树状数组可看作是 “ 支持单点修改的前缀和 ” 。
+    1. N 为数组大小。
+< 使用 >
+    1. 调用 init(n) 对数组初始化， n 为数组大小。
+    2. 调用 upd(x, d) ，即在下标为 x 的位置加上 d 。
+    3. 调用 sum(x) 查询 1 到 x 的前缀和。
+    4. 调用 qry(l, r) 查询 l 到 r 的区间和。
+< 注意 >
+    1. 数组下标从 1 开始。
+    2. 当下标过大时，可选择离散化，或使用 map <int, int> t;
 */
 
-ll t[N]; // map <int, int> t;
-
-ll Sum(int x) { ll res = 0; for (; x > 0; x -= x&-x) res += t[x]; return res; }
-
-void Add(int x, ll d) { for (; x <= ?; x += x&-x) t[x] += d; }
-
-ll Qry(int l, int r) { return Sum(r) - Sum(l-1); }
+typedef int T;
+struct Fenwick {
+    int n; T t[N];
+    void init(int _n) { n = _n; memset(t, 0, sizeof(t[0]) * (n+1)); }
+    void upd(int x, T d) { for (; x <= n; x += x&-x) t[x] += d; }
+    T sum(int x) { T r = 0; for (; x; x -= x&-x) r += t[x]; return r; }
+    T qry(int l, int r) { return sum(r) - sum(l-1); }
+} fen;
