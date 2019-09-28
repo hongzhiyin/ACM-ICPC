@@ -59,8 +59,8 @@ int Cantor_Expansion(int a[], int n) {
     seg.build(1, n, 1);
     int res = 1, jc = 1;
     per(i, 1, n+1) {
-        res = (res + 1ll * jc * seg.sum(a[i], 1, n, 1)) % MOD;
-        jc = 1ll * jc * (n - i + 1) % MOD;
+        res += jc * seg.sum(a[i], 1, n, 1);
+        jc *= n - i + 1;
         seg.upd(a[i], 1, n, 1);
     }
     return res;
