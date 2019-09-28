@@ -8,7 +8,7 @@
     1. 调用 Cantor_Expansion(a, n) ，得
     .. 返回值： 全排列 a 在所有相同长度全排列中的字典序排名，从 1 开始
     2. 调用 Reverse_Cantor_Expansion(x, n, b) ，得
-    .. x 对应的全排列保存在数组 b 中 
+    .. x 对应的全排列保存在 b[] 中 
 */
 
 #define ls rt << 1
