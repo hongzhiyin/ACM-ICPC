@@ -38,7 +38,7 @@ struct Fenwick {
     5. qry(l, r)    : 查询原数组 l 到 r 的区间和
 */
 
-typedef int T;
+typedef long long T;
 int fn; T c1[N], c2[N];
 struct Fenwick {
     void init(int n) {
@@ -46,8 +46,8 @@ struct Fenwick {
         memset(c1, 0, sizeof(c1[0]) * (fn+1));
         memset(c2, 0, sizeof(c2[0]) * (fn+1));
     }
-    void upd(int x, T d) { for (; x <= fn; x += x&-x) c1[x] += d, c2[x] += x * d; }
+    void upd(int x, T d) { for (int i = x; i <= fn; i += i&-i) c1[i] += d, c2[i] += x * d; }
     void upd(int l, int r, T d) { upd(l, d); upd(r + 1, -d); }
-    T sum(int x) { T r = 0; for (; x; x -= x&-x) r += (x+1) * c1[x] - c2[x]; return r; }
+    T sum(int x) { T r = 0; for (int i = x; i; i -= i&-i) r += (x+1) * c1[i] - c2[i]; return r; }
     T qry(int l, int r) { return sum(r) - sum(l-1); }
 } fen;
