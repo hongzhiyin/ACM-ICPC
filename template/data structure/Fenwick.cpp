@@ -34,8 +34,8 @@ struct Fenwick {
     1. init(n)      : 对数组初始化， n 为数组大小
     2. upd(x, d)    : 在差分数组下标为 x 的位置加上 d
     3. upd(l, r, d) : 在原数组区间 [l, r] 加上 d
-    3. sum(x)       : 查询原数组 1 到 x 的前缀和
-    4. qry(l, r)    : 查询原数组 l 到 r 的区间和
+    4. sum(x)       : 查询原数组 1 到 x 的前缀和
+    5. qry(l, r)    : 查询原数组 l 到 r 的区间和
 */
 
 typedef int T;
