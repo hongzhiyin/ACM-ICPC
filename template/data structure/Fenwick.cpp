@@ -1,19 +1,53 @@
-/*
-【函数功能】
-void Init(int n)     : 初始化大小为 n 的树状数组
-T Sum(int x)         : 返回前 x 个元素之和
-T Qry(int l, int r)  : 返回区间 [l, r] 内元素之和
-void Add(int x, T d) : 第 x 个元素加上 d
-
-【注意事项】
-1. 下标从 1 开始
-2. 如果下标过大，需要离散化
+/* ----- 树状数组 -----
+< 准备 >
+    0. 树状数组可看作是 “ 支持单点修改的前缀和 ” 
+    1. N 为数组大小。
+    
+< 使用 >
+    1. 调用 init(n) 对数组初始化， n 为数组大小
+    2. 调用 upd(x, d) ，即在下标为 x 的位置加上 d 
+    3. 调用 sum(x) 查询 1 到 x 的前缀和
+    4. 调用 qry(l, r) 查询 l 到 r 的区间和
+    
+< 注意 >
+    1. 数组下标从 1 开始
+    2. 当下标过大时，可选择离散化，或使用 map <int, int> t;
 */
 
-ll t[N]; // map <int, int> t;
+typedef int T;
+int fn; T t[N];
+struct Fenwick {
+    void init(int n) { fn = n; memset(t, 0, sizeof(t[0]) * (fn+1)); }
+    void upd(int x, T d) { for (; x <= fn; x += x&-x) t[x] += d; }
+    T sum(int x) { T r = 0; for (; x; x -= x&-x) r += t[x]; return r; }
+    T qry(int l, int r) { return sum(r) - sum(l-1); }
+} fen;
 
-ll Sum(int x) { ll res = 0; for (; x > 0; x -= x&-x) res += t[x]; return res; }
+---
 
-void Add(int x, ll d) { for (; x <= ?; x += x&-x) t[x] += d; }
+/* ----- 支持区间修改 -----
+< 准备 >
+    1. 树状数组中保存的是原数组的差分数组，即
+    .. b[1] = a[1], b[i] = b[i] - b[i-1] (i > 1)
+    
+< 使用 >
+    1. init(n)      : 对数组初始化， n 为数组大小
+    2. upd(x, d)    : 在差分数组下标为 x 的位置加上 d
+    3. upd(l, r, d) : 在原数组区间 [l, r] 加上 d
+    4. sum(x)       : 查询原数组 1 到 x 的前缀和
+    5. qry(l, r)    : 查询原数组 l 到 r 的区间和
+*/
 
-ll Qry(int l, int r) { return Sum(r) - Sum(l-1); }
+typedef long long T;
+int fn; T c1[N], c2[N];
+struct Fenwick {
+    void init(int n) {
+        fn = n;
+        memset(c1, 0, sizeof(c1[0]) * (fn+1));
+        memset(c2, 0, sizeof(c2[0]) * (fn+1));
+    }
+    void upd(int x, T d) { for (int i = x; i <= fn; i += i&-i) c1[i] += d, c2[i] += x * d; }
+    void upd(int l, int r, T d) { upd(l, d); upd(r + 1, -d); }
+    T sum(int x) { T r = 0; for (int i = x; i; i -= i&-i) r += (x+1) * c1[i] - c2[i]; return r; }
+    T qry(int l, int r) { return sum(r) - sum(l-1); }
+} fen;

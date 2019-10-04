@@ -93,20 +93,20 @@ struct Linear_Recursion {
 
 ll v[N], u[N<<1];
 int Linear_Recurrence(int *f, int *a, int m, ll n) {
-	if (n < m) return (a[n] + MOD) % MOD;
+    if (n < m) return (a[n] + MOD) % MOD;
     memset(v, 0, sizeof(ll) * m);
-	v[0] = 1;
-	for (ll x = 0, w = n ? 1ll<<(63 - __builtin_clzll(n)) : 0; w; w >>= 1, x <<= 1) {
+    v[0] = 1;
+    for (ll x = 0, w = n ? 1ll<<(63 - __builtin_clzll(n)) : 0; w; w >>= 1, x <<= 1) {
         memset(u, 0, sizeof(ll) * 2 * m);
-		int b = !!(n & w); if(b) x++;
-		if (x < m) u[x] = 1;
-		else {
-			rep(i, 0, m) rep(j, 0, m) (u[i+b+j] += v[i] * v[j]) %= MOD;
-			per(i, m, 2*m) rep(j, 0, m) (u[i-m+j] += f[m-j] * u[i]) %= MOD;
-		}
+        int b = !!(n & w); if(b) x++;
+        if (x < m) u[x] = 1;
+        else {
+            rep(i, 0, m) rep(j, 0, m) (u[i+b+j] += v[i] * v[j]) %= MOD;
+            per(i, m, 2*m) rep(j, 0, m) (u[i-m+j] += f[m-j] * u[i]) %= MOD;
+        }
         memcpy(v, u, sizeof(ll) * m);
-	}
-	ll ans = 0;
-	rep(i, 0, m) (ans += v[i] * a[i]) %= MOD;
-	return (ans + MOD) % MOD;
+    }
+    ll ans = 0;
+    rep(i, 0, m) (ans += v[i] * a[i]) %= MOD;
+    return (ans + MOD) % MOD;
 }

@@ -20,6 +20,33 @@ void Euler() {
     }
 }
 
+---
+
+/* ----- 扩展欧拉定理 -----
+< 内容 >
+    Calculate a ^ b (mod m)
+        if (b < phi(m)) ans = qpow(a, b, m);
+        else ans = qpow(a, b % phi(m) + phi(m), m);
+
+< 准备 >
+    1. 底数 a ，指数 b （指数很大，存在字符串 s[] 中），模数 m
+
+< 使用 >
+    1. 调用 Euler_qpow(a, s, m) 得 a ^ b (mod m)
+*/
+
+ll Euler_qpow(ll a, char s[], ll m) {
+    int len = strlen(s), ok = 0; ll b = 0, p = phi(m);
+    rep(i, 0, len) {
+        b = b * 10 + s[i] - '0';
+        if (b >= p) b %= p, ok = 1;
+    }
+    if (ok) return qpow(a, b + p, m);
+    return qpow(a, b, m);
+}
+
+---
+
 // 欧拉降幂 ( B > phi(C) )
 // A ^ B % C = A ^ (B % phi(C) + phi(C)) % C
 ll Euler_qpow(ll a, ll b, ll mod) {
