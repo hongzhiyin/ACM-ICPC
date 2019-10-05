@@ -31,8 +31,8 @@ typedef pair<int,int> pii;
 const int INF = 0x3f3f3f3f;          // -INF: 0xc0   abs(-INF) = INF + 1
 const ll LINF = 0x3f3f3f3f3f3f3f3f;
 /*}}}*/                              // zr, zm
-const int MOD = (int)1e9+7;          // inv2 = 500000004 (mod 1e9+7)
-const int N = (int)-1;               // (1 << [17, 18, 20, 21] ) > [1e5, 2e5, 1e6, 2e6]
+const int MOD = 1e9+7;          // inv2 = 500000004 (mod 1e9+7)
+const int N = -1;               // (1 << [17, 18, 20, 21] ) > [1e5, 2e5, 1e6, 2e6]
 
 // ------- 变量 ------- //
 
