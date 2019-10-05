@@ -32,7 +32,7 @@ int qmul(ll a, ll b) {
 int qpow(ll a, ll b) {
     int r = 1;
     for (a %= MOD; b; a = a * a % MOD, b >>= 1)
-        if (b & 1) r = r * a % MOD;
+        if (b & 1) r = 1ll * r * a % MOD;
     return r;
 }
 
