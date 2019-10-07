@@ -1,28 +1,37 @@
+/* ----- KMP -----
+< 准备 >
+    1. 长度为 n 母串 s[] 和长度为 m 的模式串 p[]
+
+< 使用 >
+    1. 调用 kmp.get(p, m) ，得
+    .. net[i]     : 前缀 p[0 ~ i-1] 的最长公共真前后缀长度
+    .. 即， p[0 ~ net[i]-1] == p[i-net[i] ~ i-1]
+    .. i - net[i] : 前缀 p[0 ~ i-1] 的最小循环节长度（最后一个循环节可能不完整）
+    2. 调用 kmp.match(s, n, p, m) ，根据需要记录信息
+    .. if (j == m) return i - j                 : 第一个匹配成功的 s[] 串下标，下标从 0 开始
+    .. if (j == m) { ans.pb(i-j); j = net[j]; } : 记录所有可匹配的位置
+    .. if (j == m) { cnt++; j = 0; }            : 母串中可匹配的不相交的模式串个数
+*/
+
+int net[N];
 struct KMP {
-    int net[N];     // net[i] 表示 p[0] 到 p[i-1] 的最长公共前后缀长度
-    void Get(char *p, int m) {
+    void get(char p[], int m) {
         net[0] = -1;
         for (int i = 0, j = -1; i < m;) {
             if (j == -1 || p[i] == p[j]) net[++i] = ++j;
             else j = net[j];
         }
-        // 最小循环节长度 ( m 也可以是当前字符串的前缀长度，求前缀字符串的最小循环节 )
-        // if (m % (m - net[m]) == 0) return m - net[m]; else return m;
-        // 最小循环节个数
-        // if (m % (m - net[m]) == 0) return m / (m - net[m]); else return 1;
     }
-    int kmp(char *s, int n, char *p, int m) {
-        Get(p, m);
+    int match(char s[], int n, char p[], int m) {
+        get(p, m);
         for (int i = 0, j = 0; i < n;) {
             if (j == -1 || s[i] == p[j]) ++i, ++j;
             else j = net[j];
-            if (j == m) return i - j;   // 第一个匹配成功的 s 串下标，从 0 开始
-            // if (j == m) { ans.pb(i-j); j = net[j]; } // 记录所有可匹配的位置
-            // if (j == m) cnt++, j = 0;     // 母串中可匹配的不相交模式串个数
+            if (j == m) return i - j;   // 根据需要记录信息
         }
         return -1;
     }
-};
+} kmp;
 
 ================================================== Problem Set ==================================================
 
