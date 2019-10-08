@@ -24,7 +24,7 @@ struct P {
     bool operator == (const P &b) const { return !sgn(x - b.x) && !sgn(y - b.y); }   // 向量相等
     P rot(T t) { return P(x * cos(t) - y * sin(t), x * sin(t) + y * cos(t)); }  // 向量逆时针旋转 t 弧度
     P rot90() { return P(-y, x); }           // 向量逆时针旋转 90 度
-    db arg() const { return atan2(y, x); }   // 方位角 (-pi, pi]
+    db arg() const { return atan2(y, x); }   // 方位角 (-pi, pi] ，速度慢，不要用于极角排序
     T abs() { return sqrt(x * x + y * y); }  // 向量模长
     T abs2() { return x * x + y * y; }       // 向量模长的平方
     P unit() { return (*this) / abs(); }     // 单位向量
