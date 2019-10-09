@@ -13,6 +13,7 @@
 < 注意 >
     1. 运行一次 mxf.dinic(S, T) 之后，残量网络改变，不能再次运行 mxf.dinic(S, T)
 */
+
 struct MaxFlow {
     int n, no, dis[N], Q[N], cur[N], head[N];
     struct Edge {
