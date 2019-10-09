@@ -205,22 +205,3 @@ void print(int rt) {  // 输出 rt 对应区间
     out(rt);
     rep(i, 0, sz(vout)) printf("%d%c", vout[i], " \n"[i==sz(vout)-1]);
 }
-
-================================================== Problem Set ==================================================
-
-// cf 159C
-// 题意：给一个由子串 t 重复 k 次组成的字符串 s ，每次删去第 p 次出现的字母 ch ，求最终字符串
-// 题解：建 26 个字母的 treap ，按顺序插入字母位置，进行删除操作即可。
-int Solve() {
-    int l = strlen(t), len = 0;
-    rep(i, 0, k) rep(j, 0, l) s[len++] = t[j];
-    s[len] = '\0';
-    rep(i, 0, len) Q[s[i]-'a'].ins(i);
-    rep(i, 0, n) {
-        int p; char ch[5];
-        scanf("%d%s", &p, ch);
-        vis[Q[ch[0]-'a'].del(p)] = 1;
-    }
-    rep(i, 0, len) if (!vis[i]) putchar(s[i]);
-    return !puts("");
-}
