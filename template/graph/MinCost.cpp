@@ -42,27 +42,3 @@ struct MinCost {
         return mp(maxflow, mincost);
     }
 };
-
-================================================== Problem Set ==================================================
-
-// luogu P4016
-// 题意：环形排列 n 个仓库，搬运最少的货物使得 n 个仓库存量相等
-// 题解：算平均数，富余的仓库建源点到自己的边，不足的仓库建自己到汇点的边，流量皆为富余或不足量，再在仓库之间建边，跑最小费用最大流
-int Solve() {
-    obj.init(n+2);
-    int tot = 0;
-    rep(i, 1, n+1) {
-        scanf("%d", a+i);
-        tot += a[i];
-    }
-    int ave = tot / n, S = 0, T = n + 1;
-    rep(i, 1, n+1) {
-        if (a[i] > ave) obj.addEdge(S, i, a[i] - ave, 0);
-        else obj.addEdge(i, T, ave - a[i], 0);
-    }
-    rep(i, 1, n+1) {
-        obj.addEdge(i, (i + 1) % n ? : n, INF, 1);
-        obj.addEdge(i, (i - 1) % n ? : n, INF, 1);
-    }
-    return printf("%lld\n", obj.solve(S, T).se);
-}
