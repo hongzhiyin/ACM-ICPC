@@ -1,8 +1,13 @@
-// a 进制表示的数 s1 转换为 b 进制表示的数 s2
-// a2i[] 表示字符 ch 表示的数字是 a2i[ch]
-// i2a[] 表示数字 num 用字符 i2a[num] 表示
+/* ----- 进制转换 -----
+< 准备 >
+    1. a2i[] : 字符 ch 表示的数字是 a2i[ch]
+    2. i2a[] : 数字 num 用字符 i2a[num] 表示
+    
+< 使用 >
+    1. 调用 Base_Conversion(s1, a, s2, b)
+    .. 将 a 进制表示的数 s1 转换为 b 进制表示的数 s2
+*/
 
-int a, b;
 char s[N], s1[N], s2[N];
 int a2i[128], i2a[500];
 void Base_Conversion(char *s1, int a, char *s2, int b) {
