@@ -13,7 +13,7 @@
     .. 点 i+n 表示点 i 的反值
 */
 
-struct two_SAT {
+struct Two_SAT {
     int val[N], dfn[N], low[N], scc[N], S[N], top, cnt, no;
     void SCC(int u) {
         dfn[u] = low[u] = ++no;
