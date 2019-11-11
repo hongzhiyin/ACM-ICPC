@@ -34,7 +34,7 @@ struct Centroid_Decomposition {
         for (auto o : e[u]) if (!vis[o.fi] && o.fi != f)
             dfs(o.fi, u, d + o.se, g ? g : o.fi);
     }
-    void find_equal_k(int u) {
+    void calc(int u) {
         cnt = 0;
         dfs(u);
         Radix_Sort((ll*)a, cnt);
@@ -47,4 +47,33 @@ struct Centroid_Decomposition {
         }
     }
     // -------------------------------- //
+    
+    // ----- 经过每个节点的路径中，至多一种字符出现奇数次的路径数 ----- //
+    void dfs(int u, int f = 0, int mask = 0, int val = 1) {
+        mask ^= 1 << s[u];
+        cnt[mask] += val;
+        for (auto v : e[u]) if (!vis[v] && v != f) dfs(v, u, mask, val);
+    }
+    ll work(int u, int f, int mask = 0) {
+        mask ^= 1 << s[u];
+        ll sum = cnt[mask];
+        rep(i, 0, 20) sum += cnt[mask ^ 1 << i];
+        for (auto v : e[u]) if (!vis[v] && v != f) sum += work(v, u, mask);
+        ans[u] += sum;
+        return sum;
+    }
+    void Init() { memset(cnt, 0, sizeof(cnt[0])); }
+    void calc(int u) {
+        dfs(u);
+        ll sum = cnt[0];
+        rep(i, 0, 20) sum += cnt[1 << i];
+        for (auto v : e[u]) if (!vis[v]) {
+            dfs(v, u, 1 << s[u], -1); 
+            sum += work(v, u);
+            dfs(v, u, 1 << s[u], 1);
+        }
+        ans[u] += sum / 2;
+        dfs(u, 0, 0, -1);
+    }
+    // -------------------------------------------------------- //
 } obj;
