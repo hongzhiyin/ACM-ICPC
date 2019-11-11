@@ -27,6 +27,7 @@ struct Centroid_Decomposition {
     // 根据具体问题编写 calc(rt) 函数
     
     // ----- 查找长度等于 k 的路径 ----- //
+    int cnt;
     struct node { int grp, dis; } a[N];
     void dfs(int u, int f = 0, int d = 0, int g = 0) {
         a[cnt].dis = d; a[cnt++].grp = g;
