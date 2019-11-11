@@ -4,7 +4,7 @@
     
 < 使用 >
     1. 调用 obj.init(n) 初始化
-    2. 调用 obj.run(n) 执行点分治，在 calc(rt) 中统计答案
+    2. 调用 obj.run(1) 执行点分治，在 calc(rt) 中统计答案
 */
 
 struct Centroid_Decomposition {
@@ -25,13 +25,15 @@ struct Centroid_Decomposition {
     }
     
     // 根据具体问题编写 calc(rt) 函数
+    
+    // ----- 查找长度等于 k 的路径 ----- //
     struct node { int grp, dis; } a[N];
     void dfs(int u, int f = 0, int d = 0, int g = 0) {
         a[cnt].dis = d; a[cnt++].grp = g;
         for (auto o : e[u]) if (!vis[o.fi] && o.fi != f)
             dfs(o.fi, u, d + o.se, g ? g : o.fi);
     }
-    void find_equal_k(int u) {  // 查找长度等于 k 的路径
+    void find_equal_k(int u) {
         cnt = 0;
         dfs(u);
         Radix_Sort((ll*)a, cnt);
@@ -43,4 +45,5 @@ struct Centroid_Decomposition {
             if (a[L].dis + a[R].dis == k) { ans = 1; break; }
         }
     }
+    // -------------------------------- //
 } obj;
