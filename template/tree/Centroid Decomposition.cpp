@@ -8,7 +8,7 @@
 */
 
 struct Centroid_Decomposition {
-    int vis[N], sz[N], cnt;
+    int vis[N], sz[N];
     void init(int n) { memset(vis, 0, sizeof(vis[0]) * (n+1)); }
     void Gravity(int u, int f, int n, int &rt) {
         sz[u] = 1;
