@@ -42,56 +42,48 @@ int hungary() {   // 返回最大匹配数
 // https://blog.csdn.net/c20180630/article/details/71080521
 // https://blog.csdn.net/u014097230/article/details/51554905
 
-int n;
-int match[N], wx[N], wy[N], g[N][N], slack[N];
-bool visx[N], visy[N];
 struct KM {
-    void init() {
-        memset(match, -1, sizeof(match));
-        memset(wy, 0, sizeof(wy));
-        rep(i, 0, n) {
-            wx[i] = g[i][0];
-            rep(j, 1, n) wx[i] = max(wx[i], g[i][j]);
-        }
-    }
-    bool dfs(int x) {
-        visx[x] = 1;
-        rep(y, 0, n) {
-            if (visy[y]) continue;
-            int gap = wx[x] + wy[y] - g[x][y];
-            if (gap == 0) {
-                visy[y] = 1;
-                if (match[y] == -1 || dfs( match[y] )) {
-                    match[y] = x;
-                    return true;
-                }
-            } else {
-                slack[y] = min(slack[y], gap);
-            }
-        }
-        return false;
-    }
-    int km() {
-        rep(i, 0, n) {
-            memset(slack, 0x3f, sizeof(slack));
-            while (1) {
-                memset(visx, 0, sizeof(visx));
-                memset(visy, 0, sizeof(visy));
-                if (dfs(i)) break;
-                int d = INF;
-                rep(j, 0, n) if (!visy[j]) d = min(d, slack[j]);
-                rep(j, 0, n) {
-                    if (visx[j]) wx[j] -= d;
-                    if (visy[j]) wy[j] += d;
-                    else slack[j] -= d;
-                }
-            }
-        }
-        int res = 0;
-        rep(i, 0, n) res += g[match[i]][i];
-        return res;
-    }
-};
+	static const int N = 505;
+	static const int inf = ~0U>>2;
+	int n, m, l[maxn], pre[maxn], used[maxn];
+	int g[maxn][maxn], lx[maxn], ly[maxn], slack[maxn];
+	void ini(int _n,int _m){
+		n = _n, m = _m;
+		rep(i,0,n) rep(j,0,m) g[i][j] = G[i][j];
+		//rep(i,0,n) g[i][i] = -inf;
+	/*	rep(i,0,n){
+			rep(j,0,m) dd(g[i][j]);
+			printf("\n");
+		}*/
+	}
+	void go(int now){
+		rep(i,0,m+1) used[i] =0 , slack[i] = inf;
+		l[m] = now;
+		int u, v;
+		for(u = m; ~l[u];u = v){
+			used[u] =1;
+			int d = inf;
+			rep(i,0,m) if(!used[i]){
+				int tmp = lx[l[u]] + ly[i] - g[l[u]][i];
+				if(tmp < slack[i]) slack[i] = tmp, pre[i] = u;
+				if(slack[i] < d)  d= slack[ v = i];
+			}
+			rep(i,0,m+1) if(used[i]) lx[l[i]] -= d, ly[i] += d;
+			else slack[i] -= d;
+		}
+		for(; u!=m; l[u]=l[pre[u]], u = pre[u]);
+	}
+	int run(){
+		fill_n(lx,n,0);
+		fill_n(ly,m,0);
+		fill_n(l,m,-1);
+		rep(i,0,n) go(i);
+		int ans =0;
+		rep(i,0,n) ans+=lx[i];
+		rep(i,0,m) ans+=ly[i];
+		return ans;
+	}
+}T;
 
 ------------------------------------------------------------------------------------------------
 
