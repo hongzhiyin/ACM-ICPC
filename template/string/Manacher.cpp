@@ -1,30 +1,28 @@
-// https://subetter.com/articles/2018/03/manacher-algorithm.html
+// https://subetter.com/algorithm/manacher-algorithm.html
 // 给定一个字符串，求出其最长回文子串
 
-struct Manacher {
-    int p[N<<1]; char s[N<<1];
-    int init(char *str, int m) {
-        s[0] = '$'; s[1] = '#';
-        int j = 2;
-        rep(i, 0, m) {
-            s[j++] = str[i];
-            s[j++] = '#';
+class Manacher {
+public:
+    const static int N = 1e5 + 7;
+    int radius[N<<1];
+    string longestPalindrome(string s) {
+        if (s.size() == 0) return s;
+        string t = "$#";
+        for (int i = 0; i < s.size(); ++i) {
+            t += s[i];
+            t += '#';
         }
-        s[j] = '\0';
-        return j;
-    }
-    int manacher(char *str, int m) {
-        int n = init(str, m), res = 0, id, mx = 0;
-        rep(i, 1, n) {
-            if (i < mx) p[i] = min(p[2*id-i], mx - i);
-            else p[i] = 1;
-            while (s[i-p[i]] == s[i+p[i]]) p[i]++;
-            if (mx < i + p[i]) {
-                id = i;
-                mx = i + p[i];
+        int maxlen = 0, rbound = 0, mid, pos;
+        for (int i = 1; i < t.size(); ++i) {
+            radius[i] = i < rbound ? min(radius[2*mid-i], rbound - i) : 1;
+            while (t[i-radius[i]] == t[i+radius[i]]) radius[i]++;
+            if (rbound < i + radius[i]) rbound = i + radius[mid=i];
+            if (maxlen < radius[i] - 1) {
+                maxlen = radius[i] - 1;
+                pos = i - maxlen;
+                pos = (pos + 1) / 2 - 1;
             }
-            res = max(res, p[i] - 1);
         }
-        return res;
+        return s.substr(pos, maxlen);
     }
 };
