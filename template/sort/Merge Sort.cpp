@@ -1,13 +1,21 @@
-int b[N], ans;
-void msort(int l, int r) {
-    if (l >= r) return;
-    int m = (r + l) >> 1;
-    msort(l, m);
-    msort(m+1, r);
-    int i = l, j = m+1;
-    rep(k, l, r+1) {
-        if (j > r || i <= m && a[i] <= a[j]) b[k] = a[i++];
-        else b[k] = a[j++], ans += m - i + 1;  // ans 为逆序对数
+/* ----- 归并排序 -----
+< 参数 >
+    1. first 和 last 为随机访问迭代器
+
+< 使用 >
+    1. 使用方法同 std::sort()
+*/
+
+template <class Iter>
+void Merge_Sort(Iter first, Iter last) {
+    if (first == last || last - first == 1) return;
+    Iter middle = first + (last - first) / 2, i, j;
+    Merge_Sort(first, middle); Merge_Sort(middle, last);
+    vector <typename iterator_traits<Iter>::value_type> tmp(last - first);
+    typename vector <typename iterator_traits<Iter>::value_type>::iterator k;
+    for (k = tmp.begin(), i = first, j = middle; k != tmp.end(); ++k) {
+        if (j == last || i < middle && *i <= *j) *k = *(i++);
+        else *k = *(j++);
     }
-    rep(k, l, r+1) a[k] = b[k];
+    for (k = tmp.begin(), i = first; k != tmp.end(); ++k) *(i++) = *k;
 }
