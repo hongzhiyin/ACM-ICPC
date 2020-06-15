@@ -8,10 +8,10 @@
 
 template <class Iter>
 void Bubble_Sort(Iter first, Iter last) {
-    if (first == last) return;
-    for (--last; first != last; --last) {
-        for (Iter i = first; i != last; ++i) {
-            if (*i > *(i + 1)) swap(*i, *(i+1));
+    if (first == last) return;                      // 容器为空
+    for (--last; first != last; --last) {           // last 标记当前最大值的正确位置
+        for (Iter i = first; i != last; ++i) {      // “冒泡” 过程
+            if (*i > *(i + 1)) swap(*i, *(i+1));    // 将当前最大值往后移动
         }
     }
 }

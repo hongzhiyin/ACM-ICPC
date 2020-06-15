@@ -8,11 +8,11 @@
 
 template <class Iter>
 void Selection_Sort(Iter first, Iter last) {
-    if (first == last) return;
-    for (Iter tmp = first; first != last; tmp = ++first) {
-        for (Iter i = first + 1; i != last; ++i) {
-            if (*i < *tmp) tmp = i;
+    if (first == last) return;                              // 容器为空
+    for (Iter tmp = first; first != last; tmp = ++first) {  // 查找当前最小值，用 tmp 标记
+        for (Iter i = first + 1; i != last; ++i) {          // 遍历
+            if (*i < *tmp) tmp = i;                         // 更新当前最小值标记
         }
-        swap(*first, *tmp);
+        swap(*first, *tmp);                                 // 将当前最小值移至正确位置
     }
 }
