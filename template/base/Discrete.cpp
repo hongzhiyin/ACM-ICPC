@@ -2,8 +2,8 @@
 < 参数 >
     1. first 和 last 为随机访问迭代器
 
-< 使用 >
-    1. 使用方法同 std::sort()
+< 返回 >
+    1. 返回一个 vector ，存储离散后的数据，下标和离散值都从 1 开始
 */
 
 template <class Iter>
