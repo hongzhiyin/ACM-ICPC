@@ -1,16 +1,5 @@
-/*<<head>> {{{*/
+#pragma region header
 #include <bits/stdc++.h>
-#include <algorithm>
-#include <iostream>
-#include <cstring>
-#include <vector>
-#include <cstdio>
-#include <string>
-#include <cmath>
-#include <queue>
-#include <stack>
-#include <set>
-#include <map>
 using namespace std;
 typedef double db;
 typedef long long ll;
@@ -30,8 +19,8 @@ typedef pair<int,int> pii;
 //LINF = 4 557 430 888 798 830 399 ; LINF + LINF = 9 114 861 777 597 660 798 ;
 const int INF = 0x3f3f3f3f;          // -INF: 0xc0   abs(-INF) = INF + 1
 const ll LINF = 0x3f3f3f3f3f3f3f3f;
-/*}}}*/                              // zr, zm
-const int MOD = 1e9+7;               // inv2 = 500000004 (mod 1e9+7)
+#pragma endregion
+
 const int N = -1;                    // (1 << [17, 18, 20, 21] ) > [1e5, 2e5, 1e6, 2e6]
 
 // ------- 变量 ------- //
@@ -40,9 +29,13 @@ const int N = -1;                    // (1 << [17, 18, 20, 21] ) > [1e5, 2e5, 1e
 
 // ------- 函数 ------- //
 
-void Init() {}
+void Init() {
 
-int Solve() {}
+}
+
+int Solve() {
+    
+}
 
 // ------- main ------- //
 
