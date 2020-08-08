@@ -1,12 +1,11 @@
 /* ----- 树状数组 -----
 < 准备 >
-    0. 树状数组可看作是 “ 支持单点修改的前缀和 ” 
-    1. N 为数组大小。
+    0. 树状数组可看作是 “ 支持单点修改的前缀和 ”
     
 < 使用 >
-    1. 调用 init(n) 对数组初始化， n 为数组大小
-    2. 调用 upd(x, d) ，即在下标为 x 的位置加上 d 
-    3. 调用 sum(x) 查询 1 到 x 的前缀和
+    1. 调用构造函数对树状数组初始化， _n 为数组大小
+    2. 调用 add(i, d) ，即在下标为 i 的位置加上 d 
+    3. 调用 sum(i) 查询 1 到 i 的前缀和
     4. 调用 qry(l, r) 查询 l 到 r 的区间和
     
 < 注意 >
@@ -14,16 +13,14 @@
     2. 当下标过大时，可选择离散化，或使用 map <int, int> t;
 */
 
-typedef int T;
-int fn; T t[N];
-struct Fenwick {
-    void init(int n) { fn = n; memset(t, 0, sizeof(t[0]) * (fn+1)); }
-    void upd(int x, T d) { for (; x <= fn; x += x&-x) t[x] += d; }
-    T sum(int x) { T r = 0; for (; x; x -= x&-x) r += t[x]; return r; }
+template <class T>
+struct Fenwick_Tree {
+    int n; vector<T> t;
+    Fenwick_Tree(int _n) : n(_n) { t = vector<T>(n+1, 0); }
+    void add(int i, T d) { for (; i <= n; i += i&-i) t[i] += d; }
+    T sum(int i) { T r = 0; for (; i; i -= i&-i) r += t[i]; return r; }
     T qry(int l, int r) { return sum(r) - sum(l-1); }
-} fen;
-
----
+};
 
 /* ----- 支持区间修改 -----
 < 准备 >
