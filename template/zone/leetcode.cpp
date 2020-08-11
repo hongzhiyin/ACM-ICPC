@@ -49,13 +49,22 @@ struct LeetCode {
         trimLeftTrailingSpaces(input);
         trimRightTrailingSpaces(input);
         input = input.substr(1, input.length() - 2);
-        stringstream ss;
-        ss.str(input);
         string item;
-        char delim = ',';
-        while (getline(ss, item, delim)) {
-            item = item.substr(1, item.length() - 2);
-            output.push_back(item);
+        for (int i = 0, f = 0; i < input.size(); ++i) {
+            char ch = input[i];
+            if (ch == '\"') {
+                if (f) {
+                    f = 0; ++i;
+                    output.push_back(item);
+                } else {
+                    f = 1;
+                    item = "";
+                }
+            } else if (ch == '\\') {
+                item += input[++i];
+            } else {
+                item += ch;
+            }
         }
         return output;
     }
@@ -202,12 +211,14 @@ struct LeetCode {
 class Solution {
 public:
 
-} solution;
+};
 
 int main()
 {
     freopen("in.txt", "r", stdin);
     //freopen("out.txt", "w", stdout);
+
+    Solution solution;
 
     auto param = lc.read();
     
