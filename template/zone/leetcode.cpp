@@ -164,14 +164,11 @@ struct LeetCode {
         return "[" + output.substr(0, output.length() - 1) + "]";
     }
 
-    // ---------- read any ----------
-    vector<string> readStringVector() {
-        string line;
-        getline(cin, line);
-        return stringToStringVector(line);
-    }
-
     // ---------- print any ----------
+    void print(int integer) {
+        cout << integer << endl;
+    }
+    
     void print(vector<string> stringVector) {
         cout << stringVectorToString(stringVector) << endl;
     }
@@ -216,15 +213,16 @@ public:
 int main()
 {
     freopen("in.txt", "r", stdin);
-    //freopen("out.txt", "w", stdout);
+    freopen("out.txt", "w", stdout);
 
-    Solution solution;
+    string line;
+    while (getline(cin, line)) {
+        auto param = lc.stringToIntegerVector(line);
+        
+        auto ans = Solution().fun(param);
 
-    auto param = lc.read();
-    
-    auto ans = solution.fun(param);
-
-    lc.print(ans);    
+        lc.print(ans);
+    }
 
     return 0;
 }
