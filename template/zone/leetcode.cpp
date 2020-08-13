@@ -29,6 +29,10 @@ struct LeetCode {
     }
 
     // ---------- string to any ----------
+    int stringToInteger(string input) {
+        return stoi(input);
+    }
+
     vector<int> stringToIntegerVector(string input) {
         vector<int> output;
         trimLeftTrailingSpaces(input);
@@ -42,6 +46,10 @@ struct LeetCode {
             output.push_back(stoi(item));
         }
         return output;
+    }
+
+    string stringToString(string input) {
+        return input.substr(1, input.length() - 2);
     }
 
     vector<string> stringToStringVector(string input) {
@@ -134,6 +142,29 @@ struct LeetCode {
     }
 
     // ---------- any to string ----------
+    string integerVectorToString(vector<int> list, int length = -1) {
+        if (length == -1) {
+            length = list.size();
+        }
+
+        if (length == 0) {
+            return "[]";
+        }
+
+        string result;
+        for(int index = 0; index < length; index++) {
+            int number = list[index];
+            result += to_string(number) + ", ";
+        }
+        return "[" + result.substr(0, result.length() - 2) + "]";
+    }
+
+    string stringVectorToString(vector<string> stringVector) {
+        string output = "";
+        for (auto str : stringVector) output += "\"" + str + "\",";
+        return "[" + output.substr(0, output.length() - 1) + "]";
+    }
+
     string treeNodeToString(TreeNode* root) {
         if (root == nullptr) {
         return "[]";
@@ -158,33 +189,35 @@ struct LeetCode {
         return "[" + output.substr(0, output.length() - 2) + "]";
     }
 
-    string stringVectorToString(vector<string> stringVector) {
-        string output = "";
-        for (auto str : stringVector) output += "\"" + str + "\",";
-        return "[" + output.substr(0, output.length() - 1) + "]";
-    }
-
     // ---------- print any ----------
     void print(int integer) {
         cout << integer << endl;
     }
     
+    void print(vector<int> integerVector) {
+        cout << integerVectorToString(integerVector) << endl;
+    }
+
     void print(vector<string> stringVector) {
         cout << stringVectorToString(stringVector) << endl;
     }
 
-    // ---------- pretty print any ----------
-    void prettyPrintLinkedList(ListNode* node) {
-    while (node && node->next) {
-        cout << node->val << "->";
-        node = node->next;
+    void print(TreeNode* root) {
+        cout << treeNodeToString(root) << endl;
     }
 
-    if (node) {
-        cout << node->val << endl;
-    } else {
-        cout << "Empty LinkedList" << endl;
-    }
+    // ---------- pretty print any ----------
+    void prettyPrintLinkedList(ListNode* node) {
+        while (node && node->next) {
+            cout << node->val << "->";
+            node = node->next;
+        }
+
+        if (node) {
+            cout << node->val << endl;
+        } else {
+            cout << "Empty LinkedList" << endl;
+        }
     }
 
     void prettyPrintTree(TreeNode* node, string prefix = "", bool isLeft = true) {
