@@ -48,6 +48,48 @@ struct LeetCode {
         return output;
     }
 
+    vector<vector<int>> stringToInt2dArray(string input) {
+        vector<vector<int>> output;
+        trimLeftTrailingSpaces(input);
+        trimRightTrailingSpaces(input);
+        input = input.substr(1, input.length() - 2);
+        stringstream ss;
+        ss.str(input);
+        string item;
+        char delim = ']';
+        while (getline(ss, item, delim)) {
+            output.push_back(stringToIntegerVector(item + "]"));
+            ss.get();
+        }
+        return output;
+    }
+
+    vector<char> stringToCharVector(string input) {
+        vector<char> output;
+        trimLeftTrailingSpaces(input);
+        trimRightTrailingSpaces(input);
+        input = input.substr(1, input.length() - 2);
+        for (int i = 1; i < input.size(); i += 4)
+            output.push_back(input[i]);
+        return output;
+    }
+
+    vector<vector<char>> stringToChar2dArray(string input) {
+        vector<vector<char>> output;
+        trimLeftTrailingSpaces(input);
+        trimRightTrailingSpaces(input);
+        input = input.substr(1, input.length() - 2);
+        stringstream ss;
+        ss.str(input);
+        string item;
+        char delim = ']';
+        while (getline(ss, item, delim)) {
+            output.push_back(stringToCharVector(item + "]"));
+            ss.get();
+        }
+        return output;
+    }
+
     string stringToString(string input) {
         return input.substr(1, input.length() - 2);
     }
@@ -159,6 +201,16 @@ struct LeetCode {
         return "[" + result.substr(0, result.length() - 2) + "]";
     }
 
+    string int2dArrayToString(vector<vector<int>> array) {
+        if (array.size() == 0) return "[]";
+    
+        string output;
+        for (auto item : array)
+            output += integerVectorToString(item) + ",";
+        
+        return "[" + output.substr(0, output.length() - 1) + "]";
+    }
+
     string stringVectorToString(vector<string> stringVector) {
         string output = "";
         for (auto str : stringVector) output += "\"" + str + "\",";
@@ -196,6 +248,14 @@ struct LeetCode {
     
     void print(vector<int> integerVector) {
         cout << integerVectorToString(integerVector) << endl;
+    }
+
+    void print(vector<vector<int>> int2dArray) {
+        cout << int2dArrayToString(int2dArray) << endl;
+    }
+
+    void print(string str) {
+        cout << "\"" + str + "\"" << endl;
     }
 
     void print(vector<string> stringVector) {
@@ -251,8 +311,13 @@ int main()
     string line;
     while (getline(cin, line)) {
         auto param = lc.stringToIntegerVector(line);
+        //getline(cin, line);
+        //auto param = lc.stringToInteger(line);
         
-        auto ans = Solution().fun(param);
+        //auto begin = clock();
+        auto ans = Solution().function(param);
+        //auto end = clock();
+        //cout << endl << (double)(end - begin) / CLOCKS_PER_SEC << endl << endl;
 
         lc.print(ans);
     }
