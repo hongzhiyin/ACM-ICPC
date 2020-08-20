@@ -13,7 +13,7 @@ template <class T, class Func>
 pair<bool, T> Binary_Search_Max(T left, T right, Func check) {      // 左右边界与判别函数
     T Left = left - 1, Right = right;                               // 左边界预留越界下标
     while (Left < Right) {                                          // 终止条件即二者相等
-        T Middle = Left + Right + 1 >> 1;                           // 偶数长度区间的中点落在靠右一侧
+        T Middle = Left + ((Right - Left + 1) >> 1);                // 偶数长度区间的中点落在靠右一侧
         if (check(Middle)) Left = Middle;                           // 中点可行
         else Right = Middle - 1;                                    // 中点不可行
     }
@@ -25,7 +25,7 @@ template <class T, class Func>
 pair<bool, T> Binary_Search_Min(T left, T right, Func check) {      // 左右边界与判别函数
     T Left = left, Right = right + 1;                               // 右边界预留越界下标
     while (Left < Right) {                                          // 终止条件即二者相等
-        T Middle = Left + Right>> 1;                                // 偶数长度区间的中点落在靠左一侧
+        T Middle = Left + ((Right - Left) >> 1);                    // 偶数长度区间的中点落在靠左一侧
         if (check(Middle)) Right = Middle;                          // 中点可行
         else Left = Middle + 1;                                     // 中点不可行
     }
