@@ -1,9 +1,9 @@
 /* ----- KMP -----
 < 准备 >
-    1. 长度为 n 母串 s[] 和长度为 m 的模式串 p[]
+    1. 母串 str 和模式串 pattern
 
 < 使用 >
-    1. 调用 kmp.get(p, m) ，得
+    1. 调用 kmp.build(p, m) ，得
     .. net[i]     : 前缀 p[0 ~ i-1] 的最长公共真前后缀长度
     .. 即， p[0 ~ net[i]-1] == p[i-net[i] ~ i-1]
     .. i - net[i] : 前缀 p[0 ~ i-1] 的最小循环节长度（最后一个循环节可能不完整）
@@ -13,25 +13,26 @@
     .. if (j == m) { cnt++; j = 0; }            : 母串中可匹配的不相交的模式串个数
 */
 
-int net[N];
 struct KMP {
-    void get(char p[], int m) {
-        net[0] = -1;
-        for (int i = 0, j = -1; i < m;) {
-            if (j == -1 || p[i] == p[j]) net[++i] = ++j;
-            else j = net[j];
+    vector<int> next;                                                   // next[i] : 前缀 pattern[0..i-1] 的最长公共真前后缀长度
+    void build(string pattern) {                                        // 建立 next 数组
+        next = vector<int>(pattern.size()+1);                           // 下标最大到 next[pattern.size()]
+        next[0] = -1;                                                   // 边界，即 pattern[0] 失配时，下标移动到 -1
+        for (int i = 0, j = -1; i < pattern.size();) {                  // 模式串自己匹配自己，建立 next 数组
+            if (j == -1 || pattern[i] == pattern[j]) next[++i] = ++j;   // pattern[0..j] 与 pattern[i-j..i] 匹配（自增前）
+            else j = next[j];                                           // 失配，指针 j 跳转到上一个可匹配的位置
         }
     }
-    int match(char s[], int n, char p[], int m) {
-        get(p, m);
-        for (int i = 0, j = 0; i < n;) {
-            if (j == -1 || s[i] == p[j]) ++i, ++j;
-            else j = net[j];
-            if (j == m) return i - j;   // 根据需要记录信息
+    int match(string str, string pattern) {                             // 母串 str ，模式串 pattern
+        build(pattern);                                                 // 建立 pattern 的 next 数组
+        for (int i = 0, j = 0; i < str.size();) {                       // pattern 与 str 进行匹配
+            if (j == -1 || str[i] == pattern[j]) ++i, ++j;              // 当前位置匹配成功
+            else j = next[j];                                           // 失配，模式串指针跳转到上一个可匹配的位置
+            if (j == pattern.size()) return i - j;                      // pattern 匹配完成，返回第一次匹配成功的下标
         }
-        return -1;
+        return -1;                                                      // pattern 无法与 str 匹配
     }
-} kmp;
+};
 
 ================================================== Problem Set ==================================================
 
