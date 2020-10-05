@@ -1,15 +1,18 @@
 /* ----- 字典树 ----- */
 
+struct node {                                                   // 字典树节点
+    vector<node*> next;                                         // 节点分支
+    bool isword;                                                // 从根节点到当前节点是否是一个完整单词
+    node(int fork) {                                            // 新建一个 fork 个分支的节点
+        next = vector<node*>(fork, nullptr);                    // fork 个分支初始为空指针
+        isword = 0;                                             // 标记位清零
+    }
+};
+
 struct Trie {
+    typedef node *Iter;
+    Iter root;                                                      // 根节点指针
     int fork;                                                       // 节点分支数
-    struct node {                                                   // 字典树节点
-        vector<node*> next;                                         // 节点分支
-        bool isword;                                                // 从根节点到当前节点是否是一个完整单词
-        node(int fork) {                                            // 新建一个 fork 个分支的节点
-            next = vector<node*>(fork, nullptr);                    // fork 个分支初始为空指针
-            isword = 0;                                             // 标记位清零
-        }
-    } *root;                                                        // 根节点指针
     Trie(int fork) : fork(fork) { root = new node(fork); }          // 初始化，建立根节点
 
     void insert(string &s) {                                        // 插入单词
