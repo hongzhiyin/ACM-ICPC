@@ -1,3 +1,36 @@
+template <typename distType>
+class Dijkstra {
+    int n;
+    vector<bool> done;
+    vector<distType> dist;
+    vector<vector<pair<int, distType>>> edge;
+    void init() {
+        fill(done.begin(), done.end(), 0);
+        fill(dist.begin(), dist.end(), sizeof(distType) == 4 ? 0x3f3f3f3f : 0x3f3f3f3f3f3f3f3f);
+    }
+public:
+    Dijkstra(int _n) : n(_n + 1), done(n), dist(n), edge(n) {}
+    distType dis(int id) { return dist[id]; }
+    void addEdge(int from, int to, int weight) {
+        edge[from].push_back(make_pair(to, weight));
+    }
+    void dijkstra(int start) {
+        init();
+        priority_queue<pair<distType, int>> Q;
+        Q.push(make_pair(dist[start]=0, start));
+        while (!Q.empty()) {
+            int u = Q.top().second; Q.pop();
+            if (done[u]) continue; done[u] = true;
+            for (auto &[v, w] : edge[u]) {
+                if (dist[v] > dist[u] + w) {
+                    dist[v] = dist[u] + w;
+                    Q.push(make_pair(-dist[v], v));
+                }
+            }
+        }
+    }
+};
+
 /*
 时间复杂度 : O( (V+E)logV )
 准备 :
