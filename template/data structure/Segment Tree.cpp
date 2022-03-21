@@ -49,56 +49,65 @@ struct SegTree {
 };
 
 /* 基本线段树
-【函数功能】
-void PushUp(int rt)                                 : 向上更新结点
-void PushDown(int rt)                               : 下传标记
-void Add(int rt, T val)                             : 将标记作用于当前结点
-void Build(T a[], int l, int r, int rt)             : 以 a[] 建树
-void Upd(int L, int R, T val, int l, int r, int rt) : 区间 [L, R] 都加上 val
-T Qry(int L, int R, int l, int r, int rt)           : 查询区间 [L, R]
+如果只是单点更新，则不需要 pushdown 和 Node.upd ，删除这部分以加速程序。
 */
 
 #define ls rt << 1
 #define rs rt << 1 | 1
 #define lson l, m, ls
 #define rson m + 1, r, rs
-int sz[N<<2]; ll lazy[N<<2], t[N<<2];
-inline ll op(ll a, ll b) { return a + b; } // ?
-inline void Add(int rt, ll val) {
-    lazy[rt] += val;
-    t[rt] += val * sz[rt];  // ?
-}
-inline void PushDown(int rt) {
-    if (lazy[rt]) {
-        Add2(ls, lazy[rt]);
-        Add2(rs, lazy[rt]);
-        lazy[rt] = 0;
+struct SegmentTree {
+    struct Node {
+        int len, upd;
+        int val;
+        Node() : len(0), upd(-1), val(0) {}
+        Node(int len, int upd, int val) :
+            len(len), upd(upd), val(val) {}
+    } node[N<<2];
+    inline Node pushUp(Node L, Node R) {
+        int len = L.len + R.len, upd = -1;
+        int val = ;
+        return Node(len, upd, val);
     }
-}
-inline void Build(int l, int r, int rt) {
-    lazy[rt] = 0; sz[rt] = r - l + 1;
-    if (l == r) { t[rt] = a[r]; return; }
-    int m = (l + r) >> 1;
-    Build(lson); Build(rson);
-    t[rt] = op(t[ls], t[rs]);
-}
-inline void Upd(int L, int R, ll val, int l, int r, int rt) {
-    if (L <= l && r <= R) { Add(rt, val); return ; }
-    PushDown(rt);
-    int m = (l + r) >> 1;
-    if (L <= m) Upd(L, R, val, lson);
-    if (m < R) Upd(L, R, val, rson);
-    t[rt] = op(t[ls], t[rs]);
-}
-inline ll Qry(int L, int R, int l, int r, int rt) {
-    if (L <= l && r <= R) return t[rt];
-    PushDown(rt);
-    int m = (l + r) >> 1;
-    ll res = 0;
-    if (L <= m) res = op(res, Qry(L, R, lson));
-    if (m < R) res = op(res, Qry(L, R, rson));
-    return res;
-}
+    inline void upd(int rt, int val) {
+        node[rt].upd = val;
+        node[rt].val = ;
+    }
+    inline void pushDown(int rt) {
+        if (node[rt].upd != -1) {
+            upd(ls, node[rt].upd);
+            upd(rs, node[rt].upd);
+            node[rt].upd = -1;
+        }
+    }
+    inline void build(int l, int r, int rt) {
+        if (l == r) {
+            node[rt].len = r - l + 1; node[rt].upd = -1;
+            node[rt].val = ;
+            return;
+        }
+        int m = (l + r) >> 1;
+        build(lson); build(rson);
+        node[rt] = pushUp(node[ls], node[rs]);
+    }
+    inline void upd(int L, int R, int val, int l, int r, int rt) {
+        if (L <= l && r <= R) { upd(rt, val); return ; }
+        pushDown(rt);
+        int m = (l + r) >> 1;
+        if (L <= m) upd(L, R, val, lson);
+        if (m < R) upd(L, R, val, rson);
+        node[rt] = pushUp(node[ls], node[rs]);
+    }
+    inline Node qry(int L, int R, int l, int r, int rt) {
+        if (L <= l && r <= R) return node[rt];
+        pushDown(rt);
+        int m = (l + r) >> 1;
+        Node res;
+        if (L <= m) res = pushUp(res, qry(L, R, lson));
+        if (m < R) res = pushUp(res, qry(L, R, rson));
+        return res;
+    }
+};
 
 ================================================== Problem Set ==================================================
 
